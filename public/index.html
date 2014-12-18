@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WeatherTo</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+  </head>
+  <body>
+
+    <div ng-controller="PredictController">
+      <ul>
+        <li ng-repeat="pref in prefs">
+          {{ pref.name }}
+          {{ pref.temperature.min }} - {{ pref.temperature.max }}
+
+          <ul>
+            <li ng-repeat="condSet in pref.conditionSets">
+              <span>
+                {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
+              </span>
+              <ol>
+                <li ng-repeat="cond in condSet.items">
+                  <button ng-click="modal('condition', {pref: pref, cond: cond})">i</button>
+                  <span>{{ cond.time | amCalendar }}</span>
+                </li>
+              </ol>
+            </li>
+          </ul>
+          <!--
+          <div ng-repeat="cond in pref.conditionMatches">
+            {{ cond.temperature }}
+            <span>{{ cond.time | amCalendar }}</span>
+          </div>
+          -->
+        </li>
+      </ul>
+    </div>
+
+    <script src="bower_components/requirejs/require.js"></script>
+    <script src="js/require-config.js"></script>
+    <script src="js/index.js"></script>
+
+    <script src="//localhost:35729/livereload.js"></script>
+
+  </body>
+</html>
