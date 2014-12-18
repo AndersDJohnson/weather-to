@@ -11,24 +11,36 @@
 
       Current temp: {{ current.temperature }}
 
-      <button ng-click="modal('current', current)">i</button>
+      <button ng-click="modal('current', {current: current})">i</button>
 
     </div>
 
     <div ng-controller="PredictController">
       <ul>
         <li ng-repeat="pref in prefs">
+
+          <button ng-click="collapses[pref.id] = ! collapses[pref.id]">
+            v
+          </button>
+
+          <button ng-click="editPref(pref)">e</button>
+
           {{ pref.name }}
           {{ pref.temperature.min }} - {{ pref.temperature.max }}
 
-          <ul>
-            <li ng-repeat="condSet in pref.conditionSets">
+          <ul collapse="! collapses[pref.id]">
+            <li ng-repeat="condSet in conditionSetsByPref[pref.id]">
+              <button ng-click="collapses[pref.id+'-'+$index] = ! collapses[pref.id+'-'+$index]">
+                v
+              </button>
               <span>
                 {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
               </span>
-              <ol>
+              <ol collapse="! collapses[pref.id+'-'+$index]">
                 <li ng-repeat="cond in condSet.items">
-                  <button ng-click="modal('condition', {pref: pref, cond: cond})">i</button>
+                  <button ng-click="modal('condition', {pref: pref, cond: cond})">
+                    i
+                  </button>
                   <span>{{ cond.time | amCalendar }}</span>
                 </li>
               </ol>

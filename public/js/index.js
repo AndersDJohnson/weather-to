@@ -3,7 +3,9 @@ require([
   'moment',
   'lodash',
   'angular-moment',
-  'angular-bootstrap'
+  'angular-bootstrap',
+  'json-edit',
+  'AngularJS-Scope.SafeApply'
 ], function (
   angular,
   moment,
@@ -11,7 +13,7 @@ require([
 ) {
 
   var weatherTo = angular.module('weatherTo',
-    ['angularMoment', 'ui.bootstrap']
+    ['angularMoment', 'ui.bootstrap', 'Scope.safeApply', 'jsonEdit']
   );
 
   weatherTo.constant('angularMomentConfig', {
@@ -29,8 +31,12 @@ require([
 
     $scope.data = data;
 
-    $scope.dismiss = function () {
-      $modalInstance.dismiss('cancel');
+    $scope.close = function (result) {
+      $modalInstance.close(result);
+    };
+
+    $scope.dismiss = function (reason) {
+      $modalInstance.dismiss(reason);
     };
   }]);
 
@@ -39,13 +45,14 @@ require([
     ['$scope', '$modal', 'forecast', 'preferences',
     function ($scope, $modal, forecast, prefService) {
 
+    $scope.collapses = {};
+
     $scope.prefs = [];
 
     $scope.modal = function (templateId, data) {
 
       var modalInstance = $modal.open({
         templateUrl: 'templates/modal-' + templateId + '.html',
-        backdrop: true,
         controller: 'ModalInstanceCtrl',
         // size: size,
         resolve: {
@@ -55,70 +62,90 @@ require([
         }
       });
 
+      return modalInstance;
     };
 
-    var preferences = prefService.get();
+    $scope.editPref = function (pref) {
+      $scope.modal('edit-preference', {pref: pref}).
+      result.then(function (result) {
+        console.log('result', result);
+        $scope.$safeApply(function () {
+          prefService.update(result.pref);
+          $scope.prefs = prefService.get();
+        });
+      });
+    };
 
-    forecast.get().then(function (result) {
 
-      preferences.forEach(function (pref) {
-        pref.conditionMatches = [];
+    $scope.$watch('prefs', function (prefs) {
 
-        // TODO: sort by time
+      console.log('prefs change', arguments);
 
-        var sets = [];
-        var set;
+      var conditionSetsByPref = $scope.conditionSetsByPref = {};
 
-        var lastMatches = false;
+      forecast.get().then(function (result) {
 
-        result.data.hourly.data.forEach(function (condition) {
+        prefs.forEach(function (pref) {
 
-          var timePretty = moment.unix(condition.time);
-          // condition.timePretty = timePretty.fromNow();
-          condition.timePretty = timePretty.calendar();
+          // TODO: sort by time
 
-          condition.durationSeconds = 60 * 60;
+          var sets = [];
+          var set;
 
-          var matches = forecast.preferenceMatches(pref, condition);
+          var lastMatches = false;
 
-          if (matches) {
-            pref.conditionMatches.push(condition);
+          result.data.hourly.data.forEach(function (condition) {
 
-            if (! set || ! lastMatches) {
-              set = {
-                items: [],
-                next: null
-              };
-              sets.push(set);
+            var timePretty = moment.unix(condition.time);
+            // condition.timePretty = timePretty.fromNow();
+            condition.timePretty = timePretty.calendar();
+
+            condition.durationSeconds = 60 * 60;
+
+            var matches = forecast.preferenceMatches(pref, condition);
+
+            if (matches) {
+
+              if (! set || ! lastMatches) {
+                set = {
+                  items: [],
+                  next: null
+                };
+                sets.push(set);
+              }
+
+              set.items.push(condition);
+            }
+            else {
+              if (set) {
+                set.next = condition;
+              }
             }
 
-            set.items.push(condition);
-          }
-          else {
-            if (set) {
-              set.next = condition;
+            lastMatches = matches;
+          });
+
+          sets.forEach(function (set) {
+            var items = set.items;
+            if (items.length > 0) {
+              set.start = items[0].time;
+              var last = items[items.length - 1];
+              set.end = last.time;
+              // set.end += last.durationSeconds;
             }
-          }
+          });
 
-          lastMatches = matches;
+          conditionSetsByPref[pref.id] = sets;
+
         });
-
-        sets.forEach(function (set) {
-          var items = set.items;
-          if (items.length > 0) {
-            set.start = items[0].time;
-            var last = items[items.length - 1];
-            set.end = last.time;
-            // set.end += last.durationSeconds;
-          }
-        });
-
-        pref.conditionSets = sets;
 
       });
 
-      $scope.prefs = preferences;
-    });
+    }, true);
+
+
+    $scope.prefs = prefService.get();
+
 
   }]);
 
@@ -134,7 +161,6 @@ require([
 
       var modalInstance = $modal.open({
         templateUrl: 'templates/modal-' + templateId + '.html',
-        backdrop: true,
         controller: 'ModalInstanceCtrl',
         // size: size,
         resolve: {
@@ -144,6 +170,7 @@ require([
         }
       });
 
+      return modalInstance;
     };
 
 
@@ -164,6 +191,7 @@ require([
 
     var prefs = [
       {
+        id: 1,
         name: 'Sledding',
         temperature: {
           min: 30,
@@ -171,6 +199,7 @@ require([
         }
       },
       {
+        id: 2,
         name: 'Jogging',
         temperature: {
           min: 54,
@@ -178,6 +207,7 @@ require([
         }
       },
       {
+        id: 3,
         name: 'Running',
         temperature: {
           min: 50,
@@ -188,6 +218,15 @@ require([
 
     preferences.get = function () {
       return prefs;
+    };
+
+    preferences.update = function (data) {
+      console.log('update', data);
+      var id = data.id;
+      var pref = _.findWhere(prefs, {id: id});
+      var cloned = _.cloneDeep(data);
+      delete cloned.id;
+      _.extend(pref, cloned);
     };
 
     return preferences;
