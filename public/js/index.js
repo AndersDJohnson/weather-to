@@ -36,7 +36,8 @@ require([
 
 
   weatherTo.controller('PredictController',
-    ['$scope', 'forecast', '$modal', function ($scope, forecast, $modal) {
+    ['$scope', '$modal', 'forecast', 'preferences',
+    function ($scope, $modal, forecast, prefService) {
 
     $scope.prefs = [];
 
@@ -56,29 +57,7 @@ require([
 
     };
 
-    var preferences = [
-      {
-        name: 'sledding',
-        temperature: {
-          min: 30,
-          max: 40
-        }
-      },
-      {
-        name: 'jogging',
-        temperature: {
-          min: 54,
-          max: 56
-        }
-      },
-      {
-        name: 'running',
-        temperature: {
-          min: 50,
-          max: 53
-        }
-      },
-    ];
+    var preferences = prefService.get();
 
     forecast.get().then(function (result) {
 
@@ -144,18 +123,95 @@ require([
   }]);
 
 
+  weatherTo.controller('CurrentController',
+    ['$scope', '$modal', 'forecast',
+    function ($scope, $modal, forecast) {
+
+    $scope.current = {};
+
+
+    $scope.modal = function (templateId, data) {
+
+      var modalInstance = $modal.open({
+        templateUrl: 'templates/modal-' + templateId + '.html',
+        backdrop: true,
+        controller: 'ModalInstanceCtrl',
+        // size: size,
+        resolve: {
+          data: function () {
+            return data;
+          }
+        }
+      });
+
+    };
+
+
+    forecast.get().then(function (result) {
+
+      $scope.current = result.data.currently;
+
+      console.log('current result', result);
+
+    });
+
+  }]);
+
+
+  weatherTo.service('preferences', [ function () {
+
+    var preferences = {};
+
+    var prefs = [
+      {
+        name: 'Sledding',
+        temperature: {
+          min: 30,
+          max: 40
+        }
+      },
+      {
+        name: 'Jogging',
+        temperature: {
+          min: 54,
+          max: 56
+        }
+      },
+      {
+        name: 'Running',
+        temperature: {
+          min: 50,
+          max: 53
+        }
+      },
+    ];
+
+    preferences.get = function () {
+      return prefs;
+    };
+
+    return preferences;
+  }]);
+
+
   /**
    * https://developer.forecast.io/docs/v2#forecast_call
    */
   weatherTo.service('forecast', ['$http', '$q', function ($http, $q) {
     var forecast = {};
 
-    forecast.get = function () {
-      var q = $q.defer();
+    forecast.random = Math.random();
+
+    var getDeferred;
+
+    forecast.get = function (fresh) {
+      if (! getDeferred || fresh) {
+        getDeferred = $q.defer();
+      }
       $http.
         get('/data/forecast-io_37.8267_-122.423.json').
         success(function (data, status, headers, config) {
-          q.resolve({
+          getDeferred.resolve({
             data: data,
             status: status,
             headers: headers,
@@ -163,9 +219,9 @@ require([
           });
         }).
         error(function (err) {
-          q.reject(err);
+          getDeferred.reject(err);
         });
-      return q.promise;
+      return getDeferred.promise;
     };
 
     forecast.preferenceMatches = function (pref, cond) {

@@ -7,6 +7,14 @@
   </head>
   <body>
 
+    <div ng-controller="CurrentController">
+
+      Current temp: {{ current.temperature }}
+
+      <button ng-click="modal('current', current)">i</button>
+
+    </div>
+
     <div ng-controller="PredictController">
       <ul>
         <li ng-repeat="pref in prefs">
@@ -26,12 +34,6 @@
               </ol>
             </li>
           </ul>
-          <!--
-          <div ng-repeat="cond in pref.conditionMatches">
-            {{ cond.temperature }}
-            <span>{{ cond.time | amCalendar }}</span>
-          </div>
-          -->
         </li>
       </ul>
     </div>
