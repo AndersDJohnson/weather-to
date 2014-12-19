@@ -18,7 +18,7 @@ define(['angular'], function (angular) {
     As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
      */
 
-    angular.module('jsonEdit', [])
+    var jsonEdit = angular.module('jsonEdit', [])
         .directive('jsonEdit', function () {
             return {
                 restrict: 'A',
@@ -97,4 +97,5 @@ define(['angular'], function (angular) {
             };
         });
 
+  return jsonEdit;
 });

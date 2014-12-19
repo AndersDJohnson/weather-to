@@ -29,29 +29,28 @@
       </div>
 
       <ul>
-        <li ng-repeat="pref in prefs">
+        <li ng-repeat="cat in cats">
 
-          <button ng-click="collapses[pref.id] = ! collapses[pref.id]">
+          <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
             v
           </button>
 
-          <button ng-click="editPref(pref)">e</button>
+          <button ng-click="editCat(cat)">e</button>
 
-          {{ pref.name }}
-          {{ pref.temperature.min }} - {{ pref.temperature.max }}
+          {{ cat.name }}
+          {{ cat.temperature.min }} - {{ cat.temperature.max }}
 
-          <ul collapse="! collapses[pref.id]">
-            <!-- <li ng-repeat="condSet in conditionSetsByPref[pref.id]"> -->
-            <li ng-repeat="condSet in pref.conditionSets">
-              <button ng-click="collapses[pref.id+'-'+$index] = ! collapses[pref.id+'-'+$index]">
+          <ul collapse="! collapses[cat.id]">
+            <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
+              <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
                 v
               </button>
               <span>
                 {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
               </span>
-              <ol collapse="! collapses[pref.id+'-'+$index]">
+              <ol collapse="! collapses[cat.id+'-'+$index]">
                 <li ng-repeat="cond in condSet.items">
-                  <button ng-click="modal('condition', {pref: pref, cond: cond})">
+                  <button ng-click="modal('condition', {cat: cat, cond: cond})">
                     i
                   </button>
                   <span>{{ cond.time | amCalendar }}</span>
@@ -64,7 +63,7 @@
     </div>
 
     <script src="bower_components/requirejs/require.js"></script>
-    <script src="js/require-config.js"></script>
+    <script src="js/requireConfig.js"></script>
     <script src="js/index.js"></script>
 
     <script src="//localhost:35729/livereload.js"></script>
