@@ -16,6 +16,18 @@
     </div>
 
     <div ng-controller="PredictController">
+
+      <div>
+        <form>
+          <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
+        </form>
+        <ol>
+          <li ng-repeat="loc in locationResults">
+            <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
+          </li>
+        </ol>
+      </div>
+
       <ul>
         <li ng-repeat="pref in prefs">
 
@@ -29,7 +41,8 @@
           {{ pref.temperature.min }} - {{ pref.temperature.max }}
 
           <ul collapse="! collapses[pref.id]">
-            <li ng-repeat="condSet in conditionSetsByPref[pref.id]">
+            <!-- <li ng-repeat="condSet in conditionSetsByPref[pref.id]"> -->
+            <li ng-repeat="condSet in pref.conditionSets">
               <button ng-click="collapses[pref.id+'-'+$index] = ! collapses[pref.id+'-'+$index]">
                 v
               </button>

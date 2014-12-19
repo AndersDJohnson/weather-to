@@ -42,8 +42,38 @@ require([
 
 
   weatherTo.controller('PredictController',
-    ['$scope', '$modal', 'forecast', 'preferences',
-    function ($scope, $modal, forecast, prefService) {
+    ['$scope', '$modal', 'forecast', 'preferences', 'geocode', '$q',
+    function ($scope, $modal, forecast, prefService, geocode, $q) {
+
+
+    $scope.onAddressChange = function () {
+      var address = $scope.address;
+      console.log('on addressChange', address);
+      geocode.get(address).
+        then(function (result) {
+          console.log('geocode result 1', result);
+          console.log('geocode result 2', result.data);
+          console.log('geocode result 3', result.data.results);
+
+          var locationResults = _.map(result.data.results, function (val) {
+            return {
+              name: val && val.formatted_address,
+              coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
+            };
+          });
+          console.log('locationResults', locationResults);
+          $scope.$safeApply(function () {
+            $scope.locationResults = locationResults;
+          });
+        });
+    };
+
+    $scope.pickLocation = function (loc) {
+      console.log('picked location', loc);
+
+      $scope.location = loc;
+    };
+
 
     $scope.collapses = {};
 
@@ -65,6 +95,7 @@ require([
       return modalInstance;
     };
 
+
     $scope.editPref = function (pref) {
       $scope.modal('edit-preference', {pref: pref}).
       result.then(function (result) {
@@ -77,13 +108,20 @@ require([
     };
 
 
-    $scope.$watch('prefs', function (prefs) {
 
-      console.log('prefs change', arguments);
+    var computePrefs = function (prefs, location, fresh) {
 
-      var conditionSetsByPref = $scope.conditionSetsByPref = {};
+      var deferred = $q.defer();
 
-      forecast.get().then(function (result) {
+      console.log('computePrefs', arguments);
+
+      if (! prefs) {
+        prefs = prefService.get();
+      }
+
+      var conditionSetsByPref = {};
+
+      forecast.get(location, fresh).then(function (result) {
 
         prefs.forEach(function (pref) {
 
@@ -137,10 +175,39 @@ require([
 
           conditionSetsByPref[pref.id] = sets;
 
+          pref.conditionSets = sets;
+
         });
+
+        console.log('computePrefs resolving', conditionSetsByPref);
+        deferred.resolve(conditionSetsByPref);
 
       });
 
+      return deferred.promise;
+    };
+
+
+    $scope.$watch('location', function (loc) {
+      console.log('location change', arguments);
+      computePrefs(null, loc, true).
+      then(function (result) {
+        console.log('watch loc result', result);
+        $scope.$safeApply(function () {
+          $scope.conditionSetsByPref = result;
+        });
+      });
+    }, true);
+
+
+    $scope.$watch('prefs', function (prefs) {
+      console.log('prefs change', arguments);
+      computePrefs(prefs, $scope.location, false).
+      then(function (result) {
+        $scope.$safeApply(function () {
+          $scope.conditionSetsByPref = result;
+        });
+      });
     }, true);
 
 
@@ -236,6 +303,43 @@ require([
   /**
    * https://developer.forecast.io/docs/v2#forecast_call
    */
+  weatherTo.service('geocode', ['$http', '$q', function ($http, $q) {
+    var geocode = {};
+
+    geocode.get = function (address) {
+      var deferred = $q.defer();
+
+      console.log('geocoding address', address);
+
+      var geocodingApiKey = 'AIzaSyB5XluVN28xvRR81T-uiPWKhXUt7yBzp9A';
+      var url = 'https://maps.googleapis.com/maps/api/geocode/json?';
+      url += 'key=' + escape(geocodingApiKey);
+      url += '&address=' + escape(address);
+
+      $http.
+        get(url).
+        success(function (data, status, headers, config) {
+          deferred.resolve({
+            data: data,
+            status: status,
+            headers: headers,
+            config: config
+          });
+        }).
+        error(function (err) {
+          deferred.reject(err);
+        });
+
+      return deferred.promise;
+    };
+
+    return geocode;
+  }]);
+
+
+  /**
+   * https://developer.forecast.io/docs/v2#forecast_call
+   */
   weatherTo.service('forecast', ['$http', '$q', function ($http, $q) {
     var forecast = {};
 
@@ -243,12 +347,35 @@ require([
 
     var getDeferred;
 
-    forecast.get = function (fresh) {
+    forecast.get = function (location, fresh) {
+
       if (! getDeferred || fresh) {
         getDeferred = $q.defer();
       }
+
+      var lat;
+      var lng;
+      if (location) {
+        if (location.coords) {
+          lat = location.coords.lat;
+          lng = location.coords.lng;
+        }
+      }
+      
+      lat = lat || 37.8267;
+      lng = lng || -122.423;
+
+      var url;
+      // url = '/data/forecast-io_37.8267_-122.423.json';
+      var forecastApiKey = '82f9b0c2328032d8cb168d72ce202fbe';
+      url = 'https://api.forecast.io/forecast/' + forecastApiKey + '/' + lat + ',' + lng;
+
       $http.
-        get('/data/forecast-io_37.8267_-122.423.json').
+        jsonp(url, {
+          params: {
+            callback: 'JSON_CALLBACK'
+          }
+        }).
         success(function (data, status, headers, config) {
           getDeferred.resolve({
             data: data,
