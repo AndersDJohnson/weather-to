@@ -18,6 +18,8 @@ define(['angular'], function (angular) {
 
         var geocoder = {};
 
+        var cache = true;
+
         geocoder.get = function (address) {
           var deferred = $q.defer();
 
@@ -27,6 +29,7 @@ define(['angular'], function (angular) {
 
           $http.
             get(url, {
+              cache: cache,
               params: {
                 key: key,
                 address: address

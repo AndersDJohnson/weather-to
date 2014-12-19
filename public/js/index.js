@@ -64,6 +64,30 @@ require([
   };
 
 
+  weatherTo.controller('AppController',
+    ['$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
+    function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
+
+      $scope.modal = scopeModal;
+
+      $scope.addCategory = function () {
+        scopeModal('addCategory').
+          result.then(function (result) {
+            console.log('result', result);
+            categories.save(result.cat).
+              then(function (result) {
+                console.log('saved', result);
+              });
+          });
+      };
+
+      $scope.addLocation = function () {
+        scopeModal('addLocation');
+      };
+
+    }]);
+
+
   weatherTo.controller('PredictController',
     ['$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
     function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
@@ -99,31 +123,35 @@ require([
 
     $scope.cats = [];
 
-    $scope.modal = scopeModal;
 
-
-    $scope.editCat = function (cat) {
-      $scope.modal('edit-category', {cat: cat}).
-      result.then(function (result) {
-        $log.log('result', result);
-        categories.update(result.cat).then(function (cat) {
-          categories.get().then(function (cats) {
-            $scope.$safeApply(function () {
-              $scope.cats = result;
+    $scope.editCategory = function (cat) {
+      $scope.modal('editCategory', {cat: cat}).
+        result.then(function (result) {
+          $log.log('result', result);
+          categories.save(result.cat).then(function (cat) {
+            categories.query().then(function (cats) {
+              $scope.$safeApply(function () {
+                $scope.cats = result;
+              });
             });
           });
         });
+    };
+
+    $scope.removeCategory = function (cat) {
+      categories.remove(cat).then(function (result) {
+        $log.log('removed?', result, cat);
       });
     };
 
 
-    var _computeCatsWithCats = function (cats, location, fresh) {
+    var _computeCatsWithCats = function (cats, location) {
 
       var deferred = $q.defer();
 
       var conditionSetsByCat = {};
 
-      forecastIo.get(location, fresh).then(function (result) {
+      forecastIo.get(location).then(function (result) {
 
         cats.forEach(function (cat) {
 
@@ -187,21 +215,19 @@ require([
       return deferred.promise;
     };
 
-    var computeCats = function (cats, location, fresh) {
+    var computeCats = function (cats, location) {
 
       var deferred = $q.defer();
-
-      $log.log('deferred', deferred);
 
       $log.log('computeCats', arguments);
 
       if (! cats) {
-        categories.get().then(function (cats) {
-          deferred.resolve(_computeCatsWithCats(cats, location, fresh));
+        categories.query().then(function (cats) {
+          deferred.resolve(_computeCatsWithCats(cats, location));
         });
       }
       else {
-        deferred.resolve(_computeCatsWithCats(cats, location, fresh));
+        deferred.resolve(_computeCatsWithCats(cats, location));
       }
 
       return deferred.promise;
@@ -210,7 +236,7 @@ require([
 
     $scope.$watch('location', function (loc) {
       $log.log('location change', arguments);
-      computeCats(null, loc, true).
+      computeCats(null, loc).
       then(function (result) {
         $log.log('watch loc result', result);
         $scope.$safeApply(function () {
@@ -222,7 +248,7 @@ require([
 
     $scope.$watch('cats', function (cats) {
       $log.log('cats change', arguments);
-      computeCats(cats, $scope.location, false).
+      computeCats(cats, $scope.location).
       then(function (result) {
         $scope.$safeApply(function () {
           $scope.conditionSetsByCat = result;
@@ -231,7 +257,7 @@ require([
     }, true);
 
 
-    categories.get().then(function (cats) {
+    categories.query().then(function (cats) {
       $scope.$safeApply(function () {
         $scope.cats = cats;
       });
@@ -246,10 +272,6 @@ require([
     function ($scope, scopeModal, forecastIo, $log) {
 
     $scope.current = {};
-
-
-    $scope.modal = scopeModal;
-
 
     forecastIo.get().then(function (result) {
       $log.log('current result', result);

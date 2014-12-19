@@ -16,13 +16,11 @@ define(['angular'], function (angular) {
 
         var forecastIo = {};
 
-        var getDeferred;
+        forecastIo.get = function (location) {
 
-        forecastIo.get = function (location, fresh) {
+          var deferred = $q.defer();
 
-          if (! getDeferred || fresh) {
-            getDeferred = $q.defer();
-          }
+          var cache = true;
 
           var lat;
           var lng;
@@ -42,12 +40,13 @@ define(['angular'], function (angular) {
 
           $http.
             jsonp(url, {
+              cache: cache,
               params: {
                 callback: 'JSON_CALLBACK'
               }
             }).
             success(function (data, status, headers, config) {
-              getDeferred.resolve({
+              deferred.resolve({
                 data: data,
                 status: status,
                 headers: headers,
@@ -55,9 +54,10 @@ define(['angular'], function (angular) {
               });
             }).
             error(function (err) {
-              getDeferred.reject(err);
+              deferred.reject(err);
             });
-          return getDeferred.promise;
+
+          return deferred.promise;
         };
 
         return forecastIo;

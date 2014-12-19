@@ -7,59 +7,67 @@
   </head>
   <body>
 
-    <div ng-controller="CurrentController">
+    <div ng-controller="AppController">
 
-      Current temp: {{ current.temperature }}
+      <button ng-click="addCategory()">+ Category</button>
+      <button ng-click="addLocation()">+ Location</button>
 
-      <button ng-click="modal('current', {current: current})">i</button>
+      <div ng-controller="CurrentController">
 
-    </div>
+        Current temp: {{ current.temperature }}
 
-    <div ng-controller="PredictController">
+        <button ng-click="modal('current', {current: current})">i</button>
 
-      <div>
-        <form>
-          <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
-        </form>
-        <ol>
-          <li ng-repeat="loc in locationResults">
-            <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
-          </li>
-        </ol>
       </div>
 
-      <ul>
-        <li ng-repeat="cat in cats">
+      <div ng-controller="PredictController">
 
-          <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
-            v
-          </button>
-
-          <button ng-click="editCat(cat)">e</button>
-
-          {{ cat.name }}
-          {{ cat.temperature.min }} - {{ cat.temperature.max }}
-
-          <ul collapse="! collapses[cat.id]">
-            <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
-              <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
-                v
-              </button>
-              <span>
-                {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
-              </span>
-              <ol collapse="! collapses[cat.id+'-'+$index]">
-                <li ng-repeat="cond in condSet.items">
-                  <button ng-click="modal('condition', {cat: cat, cond: cond})">
-                    i
-                  </button>
-                  <span>{{ cond.time | amCalendar }}</span>
-                </li>
-              </ol>
+        <div>
+          <form>
+            <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
+          </form>
+          <ol>
+            <li ng-repeat="loc in locationResults">
+              <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
             </li>
-          </ul>
-        </li>
-      </ul>
+          </ol>
+        </div>
+
+        <ul>
+          <li ng-repeat="cat in cats">
+
+            <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
+              v
+            </button>
+
+            <button ng-click="editCategory(cat)">e</button>
+            <button ng-click="removeCategory(cat)">x</button>
+
+            {{ cat.name }}
+            {{ cat.temperature.min }} - {{ cat.temperature.max }}
+
+            <ul collapse="! collapses[cat.id]">
+              <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
+                <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
+                  v
+                </button>
+                <span>
+                  {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
+                </span>
+                <ol collapse="! collapses[cat.id+'-'+$index]">
+                  <li ng-repeat="cond in condSet.items">
+                    <button ng-click="modal('condition', {cat: cat, cond: cond})">
+                      i
+                    </button>
+                    <span>{{ cond.time | amCalendar }}</span>
+                  </li>
+                </ol>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
     <script src="bower_components/requirejs/require.js"></script>

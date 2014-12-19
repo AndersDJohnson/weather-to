@@ -5,9 +5,12 @@ define(['angular'], function (angular) {
   categoriesModule.provider('categories', [function () {
 
     this.$get = [
-      '$q', function ($q) {
+      '$q', '$log',
+      function ($q, $log) {
 
         var categories = {};
+
+        var nextId = 4;
 
         var cats = [
           {
@@ -36,27 +39,81 @@ define(['angular'], function (angular) {
           },
         ];
 
-        categories.get = function () {
+        categories.query = function () {
           var deferred = $q.defer();
+          var promise = deferred.promise;
 
           deferred.resolve(cats);
 
-          return deferred.promise;
+          return promise;
         };
 
-        categories.update = function (data) {
-          var deferred = $q.defer();
 
-          console.log('update', data);
+        /**
+         * Remove by cat or id.
+         */
+        categories.remove = function (cat) {
+          var deferred = $q.defer();
+          var promise = deferred.promise;
+
+          if (_.isPlainObject(cat)) {
+            id = cat.id;
+          }
+          else {
+            id = cat;
+          }
+
+          if (! id) {
+            $log.error('must provide id');
+            deferred.reject('must provide id');
+            return promise;
+          }
+
+          var index = _.findIndex(cats, {id: id});
+
+          // remove it
+          cats.splice(index, 1);
+
+          deferred.resolve(true);
+
+          return promise;
+        };
+
+
+        categories.save = function (data) {
+
+          var deferred = $q.defer();
+          var promise = deferred.promise;
+
+          if (! data) {
+            $log.error('must provide data');
+            deferred.reject('must provide data');
+            return promise;
+          }
+
+          // clone data to prevent modification
+          data = _.cloneDeep(data);
+
+          console.log('save', data);
           var id = data.id;
-          var cat = _.findWhere(cats, {id: id});
-          var cloned = _.cloneDeep(data);
-          delete cloned.id;
-          _.extend(cat, cloned);
+
+          if (id) {
+
+            var cat = _.findWhere(cats, {id: id});
+            delete data.id;
+            _.extend(cat, data);
+
+          }
+          else {
+
+            data.id = nextId++;
+            cats.push(data);
+
+          }
 
           deferred.resolve(cat);
 
-          return deferred.promise;
+          return promise;
         };
 
         return categories;
