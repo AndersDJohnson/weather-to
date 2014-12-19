@@ -9,7 +9,8 @@ require([
   'geocoder',
   'forecastIo',
   'categories',
-  'AngularJS-Scope.SafeApply'
+  'AngularJS-Scope.SafeApply',
+  'goog!visualization,1,packages:[timeline]'
 ], function (
   angular,
   moment,
@@ -64,11 +65,14 @@ require([
   };
 
 
-  weatherTo.controller('AppController',
-    ['$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
+  weatherTo.controller('AppController', [
+    '$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
     function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
 
       $scope.modal = scopeModal;
+
+      $scope.cats = [];
+
 
       $scope.addCategory = function () {
         scopeModal('addCategory').
@@ -85,186 +89,259 @@ require([
         scopeModal('addLocation');
       };
 
-    }]);
+
+      $scope.onAddressChange = function () {
+        var address = $scope.address;
+        $log.log('on addressChange', address);
+        geocoder.get(address).
+          then(function (result) {
+
+            var locationResults = _.map(result.data.results, function (val) {
+              return {
+                name: val && val.formatted_address,
+                coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
+              };
+            });
+
+            $scope.$safeApply(function () {
+              $scope.locationResults = locationResults;
+            });
+          });
+      };
+
+      $scope.pickLocation = function (loc) {
+        $log.log('picked location', loc);
+
+        $scope.location = loc;
+      };
+
+
+      $scope.editCategory = function (cat) {
+        $scope.modal('editCategory', {cat: cat}).
+          result.then(function (result) {
+            $log.log('result', result);
+            categories.save(result.cat).then(function (cat) {
+              categories.query().then(function (cats) {
+                $scope.$safeApply(function () {
+                  $scope.cats = result;
+                });
+              });
+            });
+          });
+      };
+
+      $scope.removeCategory = function (cat) {
+        categories.remove(cat).then(function (result) {
+          $log.log('removed?', result, cat);
+        });
+      };
+
+
+      var _computeCatsWithCats = function (cats, location) {
+
+        var deferred = $q.defer();
+
+        var conditionSetsByCat = {};
+
+        forecastIo.get(location).then(function (result) {
+
+          cats.forEach(function (cat) {
+
+            // TODO: sort by time?
+
+            var sets = [];
+            var set;
+
+            var lastMatches = false;
+
+            result.data.hourly.data.forEach(function (condition) {
+
+              var timePretty = moment.unix(condition.time);
+              // condition.timePretty = timePretty.fromNow();
+              condition.timePretty = timePretty.calendar();
+
+              condition.durationSeconds = 60 * 60;
+
+              var matches = categoryMatches(cat, condition);
+
+              if (matches) {
+
+                if (! set || ! lastMatches) {
+                  set = {
+                    items: [],
+                    next: null
+                  };
+                  sets.push(set);
+                }
+
+                set.items.push(condition);
+              }
+              else {
+                if (set) {
+                  set.next = condition;
+                }
+              }
+
+              lastMatches = matches;
+            });
+
+            sets.forEach(function (set) {
+              var items = set.items;
+              if (items.length > 0) {
+                set.start = items[0].time;
+                set.startDate = moment.unix(set.start).toDate();
+                var last = items[items.length - 1];
+                set.end = last.time;
+                set.endDate = moment.unix(set.end).toDate();
+                // set.end += last.durationSeconds;
+              }
+            });
+
+            conditionSetsByCat[cat.id] = sets;
+
+          });
+
+          $log.log('computeCats resolving', conditionSetsByCat);
+          deferred.resolve(conditionSetsByCat);
+
+        });
+
+        return deferred.promise;
+      };
+
+      var computeCats = function (cats, location) {
+
+        var deferred = $q.defer();
+
+        $log.log('computeCats', arguments);
+
+        if (! cats) {
+          categories.query().then(function (cats) {
+            deferred.resolve(_computeCatsWithCats(cats, location));
+          });
+        }
+        else {
+          deferred.resolve(_computeCatsWithCats(cats, location));
+        }
+
+        return deferred.promise;
+      };
+
+
+      $scope.$watch('location', function (loc) {
+        $log.log('location change', arguments);
+        computeCats(null, loc).
+        then(function (result) {
+          $log.log('watch loc result', result);
+          $scope.$safeApply(function () {
+            $scope.conditionSetsByCat = result;
+          });
+        });
+      }, true);
+
+
+      $scope.$watch('cats', function (cats) {
+        $log.log('cats change', arguments);
+        computeCats(cats, $scope.location).
+        then(function (result) {
+          $scope.$safeApply(function () {
+            $scope.conditionSetsByCat = result;
+          });
+        });
+      }, true);
+
+
+      categories.query().then(function (cats) {
+        $scope.$safeApply(function () {
+          $scope.cats = cats;
+        });
+      });
+
+
+    }
+  ]);
+
+
+  weatherTo.controller('TimelineController', [
+    '$scope', '$q',
+    function ($scope, $q) {
+
+      var googleLoadDeferred = $q.defer();
+      var googleLoadPromise = googleLoadDeferred.promise;
+
+      var googleOnLoadCallback = function () {
+        console.log('google loaded');
+        googleLoadDeferred.resolve(true);
+      };
+
+      google.setOnLoadCallback(googleOnLoadCallback);
+
+
+      $scope.$watch('cats', function () {
+        console.log('watch cats...');
+        googleLoadPromise.then(function () {
+          drawChart();
+        });
+      });
+
+      $scope.$watch('loc', function () {
+        console.log('watch cats...');
+        googleLoadPromise.then(function () {
+          drawChart();
+        });
+      });
+
+      var drawChart = function () {
+        console.log('drawing...');
+
+        var container = document.getElementById('timeline');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'President' });
+        dataTable.addColumn({ type: 'date', id: 'Start' });
+        dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({type: 'string', role: 'tooltip'});
+
+        var rows = [];
+
+        _.each($scope.cats, function (cat) {
+
+          var conditionSets = $scope.conditionSetsByCat[cat.id];
+
+          _.each(conditionSets, function (conditionSet) {
+
+            console.log('cat', cat);
+            var row = [cat.name, conditionSet.startDate, conditionSet.endDate, ''];
+            row.push();
+            console.log('row', row);
+            rows.push(row);
+          });
+        });
+
+        dataTable.addRows(rows);
+
+        // [
+        //   [ 'Washington', new Date(1789, 3, 29), new Date(1797, 2, 3), 'a' ],
+        //   [ 'Adams',      new Date(1797, 2, 3),  new Date(1801, 2, 3), 'b' ],
+        //   [ 'Jefferson',  new Date(1801, 2, 3),  new Date(1809, 2, 3), 'c' ]
+        // ]);
+
+        chart.draw(dataTable);
+      };
+
+    }
+  ]);
 
 
   weatherTo.controller('PredictController',
     ['$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
     function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
 
+      $scope.collapses = {};
 
-    $scope.onAddressChange = function () {
-      var address = $scope.address;
-      $log.log('on addressChange', address);
-      geocoder.get(address).
-        then(function (result) {
-
-          var locationResults = _.map(result.data.results, function (val) {
-            return {
-              name: val && val.formatted_address,
-              coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
-            };
-          });
-
-          $scope.$safeApply(function () {
-            $scope.locationResults = locationResults;
-          });
-        });
-    };
-
-    $scope.pickLocation = function (loc) {
-      $log.log('picked location', loc);
-
-      $scope.location = loc;
-    };
-
-
-    $scope.collapses = {};
-
-    $scope.cats = [];
-
-
-    $scope.editCategory = function (cat) {
-      $scope.modal('editCategory', {cat: cat}).
-        result.then(function (result) {
-          $log.log('result', result);
-          categories.save(result.cat).then(function (cat) {
-            categories.query().then(function (cats) {
-              $scope.$safeApply(function () {
-                $scope.cats = result;
-              });
-            });
-          });
-        });
-    };
-
-    $scope.removeCategory = function (cat) {
-      categories.remove(cat).then(function (result) {
-        $log.log('removed?', result, cat);
-      });
-    };
-
-
-    var _computeCatsWithCats = function (cats, location) {
-
-      var deferred = $q.defer();
-
-      var conditionSetsByCat = {};
-
-      forecastIo.get(location).then(function (result) {
-
-        cats.forEach(function (cat) {
-
-          // TODO: sort by time?
-
-          var sets = [];
-          var set;
-
-          var lastMatches = false;
-
-          result.data.hourly.data.forEach(function (condition) {
-
-            var timePretty = moment.unix(condition.time);
-            // condition.timePretty = timePretty.fromNow();
-            condition.timePretty = timePretty.calendar();
-
-            condition.durationSeconds = 60 * 60;
-
-            var matches = categoryMatches(cat, condition);
-
-            if (matches) {
-
-              if (! set || ! lastMatches) {
-                set = {
-                  items: [],
-                  next: null
-                };
-                sets.push(set);
-              }
-
-              set.items.push(condition);
-            }
-            else {
-              if (set) {
-                set.next = condition;
-              }
-            }
-
-            lastMatches = matches;
-          });
-
-          sets.forEach(function (set) {
-            var items = set.items;
-            if (items.length > 0) {
-              set.start = items[0].time;
-              var last = items[items.length - 1];
-              set.end = last.time;
-              // set.end += last.durationSeconds;
-            }
-          });
-
-          conditionSetsByCat[cat.id] = sets;
-
-        });
-
-        $log.log('computeCats resolving', conditionSetsByCat);
-        deferred.resolve(conditionSetsByCat);
-
-      });
-
-      return deferred.promise;
-    };
-
-    var computeCats = function (cats, location) {
-
-      var deferred = $q.defer();
-
-      $log.log('computeCats', arguments);
-
-      if (! cats) {
-        categories.query().then(function (cats) {
-          deferred.resolve(_computeCatsWithCats(cats, location));
-        });
-      }
-      else {
-        deferred.resolve(_computeCatsWithCats(cats, location));
-      }
-
-      return deferred.promise;
-    };
-
-
-    $scope.$watch('location', function (loc) {
-      $log.log('location change', arguments);
-      computeCats(null, loc).
-      then(function (result) {
-        $log.log('watch loc result', result);
-        $scope.$safeApply(function () {
-          $scope.conditionSetsByCat = result;
-        });
-      });
-    }, true);
-
-
-    $scope.$watch('cats', function (cats) {
-      $log.log('cats change', arguments);
-      computeCats(cats, $scope.location).
-      then(function (result) {
-        $scope.$safeApply(function () {
-          $scope.conditionSetsByCat = result;
-        });
-      });
-    }, true);
-
-
-    categories.query().then(function (cats) {
-      $scope.$safeApply(function () {
-        $scope.cats = cats;
-      });
-    });
-
-
-  }]);
+    }
+  ]);
 
 
   weatherTo.controller('CurrentController',
@@ -278,7 +355,8 @@ require([
       $scope.current = result.data.currently;
     });
 
-  }]);
+    }
+  ]);
 
 
   angular.bootstrap(document, ['weatherTo']);

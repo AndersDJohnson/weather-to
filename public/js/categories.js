@@ -17,15 +17,15 @@ define(['angular'], function (angular) {
             id: 1,
             name: 'Sledding',
             temperature: {
-              min: 30,
-              max: 40
+              min: 55,
+              max: 62
             }
           },
           {
             id: 2,
             name: 'Jogging',
             temperature: {
-              min: 54,
+              min: 50,
               max: 56
             }
           },
@@ -34,7 +34,7 @@ define(['angular'], function (angular) {
             name: 'Running',
             temperature: {
               min: 50,
-              max: 53
+              max: 55
             }
           },
         ];

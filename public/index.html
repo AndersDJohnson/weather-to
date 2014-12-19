@@ -9,8 +9,22 @@
 
     <div ng-controller="AppController">
 
+
       <button ng-click="addCategory()">+ Category</button>
       <button ng-click="addLocation()">+ Location</button>
+
+
+      <div>
+        <form>
+          <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
+        </form>
+        <ol>
+          <li ng-repeat="loc in locationResults">
+            <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
+          </li>
+        </ol>
+      </div>
+
 
       <div ng-controller="CurrentController">
 
@@ -20,18 +34,18 @@
 
       </div>
 
+
+      <div ng-controller="TimelineController">
+
+        <div id="timeline" class="clearfix" style="height: 200px; width: 2000px;">
+          ...
+        </div>
+
+      </div>
+
+
       <div ng-controller="PredictController">
 
-        <div>
-          <form>
-            <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
-          </form>
-          <ol>
-            <li ng-repeat="loc in locationResults">
-              <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
-            </li>
-          </ol>
-        </div>
 
         <ul>
           <li ng-repeat="cat in cats">
@@ -68,7 +82,9 @@
         </ul>
       </div>
 
+
     </div>
+
 
     <script src="bower_components/requirejs/require.js"></script>
     <script src="js/requireConfig.js"></script>
