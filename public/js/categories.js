@@ -94,7 +94,7 @@ define(['angular'], function (angular) {
           // clone data to prevent modification
           data = _.cloneDeep(data);
 
-          console.log('save', data);
+          $log.log('save', data);
           var id = data.id;
 
           if (id) {

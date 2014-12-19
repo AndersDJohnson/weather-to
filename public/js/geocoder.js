@@ -13,8 +13,8 @@ define(['angular'], function (angular) {
     var url = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     this.$get = [
-      '$http', '$q',
-      function ($http, $q) {
+      '$http', '$q', '$log',
+      function ($http, $q, $log) {
 
         var geocoder = {};
 
@@ -23,7 +23,7 @@ define(['angular'], function (angular) {
         geocoder.get = function (address) {
           var deferred = $q.defer();
 
-          console.log('geocoding address', address);
+          $log.log('geocoding address', address);
 
           var key = config.google.serverApiKey;
 

@@ -77,10 +77,10 @@ require([
       $scope.addCategory = function () {
         scopeModal('addCategory').
           result.then(function (result) {
-            console.log('result', result);
+            $log.log('result', result);
             categories.save(result.cat).
               then(function (result) {
-                console.log('saved', result);
+                $log.log('saved', result);
               });
           });
       };
@@ -263,36 +263,40 @@ require([
 
 
   weatherTo.controller('TimelineController', [
-    '$scope', '$q',
-    function ($scope, $q) {
+    '$scope', '$q', '$log',
+    function ($scope, $q, $log) {
 
       var googleLoadDeferred = $q.defer();
       var googleLoadPromise = googleLoadDeferred.promise;
 
       var googleOnLoadCallback = function () {
-        console.log('google loaded');
+        $log.log('google loaded');
         googleLoadDeferred.resolve(true);
       };
 
       google.setOnLoadCallback(googleOnLoadCallback);
 
+      googleLoadPromise.then(function () {
+        drawChart();
 
-      $scope.$watch('cats', function () {
-        console.log('watch cats...');
-        googleLoadPromise.then(function () {
+        $scope.$watch('cats', function () {
+          $log.log('watch cats...');
           drawChart();
-        });
-      });
+        }, true);
 
-      $scope.$watch('loc', function () {
-        console.log('watch cats...');
-        googleLoadPromise.then(function () {
+        $scope.$watch('conditionSetsByCat', function () {
+          $log.log('watch conditionSetsByCat...');
           drawChart();
-        });
+        }, true);
+
+        $scope.$watch('location', function () {
+          $log.log('watch location...');
+          drawChart();
+        }, true);
       });
 
       var drawChart = function () {
-        console.log('drawing...');
+        $log.log('drawing...');
 
         var container = document.getElementById('timeline');
         var chart = new google.visualization.Timeline(container);
@@ -311,10 +315,8 @@ require([
 
           _.each(conditionSets, function (conditionSet) {
 
-            console.log('cat', cat);
             var row = [cat.name, conditionSet.startDate, conditionSet.endDate, ''];
             row.push();
-            console.log('row', row);
             rows.push(row);
           });
         });

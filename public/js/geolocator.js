@@ -5,8 +5,8 @@ define(['angular'], function (angular) {
   geolocatorModule.provider('geolocator', [function () {
 
     this.$get = [
-      '$q',
-      function ($q) {
+      '$q', '$log',
+      function ($q, $log) {
 
         var geolocator = {};
 
