@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 
     bower: {
       main: {
-        rjsConfig: 'public/js/require-config.js',
+        rjsConfig: 'public/js/requireConfig.js',
         options: {
           // baseUrl: './public'
         }
