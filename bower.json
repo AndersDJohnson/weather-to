@@ -25,5 +25,8 @@
     "angular-ui-router": "~0.2.13",
     "AngularJS-Scope.SafeApply": "yearofmoo/AngularJS-Scope.SafeApply",
     "requirejs-plugins": "~1.0.3"
+  },
+  "resolutions": {
+    "angular": "~1.3.7"
   }
 }
