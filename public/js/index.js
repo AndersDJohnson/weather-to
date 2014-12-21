@@ -123,11 +123,6 @@ require([
         addLocationModal.result.then(function (result) {
           $log.log('result', result);
         });
-        addLocationModal.opened.then(function () {
-          var $el = angular.element('.modal-add-location');
-          var $input = $el.find('input[autofocus]').first();
-          $input.focus();
-        });
       };
 
 
