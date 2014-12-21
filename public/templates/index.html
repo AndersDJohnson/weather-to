@@ -6,6 +6,7 @@
 
     <button ng-click="showCategories()">Categories</button>
     <button ng-click="showLocations()">Locations</button>
+    <button ng-click="getCurrentLocation()">Current Location</button>
 
 
     <div ng-controller="CurrentController">
@@ -29,9 +30,9 @@
     </div>
 
 
-    <div ng-include="'templates/timeline.html'"></div>
-
     <div ng-include="'templates/agenda.html'"></div>
+
+    <div ng-include="'templates/timeline.html'"></div>
 
   </div>
 

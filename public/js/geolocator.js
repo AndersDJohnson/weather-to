@@ -28,6 +28,7 @@ define(['angular'], function (angular) {
         };
 
         return geolocator;
+      }
     ];
 
   }]);

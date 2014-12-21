@@ -28,7 +28,13 @@ define(['angular'], function (angular) {
           if (location) {
             if (location.coords) {
               lat = location.coords.lat;
+              if (! angular.isNumber(lat)) {
+                lat = location.coords.latitude;
+              }
               lng = location.coords.lng;
+              if (! angular.isNumber(lng)) {
+                lng = location.coords.longitude;
+              }
             }
           }
 

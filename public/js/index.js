@@ -7,6 +7,7 @@ require([
   'jsonEdit',
   'modal',
   'geocoder',
+  'geolocator',
   'forecastIo',
   'categories',
   'locations',
@@ -26,6 +27,7 @@ require([
       'jsonEdit',
       'modal',
       'geocoder',
+      'geolocator',
       'forecastIo',
       'categories',
       'locations'
@@ -68,8 +70,8 @@ require([
 
 
   weatherTo.controller('AppController', [
-    '$scope', 'scopeModal', 'forecastIo', 'categories', 'locations', 'geocoder', '$q', '$log',
-    function ($scope, scopeModal, forecastIo, categories, locations, geocoder, $q, $log) {
+    '$scope', 'scopeModal', 'forecastIo', 'categories', 'locations', 'geocoder', 'geolocator', '$q', '$log',
+    function ($scope, scopeModal, forecastIo, categories, locations, geocoder, geolocator, $q, $log) {
 
       $scope.modal = scopeModal;
 
@@ -121,7 +123,16 @@ require([
 
 
       $scope.getCurrentLocation = function () {
-
+        geolocator.locate().then(function (position) {
+          var location = {
+            name: 'Here',
+            coords: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            }
+          };
+          $scope.location = location;
+        });
       };
 
 
