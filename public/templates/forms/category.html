@@ -1,10 +1,34 @@
 <form name="catForm" ng-submit="catFormSubmit(this)">
 
   <fieldset>
-    <input type="text" ng-model="catFormModel.name" />
 
-    <input type="number" ng-model="catFormModel.temperature.min" />
-    <input type="number" ng-model="catFormModel.temperature.max" />
+    <div class="form-group">
+        <label for="catFormModel.name">Name</label>
+      <input type="text" class="form-control"
+        id="catFormModel.name"
+        ng-model="catFormModel.name"
+      />
+    </div>
+
+    <fieldset>
+      <legend>Temperature</legend>
+
+      <div class="form-group">
+        <label for="catFormModel.temperature.max">Min</label>
+        <input type="number" class="form-control"
+          id="catFormModel.temperature.min"
+          ng-model="catFormModel.temperature.min"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="catFormModel.temperature.max">Max</label>
+        <input type="number" class="form-control"
+          id="catFormModel.temperature.max"
+          ng-model="catFormModel.temperature.max"
+        />
+      </div>
+
   </fieldset>
 
   <textarea name="catField" json-edit="catFormModel" rows="10" class="form-control"></textarea>

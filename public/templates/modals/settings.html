@@ -12,6 +12,16 @@
 
   <form name="settingsForm" ng-submit="settingsFormSubmit(this)">
 
+    <div class="form-group">
+      <input type="checkbox" class=""
+        id="settingsFormModel.apparentTemperatures"
+        ng-model="settingsFormModel.apparentTemperatures"
+      />
+      <label for="settingsFormModel.apparentTemperatures">
+        Apparent Temperatures
+      </label>
+    </div>
+
     <textarea name="jsonField" json-edit="settingsFormModel" rows="10" class="form-control"></textarea>
     <div ng-show="settingsForm.jsonField.$error.json">Invalid JSON.</div>
 
