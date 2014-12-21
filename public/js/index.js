@@ -219,6 +219,8 @@ require([
       $scope.pickLocationResult = function (loc) {
         $log.log('picked location result', loc);
 
+        $scope.locationResults = [];
+
         locations.save(loc).then(function (loc) {
           $scope.setLocation(loc);
         });
