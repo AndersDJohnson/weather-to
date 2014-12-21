@@ -1,0 +1,13 @@
+<form name="catForm">
+
+  <fieldset>
+    <input type="text" ng-model="editingCat.name" />
+
+    <input type="number" ng-model="editingCat.temperature.min" />
+    <input type="number" ng-model="editingCat.temperature.max" />
+  </fieldset>
+
+  <textarea name="catField" json-edit="editingCat" rows="10" class="form-control"></textarea>
+  <div ng-show="catForm.catField.$error.json">Invalid JSON.</div>
+
+</form>

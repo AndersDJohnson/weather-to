@@ -88,11 +88,17 @@ require([
 
 
       $scope.showLocations = function () {
-        scopeModal('locations', $scope).
-          result.then(function (result) {
-            $log.log('result', result);
-
-          });
+        var locationModal = scopeModal('locations', $scope, {
+          windowClass: 'modal-locations'
+        });
+        locationModal.result.then(function (result) {
+          $log.log('result', result);
+        });
+        locationModal.opened.then(function () {
+          var $el = $('.modal-locations');
+          var $input = $el.find('input[autofocus]').first();
+          $input.focus();
+        });
       };
 
 
@@ -156,8 +162,19 @@ require([
           });
       };
 
-      $scope.pickLocation = function (loc) {
-        $log.log('picked location', loc);
+
+      $scope.pickLocationResult = function (loc) {
+        $log.log('picked location result', loc);
+
+        locations.save(loc).then(function (loc) {
+          $scope.setLocation(loc);
+        });
+
+      };
+
+
+      $scope.setLocation = function (loc) {
+        $log.log('set location', loc);
 
         $scope.location = loc;
       };
