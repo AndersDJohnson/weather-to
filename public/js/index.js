@@ -124,6 +124,10 @@ require([
             thisScope.close();
           }
         };
+        scopeModal('settings', scope).
+          result.then(function (result) {
+            $log.log('result', result);
+          });
       };
 
 
