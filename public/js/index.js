@@ -15,8 +15,8 @@ require([
   'locations',
   'locationConverter',
   'conditionsEngine',
-  'AngularJS-Scope.SafeApply',
-  'goog!visualization,1,packages:[timeline]'
+  'AngularJS-Scope.SafeApply'//,
+  // 'goog!visualization,1,packages:[timeline]'
 ], function (
   angular,
   moment,
@@ -361,78 +361,78 @@ require([
   ]);
 
 
-  weatherTo.controller('TimelineController', [
-    '$scope', '$q', '$log',
-    function ($scope, $q, $log) {
+  // weatherTo.controller('TimelineController', [
+  //   '$scope', '$q', '$log',
+  //   function ($scope, $q, $log) {
 
-      var googleLoadDeferred = $q.defer();
-      var googleLoadPromise = googleLoadDeferred.promise;
+  //     var googleLoadDeferred = $q.defer();
+  //     var googleLoadPromise = googleLoadDeferred.promise;
 
-      var googleOnLoadCallback = function () {
-        $log.log('google loaded');
-        googleLoadDeferred.resolve(true);
-      };
+  //     var googleOnLoadCallback = function () {
+  //       $log.log('google loaded');
+  //       googleLoadDeferred.resolve(true);
+  //     };
 
-      google.setOnLoadCallback(googleOnLoadCallback);
+  //     google.setOnLoadCallback(googleOnLoadCallback);
 
-      googleLoadPromise.then(function () {
-        drawChart();
+  //     googleLoadPromise.then(function () {
+  //       drawChart();
 
-        $scope.$watch('cats', function () {
-          $log.log('watch cats...');
-          drawChart();
-        }, true);
+  //       $scope.$watch('cats', function () {
+  //         $log.log('watch cats...');
+  //         drawChart();
+  //       }, true);
 
-        $scope.$watch('conditionSetsByCat', function () {
-          $log.log('watch conditionSetsByCat...');
-          drawChart();
-        }, true);
+  //       $scope.$watch('conditionSetsByCat', function () {
+  //         $log.log('watch conditionSetsByCat...');
+  //         drawChart();
+  //       }, true);
 
-        $scope.$watch('location', function () {
-          $log.log('watch location...');
-          drawChart();
-        }, true);
-      });
+  //       $scope.$watch('location', function () {
+  //         $log.log('watch location...');
+  //         drawChart();
+  //       }, true);
+  //     });
 
-      var drawChart = function () {
-        $log.log('drawing...');
+  //     var drawChart = function () {
+  //       $log.log('drawing...');
 
-        var container = document.getElementById('timeline');
-        var chart = new google.visualization.Timeline(container);
-        var dataTable = new google.visualization.DataTable();
+  //       var container = document.getElementById('timeline');
+  //       var chart = new google.visualization.Timeline(container);
+  //       var dataTable = new google.visualization.DataTable();
 
-        dataTable.addColumn({ type: 'string', id: 'President' });
-        dataTable.addColumn({ type: 'date', id: 'Start' });
-        dataTable.addColumn({ type: 'date', id: 'End' });
-        dataTable.addColumn({type: 'string', role: 'tooltip'});
+  //       dataTable.addColumn({ type: 'string', id: 'President' });
+  //       dataTable.addColumn({ type: 'date', id: 'Start' });
+  //       dataTable.addColumn({ type: 'date', id: 'End' });
+  //       dataTable.addColumn({type: 'string', role: 'tooltip'});
 
-        var rows = [];
+  //       var rows = [];
 
-        _.each($scope.cats, function (cat) {
+  //       _.each($scope.cats, function (cat) {
 
-          var conditionSets = $scope.conditionSetsByCat[cat.id];
+  //         var conditionSets = $scope.conditionSetsByCat[cat.id];
 
-          _.each(conditionSets, function (conditionSet) {
+  //         _.each(conditionSets, function (conditionSet) {
 
-            var row = [cat.name, conditionSet.startDate, conditionSet.endDate, ''];
-            row.push();
-            rows.push(row);
-          });
-        });
+  //           var row = [cat.name, conditionSet.startDate, conditionSet.endDate, ''];
+  //           row.push();
+  //           rows.push(row);
+  //         });
+  //       });
 
-        dataTable.addRows(rows);
+  //       dataTable.addRows(rows);
 
-        // [
-        //   [ 'Washington', new Date(1789, 3, 29), new Date(1797, 2, 3), 'a' ],
-        //   [ 'Adams',      new Date(1797, 2, 3),  new Date(1801, 2, 3), 'b' ],
-        //   [ 'Jefferson',  new Date(1801, 2, 3),  new Date(1809, 2, 3), 'c' ]
-        // ]);
+  //       // [
+  //       //   [ 'Washington', new Date(1789, 3, 29), new Date(1797, 2, 3), 'a' ],
+  //       //   [ 'Adams',      new Date(1797, 2, 3),  new Date(1801, 2, 3), 'b' ],
+  //       //   [ 'Jefferson',  new Date(1801, 2, 3),  new Date(1809, 2, 3), 'c' ]
+  //       // ]);
 
-        chart.draw(dataTable);
-      };
+  //       chart.draw(dataTable);
+  //     };
 
-    }
-  ]);
+  //   }
+  // ]);
 
 
   weatherTo.controller('AgendaController',

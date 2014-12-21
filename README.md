@@ -1,6 +1,16 @@
 # WeatherTo
 
 
+## Requirements
+
+Weather Application
+* Front end oriented.
+* Create weather site that determines if it is a good day to do things outside for the week.
+* Weather underground API is one option for data: http://www.wunderground.com/weather/api/
+* Takes in user preferences on conditions and temps they like to do things outside.
+* Get some weather api.
+* See what days match up to your settings and display accordingly.
+
 
 ## TODO
 
