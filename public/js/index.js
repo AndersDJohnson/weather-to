@@ -386,7 +386,7 @@ require([
   ]);
 
 
-  weatherTo.controller('PredictController',
+  weatherTo.controller('AgendaController',
     ['$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
     function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
 

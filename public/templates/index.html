@@ -29,51 +29,9 @@
     </div>
 
 
-    <div ng-controller="TimelineController">
+    <div ng-include="'templates/timeline.html'"></div>
 
-      <div style="overflow-x: scroll; width: 100%;">
-        <div id="timeline" class="clearfix" style="height: 200px; width: 6000px;">
-          ...
-        </div>
-      </div>
-
-    </div>
-
-
-    <div ng-controller="PredictController">
-
-
-      <ul>
-        <li ng-repeat="cat in cats">
-
-          <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
-            v
-          </button>
-
-          {{ cat.name }}
-          {{ cat.temperature.min }} - {{ cat.temperature.max }}
-
-          <ul collapse="! collapses[cat.id]">
-            <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
-              <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
-                v
-              </button>
-              <span>
-                {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
-              </span>
-              <ol collapse="! collapses[cat.id+'-'+$index]">
-                <li ng-repeat="cond in condSet.items">
-                  <button ng-click="modal('condition', {cat: cat, cond: cond})">
-                    i
-                  </button>
-                  <span>{{ cond.time | amCalendar }}</span>
-                </li>
-              </ol>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <div ng-include="'templates/agenda.html'"></div>
 
   </div>
 
