@@ -24,7 +24,7 @@
   </div>
 
   <ul>
-    <li ng-repeat="loc in locations">
+    <li ng-repeat="loc in locations track by loc.id">
 
       <button ng-click="removeLocation(loc)">x</button>
 
@@ -32,8 +32,6 @@
 
     </li>
   </ul>
-
-  <!-- <button ng-click="addLocation()">Add</button> -->
 
 </div>
 

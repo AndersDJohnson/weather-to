@@ -9,6 +9,7 @@ require([
   'geocoder',
   'forecastIo',
   'categories',
+  'locations',
   'AngularJS-Scope.SafeApply',
   'goog!visualization,1,packages:[timeline]'
 ], function (
@@ -26,7 +27,8 @@ require([
       'modal',
       'geocoder',
       'forecastIo',
-      'categories'
+      'categories',
+      'locations'
     ]
   );
 
@@ -66,8 +68,8 @@ require([
 
 
   weatherTo.controller('AppController', [
-    '$scope', 'scopeModal', 'forecastIo', 'categories', 'geocoder', '$q', '$log',
-    function ($scope, scopeModal, forecastIo, categories, geocoder, $q, $log) {
+    '$scope', 'scopeModal', 'forecastIo', 'categories', 'locations', 'geocoder', '$q', '$log',
+    function ($scope, scopeModal, forecastIo, categories, locations, geocoder, $q, $log) {
 
       $scope.modal = scopeModal;
 
@@ -104,8 +106,10 @@ require([
       };
 
       $scope.addLocation = function (loc) {
-        // TODO: Uniqueness
-        $scope.locations.push(loc);
+        locations.save(loc).
+          then(function (result) {
+            $log.log('saved', result);
+          });
       };
 
 
@@ -113,6 +117,11 @@ require([
         locations.remove(loc).then(function (result) {
           $log.log('removed?', result, loc);
         });
+      };
+
+
+      $scope.getCurrentLocation = function () {
+
       };
 
 
@@ -300,10 +309,15 @@ require([
       // INIT
 
 
-
       categories.query().then(function (cats) {
         $scope.$safeApply(function () {
           $scope.cats = cats;
+        });
+      });
+
+      locations.query().then(function (locs) {
+        $scope.$safeApply(function () {
+          $scope.locations = locs;
         });
       });
 
