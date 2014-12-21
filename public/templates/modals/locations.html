@@ -13,21 +13,8 @@
   <div>
 
     <button ng-click="getCurrentLocation(); close()">Detect location</button>
+    <button ng-click="showAddLocation(); close()">Add location</button>
 
-    <h4>Or find location:</h4>
-    <form>
-      <input type="text" autofocus
-        ng-model="address" name="addressField"
-        ng-change="onAddressChange(address)"
-      />
-    </form>
-    <ol class="list-unstyled">
-      <li ng-repeat="loc in locationResults">
-        <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
-
-        <button ng-click="addLocation(loc)">+</button>
-      </li>
-    </ol>
   </div>
 
   <ul class="list-unstyled">
@@ -39,9 +26,5 @@
 
     </li>
   </ul>
-
-</div>
-
-<div class="modal-footer">
 
 </div>

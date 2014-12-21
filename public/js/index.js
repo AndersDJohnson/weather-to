@@ -163,16 +163,8 @@ require([
 
 
       $scope.showLocations = function () {
-        var locationModal = scopeModal('locations', $scope, {
+        scopeModal('locations', $scope, {
           windowClass: 'modal-locations'
-        });
-        locationModal.result.then(function (result) {
-          $log.log('result', result);
-        });
-        locationModal.opened.then(function () {
-          var $el = angular.element('.modal-locations');
-          var $input = $el.find('input[autofocus]').first();
-          $input.focus();
         });
       };
 
@@ -187,11 +179,21 @@ require([
             thisScope.close();
           }
         };
-        $log.log('settings scope', scope);
-        scopeModal('settings', scope).
-          result.then(function (result) {
-            $log.log('result', result);
-          });
+      };
+
+
+      $scope.showAddLocation = function () {
+        var addLocationModal = scopeModal('addLocation', $scope, {
+          windowClass: 'modal-add-location'
+        });
+        addLocationModal.result.then(function (result) {
+          $log.log('result', result);
+        });
+        addLocationModal.opened.then(function () {
+          var $el = angular.element('.modal-add-location');
+          var $input = $el.find('input[autofocus]').first();
+          $input.focus();
+        });
       };
 
 
