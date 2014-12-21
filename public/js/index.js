@@ -301,11 +301,11 @@ require([
 
 
 
-      // categories.query().then(function (cats) {
-      //   $scope.$safeApply(function () {
-      //     $scope.cats = cats;
-      //   });
-      // });
+      categories.query().then(function (cats) {
+        $scope.$safeApply(function () {
+          $scope.cats = cats;
+        });
+      });
 
 
     }
