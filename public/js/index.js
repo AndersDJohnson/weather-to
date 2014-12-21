@@ -370,6 +370,9 @@ require([
       });
 
 
+      $scope.getCurrentLocation();
+
+
     }
   ]);
 
