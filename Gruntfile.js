@@ -44,6 +44,11 @@ module.exports = function (grunt) {
 
     less: {
       dev: {
+        options: {
+          sourceMap: true,
+          sourceMapBasepath: 'public',
+          sourceMapRootpath: '/'
+        },
         files: [
           {
             expand: true,
