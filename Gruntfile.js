@@ -73,6 +73,7 @@ module.exports = function (grunt) {
         },
         files: [
           'public/**',
+          '!public/css/**/*.less.css',
           '!public/bower_components/**'
         ],
         tasks: ['jshint:dev', 'less:dev']
