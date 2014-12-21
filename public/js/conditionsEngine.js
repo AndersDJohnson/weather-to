@@ -88,7 +88,7 @@ function (
 
         var deferred = $q.defer();
 
-        var conditionSetsByCat = {};
+        var pointSetsByCat = {};
 
         forecastIo.get(location).then(function (result) {
 
@@ -182,12 +182,14 @@ function (
 
             });
 
-            conditionSetsByCat[cat.id] = sets;
+            pointSetsByCat[cat.id] = sets;
+
+            // cat.pointSetsLength = sets.length;
 
           });
 
-          $log.log('computeCats resolving', conditionSetsByCat);
-          deferred.resolve(conditionSetsByCat);
+          $log.log('computeCats resolving', pointSetsByCat);
+          deferred.resolve(pointSetsByCat);
 
         });
 

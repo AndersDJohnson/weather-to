@@ -311,7 +311,7 @@ require([
         conditionsEngine.computeCats(cats, loc).
           then(function (result) {
             $scope.$safeApply(function () {
-              $scope.conditionSetsByCat = result;
+              $scope.pointSetsByCat = result;
             });
           });
       };
@@ -405,8 +405,8 @@ require([
   //         drawChart();
   //       }, true);
 
-  //       $scope.$watch('conditionSetsByCat', function () {
-  //         $log.log('watch conditionSetsByCat...');
+  //       $scope.$watch('pointSetsByCat', function () {
+  //         $log.log('watch pointSetsByCat...');
   //         drawChart();
   //       }, true);
 
@@ -432,7 +432,7 @@ require([
 
   //       _.each($scope.cats, function (cat) {
 
-  //         var conditionSets = $scope.conditionSetsByCat[cat.id];
+  //         var conditionSets = $scope.pointSetsByCat[cat.id];
 
   //         _.each(conditionSets, function (conditionSet) {
 
