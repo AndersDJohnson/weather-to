@@ -24,7 +24,8 @@ module.exports = function (grunt) {
     jshint: {
       dev: {
         options: {
-          force: true,
+          // force: true,
+          force: false,
           jshintrc: true
         },
         files: {
