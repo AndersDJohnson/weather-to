@@ -41,7 +41,7 @@ function (
           return false;
         }
 
-        matches = false;
+        var matches = false;
 
         var pointTemp = conditionsEngine.getTemperatureFromCondition(point);
         if (! pointTemp) {
@@ -178,7 +178,7 @@ function (
 
               set.averages = averages;
 
-              console.log('averages', averages, totals, points);
+              $log.log('averages', averages, totals, points);
 
             });
 
