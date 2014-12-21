@@ -10,6 +10,7 @@ require([
   'geocoder',
   'geolocator',
   'forecastIo',
+  'settings',
   'categories',
   'locations',
   'AngularJS-Scope.SafeApply',
@@ -31,6 +32,7 @@ require([
       'geocoder',
       'geolocator',
       'forecastIo',
+      'settings',
       'categories',
       'locations'
     ]
@@ -58,6 +60,17 @@ require([
   }]);
 
 
+  var getTemperartureFromCondition = function (condition) {
+    var temperature;
+    if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
+      temperature = condition.apparentTemperature;
+    }
+    else {
+      temperature = condition.temperature;
+    }
+    return temperature;
+  };
+
 
   var conditionMatchesCategory = function (cond, cat) {
     if (! cond) {
@@ -68,11 +81,13 @@ require([
       $log.warn('no cat:', cat);
       return false;
     }
-    var condTemp = cond.temperature;
+
+    var condTemp = getTemperartureFromCondition(cond);
     if (! condTemp) {
       $log.warn('no cond temp:', condTemp);
       return false;
     }
+    // TODO: apparent temperature support for categories?
     var catTemp = cat.temperature;
     if (! catTemp) {
       $log.warn('no cat temp:', catTemp);
@@ -92,8 +107,14 @@ require([
 
 
   weatherTo.controller('AppController', [
-    '$scope', 'scopeModal', 'forecastIo', 'categories', 'locations', 'geocoder', 'geolocator', '$q', '$log',
-    function ($scope, scopeModal, forecastIo, categories, locations, geocoder, geolocator, $q, $log) {
+    '$scope', '$q', '$log',
+    'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
+    'categories','locations', 'settings',
+    function (
+      $scope, $q, $log,
+      scopeModal, geocoder, geolocator, forecastIo,
+      categories, locations, settings
+    ) {
 
       $scope.modal = scopeModal;
 
@@ -121,6 +142,14 @@ require([
           var $input = $el.find('input[autofocus]').first();
           $input.focus();
         });
+      };
+
+
+      $scope.showSettings = function () {
+        scopeModal('settings', $scope).
+          result.then(function (result) {
+            $log.log('result', result);
+          });
       };
 
 
