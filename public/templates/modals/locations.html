@@ -12,11 +12,14 @@
 
   <div>
     <form>
-      <input ng-model="address" name="addressField" type="text" ng-change="onAddressChange(address)" />
+      <input type="text" autofocus
+        ng-model="address" name="addressField"
+        ng-change="onAddressChange(address)"
+      />
     </form>
     <ol>
       <li ng-repeat="loc in locationResults">
-        <a ng-click="pickLocation(loc); close()">{{ loc.name }}</a>
+        <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
 
         <button ng-click="addLocation(loc)">+</button>
       </li>
@@ -28,7 +31,7 @@
 
       <button ng-click="removeLocation(loc)">x</button>
 
-      <a ng-click="pickLocation(loc); close()">{{ loc.name }}</a>
+      <a ng-click="setLocation(loc); close()">{{ loc.name }}</a>
 
     </li>
   </ul>

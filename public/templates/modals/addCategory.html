@@ -10,10 +10,7 @@
 
 <div class="modal-body">
 
-  <form name="catForm">
-    <textarea name="catField" json-edit="cat" rows="10" class="form-control"></textarea>
-    <div ng-show="cat.cat.$error.json">Invalid JSON.</div>
-  </form>
+  <div ng-include="'templates/forms/category.html'"></div>
 
 </div>
 

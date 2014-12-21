@@ -13,7 +13,7 @@ define(['angular'], function (angular) {
         scope = scope || {};
 
         var modalOptions = {
-          templateUrl: 'templates/modal/' + templateId + '.html',
+          templateUrl: 'templates/modals/' + templateId + '.html',
           controller: 'ModalInstanceCtrl'
         };
 
