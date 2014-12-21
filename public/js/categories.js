@@ -34,6 +34,7 @@ define(['angular', 'resourceArray'], function (angular) {
               min: 32,
               max: 90
             },
+            "conditionsEnabled": true,
             "conditions": {
               "partlyCloudNight": true,
               "partlyCloudyDay": true,
