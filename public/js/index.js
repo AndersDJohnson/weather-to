@@ -242,6 +242,7 @@ require([
         return deferred.promise;
       };
 
+
       var computeCats = function (cats, location) {
 
         var deferred = $q.defer();
@@ -262,33 +263,49 @@ require([
 
 
       $scope.$watch('location', function (loc) {
-        $log.log('location change', arguments);
-        computeCats(null, loc).
-        then(function (result) {
-          $log.log('watch loc result', result);
-          $scope.$safeApply(function () {
-            $scope.conditionSetsByCat = result;
-          });
-        });
+        if (loc) {
+          $log.log('location change', arguments);
+          if ( ! $scope.cats || $scope.cats.length === 0 ) {
+            categories.query().then(function (cats) {
+              $scope.$safeApply(function () {
+                $scope.cats = cats;
+                // should trigger watch on 'cats'
+              });
+            });
+          }
+          else {
+            computeCats(null, loc).
+              then(function (result) {
+                $log.log('watch loc result', result);
+                $scope.$safeApply(function () {
+                  $scope.conditionSetsByCat = result;
+                });
+              });
+          }
+        }
       }, true);
 
 
       $scope.$watch('cats', function (cats) {
         $log.log('cats change', arguments);
         computeCats(cats, $scope.location).
-        then(function (result) {
-          $scope.$safeApply(function () {
-            $scope.conditionSetsByCat = result;
+          then(function (result) {
+            $scope.$safeApply(function () {
+              $scope.conditionSetsByCat = result;
+            });
           });
-        });
       }, true);
 
 
-      categories.query().then(function (cats) {
-        $scope.$safeApply(function () {
-          $scope.cats = cats;
-        });
-      });
+      // INIT
+
+
+
+      // categories.query().then(function (cats) {
+      //   $scope.$safeApply(function () {
+      //     $scope.cats = cats;
+      //   });
+      // });
 
 
     }
@@ -388,10 +405,12 @@ require([
     $scope.$watch('location', function (loc) {
       $log.log('location change', arguments);
 
-      forecastIo.get(loc).then(function (result) {
-        $log.log('current result', result);
-        $scope.current = result.data.currently;
-      });
+      if (loc) {
+        forecastIo.get(loc).then(function (result) {
+          $log.log('current result', result);
+          $scope.current = result.data.currently;
+        });
+      }
 
     }, true);
 

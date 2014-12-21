@@ -19,6 +19,7 @@ define(['angular'], function (angular) {
         forecastIo.get = function (location) {
 
           var deferred = $q.defer();
+          var promise = deferred.promise;
 
           var cache = true;
 
@@ -30,9 +31,15 @@ define(['angular'], function (angular) {
               lng = location.coords.lng;
             }
           }
-          
-          lat = lat || 37.8267;
-          lng = lng || -122.423;
+
+          if ( ! ( angular.isNumber(lat) && angular.isNumber(lng) ) ) {
+            deferred.reject('lat and lng must be numeric');
+            return promise;
+          }
+
+          // defaults
+          // lat = lat || 37.8267;
+          // lng = lng || -122.423;
 
           var url;
           // url = '/data/forecast-io_37.8267_-122.423.json';
@@ -57,7 +64,7 @@ define(['angular'], function (angular) {
               deferred.reject(err);
             });
 
-          return deferred.promise;
+          return promise;
         };
 
         return forecastIo;
