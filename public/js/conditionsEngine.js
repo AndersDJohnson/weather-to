@@ -3,8 +3,8 @@ define(['angular'], function (angular) {
   var conditionsEngineModule = angular.module('conditionsEngine', []);
 
   conditionsEngineModule.service('conditionsEngine', [
-    '$log', 'settings',
-    function ($log, settings) {
+    '$log', '$q', 'settings',
+    function ($log, $q, settings) {
 
       var conditionsEngine = {};
 
