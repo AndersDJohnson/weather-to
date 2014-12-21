@@ -84,12 +84,12 @@ require([
 
       $scope.settings = settings.settings;
 
-
-      $scope.conditions = forecastIo.conditions;
-
       $scope.format = {
         number: 1
       };
+
+      $scope.conditions = forecastIo.conditions;
+      $scope.conditionsByIcon = forecastIo.conditionsByIcon;
 
 
       $scope.showCategories = function () {

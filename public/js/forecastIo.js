@@ -79,6 +79,10 @@ define(['angular', 'lodash'], function (angular, _) {
           condition.key = key;
         });
 
+        forecastIo.conditionsByIcon = _.transform(forecastIo.conditions, function (result, value, key) {
+          result[value.icon] = value;
+        });
+
         forecastIo.conditionsSorted = _(forecastIo.conditions).
           values().
           sortBy(function (condition) {

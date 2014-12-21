@@ -24,7 +24,7 @@
             </div>
             <div>
               <span ng-repeat="(cond, bool) in cat.conditions">
-                {{ conditions[cond].summary }}{{$last ? '' : ', '}}
+                {{ conditionsByIcon[cond].summary }}{{$last ? '' : ', '}}
               </span>
             </div>
           </div>
@@ -54,7 +54,7 @@
               </div>
               <div>
                 <span ng-repeat="(cond, bool) in pointSet.conditions">
-                  {{ conditions[cond].summary }}{{$last ? '' : ', '}}
+                  {{ conditionsByIcon[cond].summary || cond }}{{$last ? '' : ', '}}
                 </span>
               </div>
             </div>
