@@ -167,7 +167,7 @@ require([
             $scope.settings = settings.settings = thisScope.settingsFormModel;
             thisScope.close();
           }
-        }
+        };
         $log.log('settings scope', scope);
         scopeModal('settings', scope).
           result.then(function (result) {

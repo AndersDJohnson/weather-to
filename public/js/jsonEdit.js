@@ -31,7 +31,7 @@ define(['angular'], function (angular) {
                 link: function (scope, element, attrs, ngModelCtrl) {
 
                     function setEditing (value) {
-                        scope.jsonEditing = angular.copy(JSON2String(value));
+                        scope.jsonEditing = angular.copy(fromJSON2String(value));
                     }
 
                     function updateModel (value) {
@@ -55,7 +55,7 @@ define(['angular'], function (angular) {
                         }
                     }
 
-                    function JSON2String(object) {
+                    function fromJSON2String(object) {
                         // better than JSON.stringify(), because it formats + filters $$hashKey etc.
                         // NOTE that this will remove all $-prefixed values
                         return angular.toJson(object, true);
