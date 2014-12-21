@@ -1,0 +1,86 @@
+<div class="modal-header">
+
+  <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+  <h3 class="modal-title">
+    <!-- {{cat.name}}: {{ pointSet.start | amCalendar }} - {{ pointSet.end | amCalendar }} -->
+    {{ pointSet.start | amCalendar }} - {{ pointSet.end | amCalendar }}
+  </h3>
+
+</div>
+
+<div class="modal-body">
+
+  <div class="panel panel-default">
+    <!--
+    <div class="panel-heading">
+      <h3 class="panel-title">Summary</h3>
+    </div>
+    -->
+    <div class="panel-body">
+      <div>
+        <!-- <b>Avg.:</b>  -->
+        {{ pointSet.averages.temperature | number:format.number }}&deg;
+        (feels like {{ pointSet.averages.apparentTemperature | number:format.number }}&deg;)
+      </div>
+      <div>
+        <!-- <b>Conditions:</b>  -->
+        <span ng-repeat="(cond, bool) in pointSet.conditions">
+          {{ conditionsByIcon[cond].summary || cond }}{{$last ? '' : ', '}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Condition</th>
+          <th>Temperature</th>
+          <th>Feels Like</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="point in pointSet.points">
+          <td><span>{{ point.timePretty }}</span></td>
+          <td><span>{{ point.summary }}</span></td>
+          <td><span>{{ point.temperature | number:format.number }}&deg;</span></td>
+          <td><span>{{ point.apparentTemperature | number:format.number }}&deg;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!--
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="close()">OK</button>
+  <button class="btn btn-warning" ng-click="dismiss()">Cancel</button>
+</div>
+-->
+
+<!--
+{
+  "time": 1419206400,
+  "summary": "Overcast",
+  "icon": "cloudy",
+  "precipIntensity": 0.0021,
+  "precipProbability": 0.01,
+  "precipType": "rain",
+  "temperature": 34.99,
+  "apparentTemperature": 27.74,
+  "dewPoint": 34.41,
+  "humidity": 0.98,
+  "windSpeed": 9.39,
+  "windBearing": 160,
+  "visibility": 5.4,
+  "cloudCover": 1,
+  "pressure": 1007.83,
+  "ozone": 355.23,
+  "timePretty": "Today at 6:00 PM",
+  "durationSeconds": 3600
+}
+-->
