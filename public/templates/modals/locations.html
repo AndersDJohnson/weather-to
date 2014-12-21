@@ -21,7 +21,7 @@
         ng-change="onAddressChange(address)"
       />
     </form>
-    <ol>
+    <ol class="list-unstyled">
       <li ng-repeat="loc in locationResults">
         <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
 
@@ -30,7 +30,7 @@
     </ol>
   </div>
 
-  <ul>
+  <ul class="list-unstyled">
     <li ng-repeat="loc in locations track by loc.id">
 
       <button ng-click="removeLocation(loc)">x</button>
