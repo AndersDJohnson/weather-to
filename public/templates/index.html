@@ -22,23 +22,13 @@
 
         <div>
           <div>
-            <div ng-show="settings.apparentTemperatures">
-              {{ current.apparentTemperature }}&deg;
-            </div>
-            <div ng-hide="settings.apparentTemperatures">
-              {{ current.temperature }}&deg;
-            </div>
+            {{ current.temperature | number:format.number }}&deg;
+            <span class="feels-like">
+              (feels like {{ current.apparentTemperature | number:format.number }}&deg;)
+            </span>
           </div>
           <div>
             {{ current.summary }}
-          </div>
-          <div>
-            <div ng-show="settings.apparentTemperatures">
-              Actually {{ current.temperature }}&deg;
-            </div>
-            <div ng-hide="settings.apparentTemperatures">
-              Feels like {{ current.apparentTemperature }}&deg;
-            </div>
           </div>
           <button ng-click="modal('current', {current: current})">i</button>
         </div>

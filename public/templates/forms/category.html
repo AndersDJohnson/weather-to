@@ -19,7 +19,8 @@
     <fieldset>
       <legend>Temperature</legend>
 
-      <div class="form-group">
+
+      <div class="form-group col-xs-6">
         <label for="catFormModel.temperature.max">Min</label>
         <input type="number" class="form-control"
           id="catFormModel.temperature.min"
@@ -28,7 +29,7 @@
         />
       </div>
 
-      <div class="form-group">
+      <div class="form-group col-xs-6">
         <label for="catFormModel.temperature.max">Max</label>
         <input type="number" class="form-control"
           id="catFormModel.temperature.max"
@@ -42,15 +43,30 @@
   <fieldset>
     <legend>Conditions</legend>
 
-    <div class="checkbox" ng-repeat="condition in conditions">
-      <label for="catFormModel.conditions.{{ condition.key }}">
+    <div class="checkbox">
+      <label for="catFormModel.conditionsEnabled">
         <input type="checkbox"
-          id="catFormModel.conditions.{{ condition.key }}"
-          ng-model="catFormModel.conditions[condition.key]"
+          id="catFormModel.conditionsEnabled"
+          ng-model="catFormModel.conditionsEnabled"
         />
-        {{ condition.summary }}
+        Enable
       </label>
     </div>
+
+    <fieldset>
+
+      <div class="checkbox" ng-repeat="condition in conditions">
+        <label for="catFormModel.conditions.{{ condition.key }}">
+          <input type="checkbox"
+            id="catFormModel.conditions.{{ condition.key }}"
+            ng-model="catFormModel.conditions[condition.key]"
+            ng-disabled="! catFormModel.conditionsEnabled"
+          />
+          {{ condition.summary }}
+        </label>
+      </div>
+
+    </fieldset>
 
   </fieldset>
 

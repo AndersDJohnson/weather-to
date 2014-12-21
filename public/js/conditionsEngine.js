@@ -1,6 +1,17 @@
-define(['angular'], function (angular) {
+define([
+  'angular',
+  'moment',
+  'lodash'
+],
+function (
+  angular,
+  moment,
+  _
+) {
 
-  var conditionsEngineModule = angular.module('conditionsEngine', []);
+  var conditionsEngineModule = angular.module('conditionsEngine', [
+    'categories'
+  ]);
 
   conditionsEngineModule.service('conditionsEngine', [
     '$log', '$q', 'forecastIo', 'settings',
@@ -20,9 +31,9 @@ define(['angular'], function (angular) {
       };
 
 
-      conditionsEngine.conditionMatchesCategory = function (cond, cat) {
-        if (! cond) {
-          $log.warn('no cond:', cond);
+      conditionsEngine.pointMatchesCategory = function (point, cat) {
+        if (! point) {
+          $log.warn('no point:', point);
           return false;
         }
         if (! cat) {
@@ -30,9 +41,11 @@ define(['angular'], function (angular) {
           return false;
         }
 
-        var condTemp = conditionsEngine.getTemperatureFromCondition(cond);
-        if (! condTemp) {
-          $log.warn('no cond temp:', condTemp);
+        matches = false;
+
+        var pointTemp = conditionsEngine.getTemperatureFromCondition(point);
+        if (! pointTemp) {
+          $log.warn('no point temp:', pointTemp);
           return false;
         }
         // TODO: apparent temperature support for categories?
@@ -47,10 +60,27 @@ define(['angular'], function (angular) {
           $log.warn('no min and max on cat temp:', catTemp);
           return false;
         }
-        if (condTemp >= min && condTemp < max) {
-          return true;
+
+        if (pointTemp >= min && pointTemp < max) {
+          matches = true;
         }
-        return false;
+
+        if (matches) {
+          if (cat.conditionsEnabled) {
+            var pointIcon = point.icon;
+            var catconditions = point.conditions;
+
+            _.forEach(catconditions, function (catpointition) {
+              var pointition = forecastIo.conditions[catpointition.key];
+              if (pointition.icon && pointition.icon == pointIcon) {
+                matches = true;
+                return false;
+              }
+            });
+          }
+        }
+
+        return matches;
       };
 
 
@@ -75,31 +105,36 @@ define(['angular'], function (angular) {
 
             var lastMatches = false;
 
-            result.hourly.data.forEach(function (condition) {
+            var hourlyData = result.hourly.data || [];
 
-              var timePretty = moment.unix(condition.time);
+            hourlyData.forEach(function (point) {
+
+              var timePretty = moment.unix(point.time);
               // condition.timePretty = timePretty.fromNow();
-              condition.timePretty = timePretty.calendar();
+              point.timePretty = timePretty.calendar();
 
-              condition.durationSeconds = 60 * 60;
+              point.durationSeconds = 60 * 60;
 
-              var matches = conditionsEngine.conditionMatchesCategory(condition, cat);
+              var matches = conditionsEngine.pointMatchesCategory(point, cat);
 
               if (matches) {
 
                 if (! set || ! lastMatches) {
                   set = {
-                    items: [],
-                    next: null
+                    points: [],
+                    next: null,
+                    conditions: {}
                   };
                   sets.push(set);
                 }
 
-                set.items.push(condition);
+                set.conditions[point.icon] = true;
+
+                set.points.push(point);
               }
               else {
                 if (set) {
-                  set.next = condition;
+                  set.next = point;
                 }
               }
 
@@ -107,15 +142,44 @@ define(['angular'], function (angular) {
             });
 
             sets.forEach(function (set) {
-              var items = set.items;
-              if (items.length > 0) {
-                set.start = items[0].time;
-                set.startDate = moment.unix(set.start).toDate();
-                var last = items[items.length - 1];
-                set.end = last.time;
-                set.endDate = moment.unix(set.end).toDate();
-                // set.end += last.durationSeconds;
+              var points = set.points;
+              if (! points) {
+                return;
               }
+
+              var length = points.length;
+              if (length === 0) {
+                return;
+              }
+
+              // get time span
+
+              set.start = points[0].time;
+              set.startDate = moment.unix(set.start).toDate();
+              var last = points[length - 1];
+              set.end = last.time;
+              set.endDate = moment.unix(set.end).toDate();
+
+              // get averages
+
+              var totals = {};
+              _.forEach(points, function (point) {
+                totals.temperature = totals.temperature || 0;
+                totals.temperature += point.temperature;
+                totals.apparentTemperature = totals.apparentTemperature || 0;
+                totals.apparentTemperature += point.apparentTemperature;
+                // TODO: more fields
+              });
+
+              var averages = {};
+              _.forEach(totals, function (total, key) {
+                averages[key] = total / length;
+              });
+
+              set.averages = averages;
+
+              console.log('averages', averages, totals, points);
+
             });
 
             conditionSetsByCat[cat.id] = sets;
@@ -137,14 +201,11 @@ define(['angular'], function (angular) {
 
         $log.log('computeCats', arguments);
 
-        if (cats) {
-          deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location));
+        if (! cats) {
+          deferred.reject('must provide cats');
         }
-        else {
-          categories.query().then(function (cats) {
-            deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location));
-          });
-        }
+
+        deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location));
 
         return deferred.promise;
       };

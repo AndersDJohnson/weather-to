@@ -5,31 +5,68 @@
   <ul>
     <li ng-repeat="cat in cats">
 
-      <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
-        <span ng-show="collapses[cat.id]">v</span>
-        <span ng-hide="collapses[cat.id]">^</span>
-      </button>
+      <div class="clearfix">
+        <div class="pull-left">
+          <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
+            <span ng-show="collapses[cat.id]">v</span>
+            <span ng-hide="collapses[cat.id]">^</span>
+          </button>
+        </div>
 
-      {{ cat.name }}
-      {{ cat.temperature.min }} - {{ cat.temperature.max }}
+        <div>
+          <div>
+            {{ cat.name }}
+          </div>
+          <!--
+          <div>
+            <div>
+              {{ cat.temperature.min }} - {{ cat.temperature.max }}
+            </div>
+            <div>
+              <span ng-repeat="(cond, bool) in cat.conditions">
+                {{ conditions[cond].summary }}{{$last ? '' : ', '}}
+              </span>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
 
       <ul collapse="collapses[cat.id]">
-        <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
-          <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
-            <span ng-show="collapses[cat.id+'-'+$index]">^</span>
-            <span ng-hide="collapses[cat.id+'-'+$index]">v</span>
-          </button>
-          <span>
-            {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
-          </span>
-          <ol collapse="! collapses[cat.id+'-'+$index]">
-            <li ng-repeat="cond in condSet.items">
-              <button ng-click="modal('condition', {cat: cat, cond: cond})">
-                i
+        <li ng-repeat="pointSet in conditionSetsByCat[cat.id]">
+          <div class="clearfix">
+            <div class="pull-left">
+              <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
+                <span ng-show="collapses[cat.id+'-'+$index]">^</span>
+                <span ng-hide="collapses[cat.id+'-'+$index]">v</span>
               </button>
-              <span>{{ cond.time | amCalendar }}</span>
-            </li>
-          </ol>
+            </div>
+            <div>
+              <div>
+                <span>
+                  {{ pointSet.start | amCalendar }} - {{ pointSet.end | amCalendar }}
+                </span>
+              </div>
+              <div>
+                Avg. temp: 
+                {{ pointSet.averages.temperature | number:format.number }}&deg;
+                (feels like {{ pointSet.averages.apparentTemperature | number:format.number }}&deg;)
+              </div>
+              <div>
+                <span ng-repeat="(cond, bool) in pointSet.conditions">
+                  {{ conditions[cond].summary }}{{$last ? '' : ', '}}
+                </span>
+              </div>
+            </div>
+            <ol collapse="! collapses[cat.id+'-'+$index]">
+              <li ng-repeat="point in pointSet.points">
+                <button ng-click="modal('point', {cat: cat, point: point})">
+                  i
+                </button>
+                <span>{{ point.time | amCalendar }}</span>
+              </li>
+            </ol>
+          </div>
         </li>
       </ul>
     </li>

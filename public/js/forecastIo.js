@@ -86,8 +86,6 @@ define(['angular', 'lodash'], function (angular, _) {
           })
           .value();
 
-        console.log('conditionsSorted', forecastIo.conditionsSorted);
-
 
         forecastIo.get = function (location) {
 

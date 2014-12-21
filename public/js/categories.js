@@ -31,18 +31,28 @@ define(['angular', 'resourceArray'], function (angular) {
             id: 3,
             name: 'Jogging',
             temperature: {
-              min: 45,
-              max: 70
+              min: 32,
+              max: 90
+            },
+            "conditions": {
+              "partlyCloudNight": true,
+              "partlyCloudyDay": true,
+              "cloudy": true,
+              "fog": false,
+              "wind": false,
+              "snow": false,
+              "clearNight": true,
+              "clearDay": true
             }
           },
           {
             id: 4,
-            name: 'Running',
+            name: 'Swimming',
             temperature: {
-              min: 50,
-              max: 55
+              min: 60,
+              max: 110
             }
-          },
+          }
         ];
 
         var resource = resourceArray(cats, nextId);

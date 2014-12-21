@@ -1,4 +1,11 @@
-define(['angular'], function (angular) {
+define([
+  'angular',
+  'lodash'
+],
+function (
+  angular,
+  _
+) {
 
   var resourceArrayModule = angular.module('resourceArray', []);
 
@@ -30,6 +37,8 @@ define(['angular'], function (angular) {
           resource.remove = function (item) {
             var deferred = $q.defer();
             var promise = deferred.promise;
+
+            var id;
 
             if (_.isPlainObject(item)) {
               id = item.id;

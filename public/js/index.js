@@ -84,6 +84,13 @@ require([
       $scope.settings = settings.settings;
 
 
+      $scope.conditions = forecastIo.conditions;
+
+      $scope.format = {
+        number: 1
+      };
+
+
       $scope.showCategories = function () {
         scopeModal('categories', $scope).
           result.then(function (result) {
@@ -223,7 +230,7 @@ require([
           }).
             then(
               function (result) {
-                console.log('reverse result', result);
+                $log.log('reverse result', result);
                 var results = result.results;
                 if (results && results.length > 0) {
                   var locality = results[0];
@@ -299,15 +306,27 @@ require([
       };
 
 
-      var scopingComputeCats = function (cats, loc) {
-        cats = cats || $scope.cats;
-        loc = loc || $scope.location;
+      var _scopingComputeCatsWithCats = function (cats, loc) {
         conditionsEngine.computeCats(cats, loc).
           then(function (result) {
             $scope.$safeApply(function () {
               $scope.conditionSetsByCat = result;
             });
           });
+      };
+
+      var scopingComputeCats = function (cats, loc) {
+        cats = cats || $scope.cats;
+        loc = loc || $scope.location;
+
+        if (! cats) {
+          categories.query().then(function (cats) {
+            _scopingComputeCatsWithCats(cats, location);
+          });
+        }
+        else {
+          _scopingComputeCatsWithCats(cats, loc);
+        }
       };
 
 
