@@ -10,22 +10,29 @@
 
 <div class="modal-body">
 
-  <form name="settingsForm" ng-submit="settingsFormSubmit(this)">
+  <form
+    class="form"
+    role="form"
+    name="settingsForm"
+    ng-submit="settingsFormSubmit(this)"
+  >
 
-    <div class="form-group">
-      <input type="checkbox" class=""
-        id="settingsFormModel.apparentTemperatures"
-        ng-model="settingsFormModel.apparentTemperatures"
-      />
+    <div class="checkbox">
       <label for="settingsFormModel.apparentTemperatures">
+        <input type="checkbox" class=""
+          id="settingsFormModel.apparentTemperatures"
+          ng-model="settingsFormModel.apparentTemperatures"
+        />
         Apparent Temperatures
       </label>
     </div>
 
-    <textarea name="jsonField" json-edit="settingsFormModel" rows="10" class="form-control"></textarea>
-    <div ng-show="settingsForm.jsonField.$error.json">Invalid JSON.</div>
+    <div class="form-group">
+      <textarea name="jsonField" json-edit="settingsFormModel" rows="10" class="form-control"></textarea>
+      <div ng-show="settingsForm.jsonField.$error.json">Invalid JSON.</div>
+    </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 
   </form>
 
