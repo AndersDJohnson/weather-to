@@ -13,6 +13,7 @@ require([
   'settings',
   'categories',
   'locations',
+  'locationConverter',
   'conditionsEngine',
   'AngularJS-Scope.SafeApply',
   'goog!visualization,1,packages:[timeline]'
@@ -36,6 +37,7 @@ require([
       'settings',
       'categories',
       'locations',
+      'locationConverter',
       'conditionsEngine'
     ]
   );
@@ -60,23 +62,6 @@ require([
   weatherTo.run([function () {
 
   }]);
-
-
-  weatherTo.service('locationConverter', [
-    function () {
-
-      var locationConverter = {};
-
-      locationConverter.convert = function (val) {
-        return {
-          name: val && val.formatted_address,
-          coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
-        };
-      };
-
-      return locationConverter;
-    }
-  ]);
 
 
   weatherTo.controller('AppController', [
