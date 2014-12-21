@@ -10,14 +10,14 @@
 
 <div class="modal-body">
 
-  <form name="cat">
-    <textarea name="cat" json-edit="data.cat" rows="10" class="form-control"></textarea>
+  <form name="catForm">
+    <textarea name="catField" json-edit="cat" rows="10" class="form-control"></textarea>
     <div ng-show="cat.cat.$error.json">Invalid JSON.</div>
   </form>
 
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="close({action: 'save', cat: data.cat})">Save</button>
+  <button class="btn btn-primary" ng-click="close({action: 'save', cat: cat})">Save</button>
   <button class="btn btn-warning" ng-click="dismiss()">Cancel</button>
 </div>

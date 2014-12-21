@@ -7,81 +7,74 @@
   </head>
   <body>
 
-    <div ng-controller="AppController">
+    <div class="container-fluid">
 
 
-      <button ng-click="addCategory()">+ Category</button>
-      <button ng-click="addLocation()">+ Location</button>
+      <div ng-controller="AppController">
 
 
-      <div>
-        <form>
-          <input ng-model="address" name="address" type="text" ng-change="onAddressChange()" />
-        </form>
-        <ol>
-          <li ng-repeat="loc in locationResults">
-            <a ng-click="pickLocation(loc)">{{ loc.name }}</a>
-          </li>
-        </ol>
-      </div>
+        <button ng-click="showCategories()">Categories</button>
+        <button ng-click="showLocations()">Locations</button>
 
 
-      <div ng-controller="CurrentController">
+        <div ng-controller="CurrentController">
 
-        Current temp: {{ current.temperature }}
+          Location: {{ location.name }}
 
-        <button ng-click="modal('current', {current: current})">i</button>
+          Current temp: {{ current.temperature }}
 
-      </div>
+          <button ng-click="modal('current', {current: current})">i</button>
+
+        </div>
 
 
-      <div ng-controller="TimelineController">
+        <div ng-controller="TimelineController">
 
-        <div id="timeline" class="clearfix" style="height: 200px; width: 6000px;">
-          ...
+          <div style="overflow-x: scroll; width: 100%;">
+            <div id="timeline" class="clearfix" style="height: 200px; width: 6000px;">
+              ...
+            </div>
+          </div>
+
+        </div>
+
+
+        <div ng-controller="PredictController">
+
+
+          <ul>
+            <li ng-repeat="cat in cats">
+
+              <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
+                v
+              </button>
+
+              {{ cat.name }}
+              {{ cat.temperature.min }} - {{ cat.temperature.max }}
+
+              <ul collapse="! collapses[cat.id]">
+                <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
+                  <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
+                    v
+                  </button>
+                  <span>
+                    {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
+                  </span>
+                  <ol collapse="! collapses[cat.id+'-'+$index]">
+                    <li ng-repeat="cond in condSet.items">
+                      <button ng-click="modal('condition', {cat: cat, cond: cond})">
+                        i
+                      </button>
+                      <span>{{ cond.time | amCalendar }}</span>
+                    </li>
+                  </ol>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
 
       </div>
-
-
-      <div ng-controller="PredictController">
-
-
-        <ul>
-          <li ng-repeat="cat in cats">
-
-            <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
-              v
-            </button>
-
-            <button ng-click="editCategory(cat)">e</button>
-            <button ng-click="removeCategory(cat)">x</button>
-
-            {{ cat.name }}
-            {{ cat.temperature.min }} - {{ cat.temperature.max }}
-
-            <ul collapse="! collapses[cat.id]">
-              <li ng-repeat="condSet in conditionSetsByCat[cat.id]">
-                <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
-                  v
-                </button>
-                <span>
-                  {{ condSet.start | amCalendar }} - {{ condSet.end | amCalendar }}
-                </span>
-                <ol collapse="! collapses[cat.id+'-'+$index]">
-                  <li ng-repeat="cond in condSet.items">
-                    <button ng-click="modal('condition', {cat: cat, cond: cond})">
-                      i
-                    </button>
-                    <span>{{ cond.time | amCalendar }}</span>
-                  </li>
-                </ol>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-
 
     </div>
 

@@ -1,0 +1,30 @@
+<div class="modal-header">
+
+  <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+  <h3 class="modal-title">
+    Categories
+  </h3>
+
+</div>
+
+<div class="modal-body">
+
+  <ul>
+    <li ng-repeat="cat in cats">
+
+      <button ng-click="editCategory(cat)">e</button>
+      <button ng-click="removeCategory(cat)">x</button>
+
+      {{ cat.name }}
+
+    </li>
+  </ul>
+
+  <button ng-click="addCategory()">Add</button>
+
+</div>
+
+<div class="modal-footer">
+
+</div>

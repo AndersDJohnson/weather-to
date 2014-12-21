@@ -3,20 +3,21 @@
   <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
   <h3 class="modal-title">
-    {{ data.cond.timePretty }}
+    Editing {{cat.name}}
   </h3>
 
 </div>
 
 <div class="modal-body">
 
-  <pre><code>{{ data.cond | json }}</code></pre>
+  <form name="catForm">
+    <textarea name="catField" json-edit="editingCat" rows="10" class="form-control"></textarea>
+    <div ng-show="catForm.catField.$error.json">Invalid JSON.</div>
+  </form>
 
 </div>
 
-<!--
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="close()">OK</button>
+  <button class="btn btn-primary" ng-click="close({action: 'save', editingCat: editingCat})">Save</button>
   <button class="btn btn-warning" ng-click="dismiss()">Cancel</button>
 </div>
--->

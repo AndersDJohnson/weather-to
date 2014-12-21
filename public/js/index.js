@@ -72,6 +72,24 @@ require([
       $scope.modal = scopeModal;
 
       $scope.cats = [];
+      $scope.locations = [];
+
+
+      $scope.showCategories = function () {
+        scopeModal('categories', $scope).
+          result.then(function (result) {
+            $log.log('result', result);
+          });
+      };
+
+
+      $scope.showLocations = function () {
+        scopeModal('locations', $scope).
+          result.then(function (result) {
+            $log.log('result', result);
+
+          });
+      };
 
 
       $scope.addCategory = function () {
@@ -85,14 +103,21 @@ require([
           });
       };
 
-      $scope.addLocation = function () {
-        scopeModal('addLocation');
+      $scope.addLocation = function (loc) {
+        // TODO: Uniqueness
+        $scope.locations.push(loc);
       };
 
 
-      $scope.onAddressChange = function () {
-        var address = $scope.address;
-        $log.log('on addressChange', address);
+      $scope.removeLocation = function (loc) {
+        locations.remove(loc).then(function (result) {
+          $log.log('removed?', result, loc);
+        });
+      };
+
+
+      $scope.onAddressChange = function (address) {
+        $log.log('addressChange', address);
         geocoder.get(address).
           then(function (result) {
 
@@ -102,6 +127,8 @@ require([
                 coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
               };
             });
+
+            console.log('loc res', locationResults);
 
             $scope.$safeApply(function () {
               $scope.locationResults = locationResults;
@@ -117,18 +144,20 @@ require([
 
 
       $scope.editCategory = function (cat) {
-        $scope.modal('editCategory', {cat: cat}).
+        var editingCat = angular.copy(cat);
+        $scope.modal('editCategory', {cat: cat, editingCat: editingCat}).
           result.then(function (result) {
             $log.log('result', result);
-            categories.save(result.cat).then(function (cat) {
+            categories.save(result.editingCat).then(function (cat) {
               categories.query().then(function (cats) {
                 $scope.$safeApply(function () {
-                  $scope.cats = result;
+                  $scope.cats = cats;
                 });
               });
             });
           });
       };
+
 
       $scope.removeCategory = function (cat) {
         categories.remove(cat).then(function (result) {
@@ -145,6 +174,10 @@ require([
 
         forecastIo.get(location).then(function (result) {
 
+          console.log('cats', cats);
+          if (! _.isArray(cats)) {
+            throw new Error("cats must be array");
+          }
           cats.forEach(function (cat) {
 
             // TODO: sort by time?
@@ -352,10 +385,16 @@ require([
 
     $scope.current = {};
 
-    forecastIo.get().then(function (result) {
-      $log.log('current result', result);
-      $scope.current = result.data.currently;
-    });
+    $scope.$watch('location', function (loc) {
+      $log.log('location change', arguments);
+
+      forecastIo.get(loc).then(function (result) {
+        $log.log('current result', result);
+        $scope.current = result.data.currently;
+      });
+
+    }, true);
+
 
     }
   ]);

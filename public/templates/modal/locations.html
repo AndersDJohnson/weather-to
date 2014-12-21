@@ -1,0 +1,42 @@
+<div class="modal-header">
+
+  <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+  <h3 class="modal-title">
+    Locations
+  </h3>
+
+</div>
+
+<div class="modal-body">
+
+  <div>
+    <form>
+      <input ng-model="address" name="addressField" type="text" ng-change="onAddressChange(address)" />
+    </form>
+    <ol>
+      <li ng-repeat="loc in locationResults">
+        <a ng-click="pickLocation(loc); close()">{{ loc.name }}</a>
+
+        <button ng-click="addLocation(loc)">+</button>
+      </li>
+    </ol>
+  </div>
+
+  <ul>
+    <li ng-repeat="loc in locations">
+
+      <button ng-click="removeLocation(loc)">x</button>
+
+      <a ng-click="pickLocation(loc); close()">{{ loc.name }}</a>
+
+    </li>
+  </ul>
+
+  <!-- <button ng-click="addLocation()">Add</button> -->
+
+</div>
+
+<div class="modal-footer">
+
+</div>
