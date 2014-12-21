@@ -1,6 +1,12 @@
 @import url("../bower_components/bootstrap/dist/css/bootstrap.css");
 @import url("../bower_components/font-awesome/css/font-awesome.css");
 
+html {
+  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+
 body {
   background: #fff;
 }
@@ -15,4 +21,15 @@ body {
 
 .wt-agenda-list-category .wt-agenda-list {
   padding-left: 2em;
+}
+
+.wt-list-toggle {
+  min-width: 2em;
+  text-align: center;
+  .button-unstyled;
+}
+
+.button-unstyled {
+  border: 0px;
+  background: transparent;
 }

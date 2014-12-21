@@ -5,15 +5,15 @@
   <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
     <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
 
-      <div class="clearfix">
-        <div class="pull-left">
-          <button ng-click="collapses[cat.id] = ! collapses[cat.id]">
-            <span ng-show="collapses[cat.id]">v</span>
-            <span ng-hide="collapses[cat.id]">^</span>
+      <div class="media">
+        <div class="media-left">
+          <button class="wt-list-toggle" ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
+            <span ng-show="collapses[cat.id+'-'+$index]"><span class="fa fa-caret-down"><span class="sr-only">Collapse</span></span></span>
+            <span ng-hide="collapses[cat.id+'-'+$index]"><span class="fa fa-caret-right"><span class="sr-only">Expand</span></span></span>
           </button>
         </div>
 
-        <div>
+        <div class="media-body">
           <div>
             {{ cat.name }}
           </div>
@@ -36,9 +36,9 @@
         <li ng-repeat="pointSet in conditionSetsByCat[cat.id]" class="wt-agenda-list-item wt-agenda-list-item-point-set">
           <div class="media">
             <div class="media-left">
-              <button ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
-                <span ng-show="collapses[cat.id+'-'+$index]">^</span>
-                <span ng-hide="collapses[cat.id+'-'+$index]">v</span>
+              <button class="wt-list-toggle" ng-click="collapses[cat.id+'-'+$index] = ! collapses[cat.id+'-'+$index]">
+                <span ng-show="collapses[cat.id+'-'+$index]"><span class="fa fa-caret-down"><span class="sr-only">Collapse</span></span></span>
+                <span ng-hide="collapses[cat.id+'-'+$index]"><span class="fa fa-caret-right"><span class="sr-only">Expand</span></span></span>
               </button>
             </div>
             <div class="media-body">
@@ -60,10 +60,14 @@
             </div>
             <ol collapse="! collapses[cat.id+'-'+$index]" class="wt-agenda-list wt-agenda-list-point list-unstyled">
               <li ng-repeat="point in pointSet.points" class="wt-agenda-list-item wt-agenda-list-item-point">
-                <button ng-click="modal('point', {cat: cat, point: point})">
-                  i
+                <!--
+                <button class="button-unstyled" ng-click="modal('point', {cat: cat, point: point})">
+                  <span class="fa fa-info"><span class="sr-only">Info</span></span>
                 </button>
-                <span>{{ point.time | amCalendar }}</span>
+                -->
+                <a ng-click="modal('point', {cat: cat, point: point})">
+                  <span>{{ point.time | amCalendar }}</span>
+                </a>
               </li>
             </ol>
           </div>
