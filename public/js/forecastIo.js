@@ -1,7 +1,7 @@
 /**
  * https://developer.forecast.io/docs/v2
  */
-define(['angular'], function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
 
   var forecastIoModule = angular.module('forecastIo', []);
 
@@ -23,17 +23,71 @@ define(['angular'], function (angular) {
          * https://developer.forecast.io/docs/v2#data-points
          */
         forecastIo.conditions = {
-          clearDay: 'clear-day',
-          clearNight: 'clear-night',
-          rain: 'rain',
-          snow: 'snow',
-          sleet: 'sleet',
-          wind: 'wind',
-          fog: 'fog',
-          cloudy: 'cloudy',
-          partlyCloudyDay: 'partly-cloudy-day',
-          partlyCloudNight: 'partly-cloudy-night'
+          clearDay: {
+            index: 0,
+            icon: 'clear-day',
+            summary: 'Clear Day'
+          },
+          clearNight: {
+            index: 1,
+            icon: 'clear-night',
+            summary: 'Clear Night'
+          },
+          rain: {
+            index: 2,
+            icon: 'rain',
+            summary: 'Rain'
+          },
+          snow: {
+            index: 3,
+            icon: 'snow',
+            summary: 'Snow'
+          },
+          sleet: {
+            index: 4,
+            icon: 'sleet',
+            summary: 'Sleet'
+          },
+          wind: {
+            index: 5,
+            icon: 'wind',
+            summary: 'Wind'
+          },
+          fog: {
+            index: 6,
+            icon: 'fog',
+            summary: 'Fog'
+          },
+          cloudy: {
+            index: 7,
+            icon: 'cloudy',
+            summary: 'Cloudy'
+          },
+          partlyCloudyDay: {
+            index: 8,
+            icon: 'partly-cloudy-day',
+            summary: 'Partly Cloudy Day'
+          },
+          partlyCloudNight: {
+            index: 9,
+            icon: 'partly-cloudy-night',
+            summary: 'Partly Cloudy Night'
+          }
         };
+
+        _.each(forecastIo.conditions, function (condition, key) {
+          condition.key = key;
+        });
+
+        forecastIo.conditionsSorted = _(forecastIo.conditions).
+          values().
+          sortBy(function (condition) {
+            return condition.index;
+          })
+          .value();
+
+        console.log('conditionsSorted', forecastIo.conditionsSorted);
+
 
         forecastIo.get = function (location) {
 

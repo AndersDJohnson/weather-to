@@ -1,4 +1,9 @@
-<form name="catForm" ng-submit="catFormSubmit(this)">
+<form
+  class="form"
+  role="form"
+  name="catForm"
+  ng-submit="catFormSubmit(this)"
+>
 
   <fieldset>
 
@@ -34,8 +39,25 @@
 
   </fieldset>
 
-  <textarea name="catField" json-edit="catFormModel" rows="10" class="form-control"></textarea>
-  <div ng-show="catForm.catField.$error.json">Invalid JSON.</div>
+  <fieldset>
+    <legend>Conditions</legend>
+
+    <div class="checkbox" ng-repeat="condition in conditions">
+      <label for="catFormModel.conditions.{{ condition.key }}">
+        <input type="checkbox"
+          id="catFormModel.conditions.{{ condition.key }}"
+          ng-model="catFormModel.conditions[condition.key]"
+        />
+        {{ condition.summary }}
+      </label>
+    </div>
+
+  </fieldset>
+
+  <div class="form-group">
+    <textarea name="catField" json-edit="catFormModel" rows="10" class="form-control"></textarea>
+    <div ng-show="catForm.catField.$error.json">Invalid JSON.</div>
+  </div>
 
   <button type="submit">Save</button>
 

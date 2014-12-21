@@ -125,14 +125,17 @@ require([
         });
       };
 
+      var catFormSubmit = function (thisScope) {
+        thisScope.close(thisScope);
+        $scope.catFormSubmit();
+      };
 
       $scope.addCategory = function () {
+        var catFormModel = {};
         var scope = {
-          catFormModel: {},
-          catFormSubmit: function (thisScope) {
-            thisScope.close(thisScope);
-            $scope.catFormSubmit();
-          }
+          catFormModel: catFormModel,
+          catFormSubmit: catFormSubmit,
+          conditions: forecastIo.conditionsSorted
         };
         scopeModal('addCategory', scope).
           result.then(function (result) {
@@ -146,13 +149,12 @@ require([
 
 
       $scope.editCategory = function (cat) {
+        var catFormModel = angular.copy(cat);
         var scope = {
-          catFormModel: angular.copy(cat),
           cat: cat,
-          catFormSubmit: function (thisScope) {
-            thisScope.close(thisScope);
-            $scope.catFormSubmit();
-          }
+          catFormModel: catFormModel,
+          catFormSubmit: catFormSubmit,
+          conditions: forecastIo.conditionsSorted
         };
         $scope.modal('editCategory', scope).
           result.then(function (result) {
