@@ -1,49 +1,55 @@
-<div class="container-fluid">
-
+<div>
 
   <div ng-controller="AppController">
 
-    <h1>WeatherTo</h1>
+    <header class="navbar navbar-default" role="banner">
+      <div class="container">
 
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#wt-navbar-collapse-1"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
 
-    <button class="btn btn-primary" ng-click="showLocations()">Locations</button>
-    <button class="btn btn-primary" ng-click="showCategories()">Categories</button>
-    <button class="btn btn-default" ng-click="showSettings()">Settings</button>
-
-
-    <div ng-controller="CurrentController">
-
-      <div ng-if="location">
-
-        <div>
-          {{ location.name }}
-          <span ng-show="location.resolving">(...)</span>
+          <a class="navbar-brand" href="#">WeatherTo</a>
         </div>
 
-        <div>
-          <div>
-            {{ current.temperature | number:format.number }}&deg;
-            <span class="feels-like">
-              (feels like {{ current.apparentTemperature | number:format.number }}&deg;)
-            </span>
-          </div>
-          <div>
-            {{ current.summary }}
-          </div>
-          <button ng-click="modal('current', {current: current})">i</button>
-        </div>
+        <nav class="collapse navbar-collapse" id="wt-navbar-collapse-1" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a ng-click="showLocations()">Locations</a>
+            </li>
+            <li>
+              <a ng-click="showCategories()">Categories</a>
+            </li>
+            <li>
+              <a ng-click="showSettings()">Settings</a>
+            </li>
+          </ul>
+        </nav>
 
       </div>
-      <div ng-if="! location">
-        No location chosen.
+    </header>
+
+    <div class="container">
+
+      <div ng-controller="CurrentController">
+
+        <div ng-include="'templates/current.html'"></div>
+
       </div>
+
+
+      <div ng-include="'templates/agenda.html'"></div>
+
+      <!-- <div ng-include="'templates/timeline.html'"></div> -->
 
     </div>
-
-
-    <div ng-include="'templates/agenda.html'"></div>
-
-    <!-- <div ng-include="'templates/timeline.html'"></div> -->
 
   </div>
 
