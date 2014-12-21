@@ -21,14 +21,22 @@ require.config({
     noext: "../bower_components/requirejs-plugins/src/noext",
     propertyParser: "../bower_components/requirejs-plugins/src/propertyParser",
     "Markdown.Converter": "../bower_components/requirejs-plugins/lib/Markdown.Converter",
-    text: "../bower_components/requirejs-plugins/lib/text"
+    text: "../bower_components/requirejs-plugins/lib/text",
+    "angular-aria": "../bower_components/angular-aria/angular-aria"
   },
   shim: {
     angular: {
       exports: "angular",
-      deps: ["jquery"] // to override jqLite
+      deps: [
+        "jquery"
+      ]
     },
     "angular-bootstrap": {
+      deps: [
+        "angular"
+      ]
+    },
+    "angular-aria": {
       deps: [
         "angular"
       ]

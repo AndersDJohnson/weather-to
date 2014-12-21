@@ -2,6 +2,7 @@ require([
   'angular',
   'moment',
   'lodash',
+  'angular-aria',
   'angular-moment',
   'angular-bootstrap',
   'jsonEdit',
@@ -21,6 +22,7 @@ require([
 
   var weatherTo = angular.module('weatherTo',
     [
+      'ngAria',
       'angularMoment',
       'ui.bootstrap',
       'Scope.safeApply',
