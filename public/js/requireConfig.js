@@ -25,7 +25,8 @@ require.config({
   },
   shim: {
     angular: {
-      exports: "angular"
+      exports: "angular",
+      deps: ["jquery"] // to override jqLite
     },
     "angular-bootstrap": {
       deps: [
