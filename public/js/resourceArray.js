@@ -72,9 +72,11 @@ define(['angular'], function (angular) {
             $log.log('save', data);
             var id = data.id;
 
+            var item;
+
             if (id) {
 
-              var item = _.findWhere(array, {id: id});
+              item = _.findWhere(array, {id: id});
               delete data.id;
               _.extend(item, data);
 
@@ -83,6 +85,7 @@ define(['angular'], function (angular) {
 
               data.id = nextId++;
               array.push(data);
+              item = data;
 
             }
 
