@@ -470,11 +470,11 @@ require([
     $scope.getTemperatureFromCondition = conditionsEngine.getTemperatureFromCondition;
 
     $scope.$watch('location', function (loc) {
-      $log.log('location change', arguments);
+      // $log.log('location change', arguments);
 
       if (loc) {
         forecastIo.get(loc).then(function (result) {
-          $log.log('current result', result);
+          // $log.log('current result', result);
           var current = result.currently;
           $scope.current = current;
           // $scope.temperature = conditionsEngine.getTemperatureFromCondition(current);
