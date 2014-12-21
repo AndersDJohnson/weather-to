@@ -1,3 +1,6 @@
+/**
+ * https://developer.forecast.io/docs/v2
+ */
 define(['angular'], function (angular) {
 
   var forecastIoModule = angular.module('forecastIo', []);
@@ -15,6 +18,22 @@ define(['angular'], function (angular) {
       function ($http, $q) {
 
         var forecastIo = {};
+
+        /**
+         * https://developer.forecast.io/docs/v2#data-points
+         */
+        forecastIo.conditions = {
+          clearDay: 'clear-day',
+          clearNight: 'clear-night',
+          rain: 'rain',
+          snow: 'snow',
+          sleet: 'sleet',
+          wind: 'wind',
+          fog: 'fog',
+          cloudy: 'cloudy',
+          partlyCloudyDay: 'partly-cloudy-day',
+          partlyCloudNight: 'partly-cloudy-night'
+        };
 
         forecastIo.get = function (location) {
 
