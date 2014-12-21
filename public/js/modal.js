@@ -60,8 +60,8 @@ define(['angular'], function (angular) {
 
 
   modalModule.controller('ModalInstanceCtrl',
-    ['$scope', '$modalInstance',
-    function ($scope, $modalInstance) {
+    ['$log', '$scope', '$modalInstance',
+    function ($log, $scope, $modalInstance) {
 
       $log.log('modal scope from ctrl', $scope);
 
