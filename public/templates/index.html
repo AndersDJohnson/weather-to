@@ -4,9 +4,8 @@
   <div ng-controller="AppController">
 
 
-    <button ng-click="showCategories()">Categories</button>
     <button ng-click="showLocations()">Locations</button>
-    <button ng-click="getCurrentLocation()">Current Location</button>
+    <button ng-click="showCategories()">Categories</button>
     <button ng-click="showSettings()">Settings</button>
 
 
@@ -16,6 +15,7 @@
 
         <div>
           {{ location.name }}
+          <span ng-show="location.resolving">(...)</span>
         </div>
 
         <div>

@@ -11,6 +11,10 @@
 <div class="modal-body">
 
   <div>
+
+    <button ng-click="getCurrentLocation(); close()">Detect location</button>
+
+    <h4>Or find location:</h4>
     <form>
       <input type="text" autofocus
         ng-model="address" name="addressField"

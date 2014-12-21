@@ -58,16 +58,16 @@ define(['angular'], function (angular) {
                 callback: 'JSON_CALLBACK'
               }
             }).
-            success(function (data, status, headers, config) {
-              deferred.resolve({
+            success(function (data) {
+              deferred.resolve(data);
+            }).
+            error(function (data, status, headers, config) {
+              deferred.reject({
                 data: data,
                 status: status,
                 headers: headers,
                 config: config
               });
-            }).
-            error(function (err) {
-              deferred.reject(err);
             });
 
           return promise;

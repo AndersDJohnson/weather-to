@@ -59,6 +59,24 @@ require([
 
   }]);
 
+
+  weatherTo.service('locationConverter', [
+    function () {
+
+      var locationConverter = {};
+
+      locationConverter.convert = function (val) {
+        return {
+          name: val && val.formatted_address,
+          coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
+        };
+      };
+
+      return locationConverter;
+    }
+  ]);
+
+
   weatherTo.service('conditionsEngine', [
     '$log', 'settings',
     function ($log, settings) {
@@ -104,7 +122,6 @@ require([
           $log.warn('no min and max on cat temp:', catTemp);
           return false;
         }
-        $log.log('condTemp', condTemp, 'catTemp', min, max);
         if (condTemp >= min && condTemp < max) {
           return true;
         }
@@ -120,17 +137,19 @@ require([
   weatherTo.controller('AppController', [
     '$scope', '$q', '$log',
     'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
-    'categories','locations', 'settings', 'conditionsEngine',
+    'categories','locations', 'settings', 'conditionsEngine', 'locationConverter',
     function (
       $scope, $q, $log,
       scopeModal, geocoder, geolocator, forecastIo,
-      categories, locations, settings, conditionsEngine
+      categories, locations, settings, conditionsEngine, locationConverter
     ) {
 
       $scope.modal = scopeModal;
 
       $scope.cats = [];
       $scope.locations = [];
+
+      $scope.location = null;
 
       $scope.settings = settings.settings;
 
@@ -233,16 +252,66 @@ require([
       };
 
 
-      $scope.getCurrentLocation = function () {
+      var getCurrentLocation = function () {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
+
         geolocator.locate().then(function (position) {
           var location = {
-            name: 'Here',
+            name: 'Current location',
             coords: {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             }
           };
+
+          // resolve with just coordinates since it's sufficient to request weather
+          deferred.resolve(location);
+        });
+
+        return promise;
+      };
+
+
+      $scope.getCurrentLocation = function () {
+
+        $scope.location = {
+          resolving: true
+        };
+
+        getCurrentLocation().then(function (location) {
+          location.resolving = true;
           $scope.location = location;
+
+          // setTimeout(function () {
+          // now lazily attempt to update the current coordinate location with reverse geocoded city
+          geocoder.reverse(location, {
+            result_type: 'locality'
+          }).
+            then(
+              function (result) {
+                console.log('reverse result', result);
+                var results = result.results;
+                if (results && results.length > 0) {
+                  var locality = results[0];
+                  if (locality && locality.formatted_address) {
+
+                    var convertedLocation = locationConverter.convert(locality);
+
+                    $scope.$safeApply(function () {
+                      location.resolving = false;
+                      location.name = convertedLocation.name;
+                    });
+                  }
+                }
+              },
+              function (err) {
+                $log.error(err);
+
+                location.resolving = false;
+              }
+            );
+          // }, 1000);
         });
       };
 
@@ -252,11 +321,9 @@ require([
         geocoder.get(address).
           then(function (result) {
 
-            var locationResults = _.map(result.data.results, function (val) {
-              return {
-                name: val && val.formatted_address,
-                coords: val && val.geometry && val.geometry.viewport && val.geometry.viewport.northeast
-              };
+            var locationResults = _.map(result.results, function (val) {
+              var location = locationConverter.convert(val);
+              return location;
             });
 
             $log.log('loc res', locationResults);
@@ -320,7 +387,7 @@ require([
 
             var lastMatches = false;
 
-            result.data.hourly.data.forEach(function (condition) {
+            result.hourly.data.forEach(function (condition) {
 
               var timePretty = moment.unix(condition.time);
               // condition.timePretty = timePretty.fromNow();
@@ -554,7 +621,7 @@ require([
       if (loc) {
         forecastIo.get(loc).then(function (result) {
           $log.log('current result', result);
-          var current = result.data.currently;
+          var current = result.currently;
           $scope.current = current;
           // $scope.temperature = conditionsEngine.getTemperatureFromCondition(current);
         });
