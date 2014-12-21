@@ -57,13 +57,33 @@ require([
 
 
 
-  var categoryMatches = function (cat, cond) {
-    if (cond.temperature) {
-      var condTemp = cond.temperature;
-      var catTemp = cat.temperature;
-      if (condTemp >= catTemp.min && condTemp < catTemp.max) {
-        return true;
-      }
+  var conditionMatchesCategory = function (cond, cat) {
+    if (! cond) {
+      $log.warn('no cond:', cond);
+      return false;
+    }
+    if (! cat) {
+      $log.warn('no cat:', cat);
+      return false;
+    }
+    var condTemp = cond.temperature;
+    if (! condTemp) {
+      $log.warn('no cond temp:', condTemp);
+      return false;
+    }
+    var catTemp = cat.temperature;
+    if (! catTemp) {
+      $log.warn('no cat temp:', catTemp);
+      return false;
+    }
+    var min = catTemp.min;
+    var min = catTemp.max;
+    if ( ! ( angular.isNumber(min) && angular.isNumber(max) ) ) {
+      $log.warn('no min and max on cat temp:', catTemp);
+      return false;
+    }
+    if (condTemp >= catTemp.min && condTemp < catTemp.max) {
+      return true;
     }
     return false;
   };
@@ -95,7 +115,7 @@ require([
           $log.log('result', result);
         });
         locationModal.opened.then(function () {
-          var $el = $('.modal-locations');
+          var $el = angular.element('.modal-locations');
           var $input = $el.find('input[autofocus]').first();
           $input.focus();
         });
@@ -103,15 +123,46 @@ require([
 
 
       $scope.addCategory = function () {
-        scopeModal('addCategory').
+        var scope = {
+          catFormModel: {},
+          catFormSubmit: function (thisScope) {
+            thisScope.close(thisScope);
+            $scope.catFormSubmit();
+          }
+        };
+        scopeModal('addCategory', scope).
           result.then(function (result) {
             $log.log('result', result);
-            categories.save(result.cat).
+            categories.save(result.catFormModel).
               then(function (result) {
                 $log.log('saved', result);
               });
           });
       };
+
+
+      $scope.editCategory = function (cat) {
+        var scope = {
+          catFormModel: angular.copy(cat),
+          cat: cat,
+          catFormSubmit: function (thisScope) {
+            thisScope.close(thisScope);
+            $scope.catFormSubmit();
+          }
+        };
+        $scope.modal('editCategory', scope).
+          result.then(function (result) {
+            $log.log('result', result);
+            categories.save(result.catFormModel).then(function (cat) {
+              categories.query().then(function (cats) {
+                $scope.$safeApply(function () {
+                  $scope.cats = cats;
+                });
+              });
+            });
+          });
+      };
+
 
       $scope.addLocation = function (loc) {
         locations.save(loc).
@@ -180,26 +231,15 @@ require([
       };
 
 
-      $scope.editCategory = function (cat) {
-        var editingCat = angular.copy(cat);
-        $scope.modal('editCategory', {cat: cat, editingCat: editingCat}).
-          result.then(function (result) {
-            $log.log('result', result);
-            categories.save(result.editingCat).then(function (cat) {
-              categories.query().then(function (cats) {
-                $scope.$safeApply(function () {
-                  $scope.cats = cats;
-                });
-              });
-            });
-          });
-      };
-
-
       $scope.removeCategory = function (cat) {
         categories.remove(cat).then(function (result) {
           $log.log('removed?', result, cat);
         });
+      };
+
+
+      $scope.catFormSubmit = function () {
+        console.log('catFormSubmit', this);
       };
 
 
@@ -232,7 +272,7 @@ require([
 
               condition.durationSeconds = 60 * 60;
 
-              var matches = categoryMatches(cat, condition);
+              var matches = conditionMatchesCategory(condition, cat);
 
               if (matches) {
 
