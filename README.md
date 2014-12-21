@@ -5,4 +5,5 @@
 ## TODO
 
 * grunt-angular-templates
+* angular-hint
 
