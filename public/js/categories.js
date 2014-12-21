@@ -13,14 +13,22 @@ define(['angular', 'resourceArray'], function (angular) {
         var cats = [
           {
             id: 1,
-            name: 'Sledding',
+            name: 'Ice Skating',
             temperature: {
-              min: 25,
-              max: 35
+              min: 0,
+              max: 25
             }
           },
           {
             id: 2,
+            name: 'Sledding',
+            temperature: {
+              min: 25,
+              max: 32
+            }
+          },
+          {
+            id: 3,
             name: 'Jogging',
             temperature: {
               min: 45,
@@ -28,7 +36,7 @@ define(['angular', 'resourceArray'], function (angular) {
             }
           },
           {
-            id: 3,
+            id: 4,
             name: 'Running',
             temperature: {
               min: 50,

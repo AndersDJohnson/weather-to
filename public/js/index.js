@@ -59,13 +59,13 @@ require([
 
   }]);
 
-  weatherTo.service('conditionEngine', [
-    'settings',
-    function (settings) {
+  weatherTo.service('conditionsEngine', [
+    '$log', 'settings',
+    function ($log, settings) {
 
-      var conditionEngine = {};
+      var conditionsEngine = {};
 
-      conditionEngine.getTemperartureFromCondition = function (condition) {
+      conditionsEngine.getTemperatureFromCondition = function (condition) {
         var temperature;
         if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
           temperature = condition.apparentTemperature;
@@ -77,7 +77,7 @@ require([
       };
 
 
-      conditionEngine.conditionMatchesCategory = function (cond, cat) {
+      conditionsEngine.conditionMatchesCategory = function (cond, cat) {
         if (! cond) {
           $log.warn('no cond:', cond);
           return false;
@@ -87,7 +87,7 @@ require([
           return false;
         }
 
-        var condTemp = conditionEngine.getTemperartureFromCondition(cond);
+        var condTemp = conditionsEngine.getTemperatureFromCondition(cond);
         if (! condTemp) {
           $log.warn('no cond temp:', condTemp);
           return false;
@@ -104,13 +104,14 @@ require([
           $log.warn('no min and max on cat temp:', catTemp);
           return false;
         }
-        if (condTemp >= catTemp.min && condTemp < catTemp.max) {
+        $log.log('condTemp', condTemp, 'catTemp', min, max);
+        if (condTemp >= min && condTemp < max) {
           return true;
         }
         return false;
       };
 
-      return conditionEngine;
+      return conditionsEngine;
     }
   ]);
 
@@ -119,17 +120,19 @@ require([
   weatherTo.controller('AppController', [
     '$scope', '$q', '$log',
     'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
-    'categories','locations', 'settings', 'conditionEngine',
+    'categories','locations', 'settings', 'conditionsEngine',
     function (
       $scope, $q, $log,
       scopeModal, geocoder, geolocator, forecastIo,
-      categories, locations, settings, conditionEngine
+      categories, locations, settings, conditionsEngine
     ) {
 
       $scope.modal = scopeModal;
 
       $scope.cats = [];
       $scope.locations = [];
+
+      $scope.settings = settings.settings;
 
 
       $scope.showCategories = function () {
@@ -156,7 +159,17 @@ require([
 
 
       $scope.showSettings = function () {
-        scopeModal('settings', $scope).
+        var settingsFormModel = angular.copy(settings.settings);
+        var scope = {
+          settingsFormModel: settingsFormModel,
+          settingsFormSubmit: function (thisScope) {
+            $log.log('settings set', thisScope.settingsFormModel);
+            $scope.settings = settings.settings = thisScope.settingsFormModel;
+            thisScope.close();
+          }
+        }
+        $log.log('settings scope', scope);
+        scopeModal('settings', scope).
           result.then(function (result) {
             $log.log('result', result);
           });
@@ -246,7 +259,7 @@ require([
               };
             });
 
-            console.log('loc res', locationResults);
+            $log.log('loc res', locationResults);
 
             $scope.$safeApply(function () {
               $scope.locationResults = locationResults;
@@ -282,7 +295,7 @@ require([
 
 
       $scope.catFormSubmit = function () {
-        console.log('catFormSubmit', this);
+        $log.log('catFormSubmit', this);
       };
 
 
@@ -294,7 +307,7 @@ require([
 
         forecastIo.get(location).then(function (result) {
 
-          console.log('cats', cats);
+          $log.log('cats', cats);
           if (! _.isArray(cats)) {
             throw new Error("cats must be array");
           }
@@ -315,7 +328,7 @@ require([
 
               condition.durationSeconds = 60 * 60;
 
-              var matches = conditionEngine.conditionMatchesCategory(condition, cat);
+              var matches = conditionsEngine.conditionMatchesCategory(condition, cat);
 
               if (matches) {
 
@@ -382,6 +395,18 @@ require([
       };
 
 
+      var scopingComputeCats = function (cats, loc) {
+        cats = cats || $scope.cats;
+        loc = loc || $scope.location;
+        computeCats(cats, loc).
+          then(function (result) {
+            $scope.$safeApply(function () {
+              $scope.conditionSetsByCat = result;
+            });
+          });
+      };
+
+
       $scope.$watch('location', function (loc) {
         if (loc) {
           $log.log('location change', arguments);
@@ -394,13 +419,7 @@ require([
             });
           }
           else {
-            computeCats(null, loc).
-              then(function (result) {
-                $log.log('watch loc result', result);
-                $scope.$safeApply(function () {
-                  $scope.conditionSetsByCat = result;
-                });
-              });
+            scopingComputeCats(null, loc);
           }
         }
       }, true);
@@ -408,12 +427,12 @@ require([
 
       $scope.$watch('cats', function (cats) {
         $log.log('cats change', arguments);
-        computeCats(cats, $scope.location).
-          then(function (result) {
-            $scope.$safeApply(function () {
-              $scope.conditionSetsByCat = result;
-            });
-          });
+        scopingComputeCats(cats);
+      }, true);
+
+
+      $scope.$watch('settings.apparentTemperatures', function () {
+        scopingComputeCats();
       }, true);
 
 
@@ -522,10 +541,12 @@ require([
 
 
   weatherTo.controller('CurrentController',
-    ['$scope', 'scopeModal', 'forecastIo', '$log',
-    function ($scope, scopeModal, forecastIo, $log) {
+    ['$scope', '$log', 'scopeModal', 'forecastIo', 'conditionsEngine',
+    function ($scope, $log, scopeModal, forecastIo, conditionsEngine) {
 
     $scope.current = {};
+
+    $scope.getTemperatureFromCondition = conditionsEngine.getTemperatureFromCondition;
 
     $scope.$watch('location', function (loc) {
       $log.log('location change', arguments);
@@ -533,7 +554,9 @@ require([
       if (loc) {
         forecastIo.get(loc).then(function (result) {
           $log.log('current result', result);
-          $scope.current = result.data.currently;
+          var current = result.data.currently;
+          $scope.current = current;
+          // $scope.temperature = conditionsEngine.getTemperatureFromCondition(current);
         });
       }
 

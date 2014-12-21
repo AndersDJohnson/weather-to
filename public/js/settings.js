@@ -4,7 +4,7 @@ define(['angular'], function (angular) {
 
   settingsModule.provider('settings', [function () {
 
-    var settings = this.settings = {
+    var settingsObject = this.settingsObject = {
       apparentTemperatures: false
     };
 
@@ -14,7 +14,7 @@ define(['angular'], function (angular) {
 
         var settings = {};
 
-        settings.settings = settings;
+        settings.settings = settingsObject;
 
         return settings;
       }
