@@ -53,7 +53,7 @@ module.exports = function (grunt) {
               '!**/_*.less',
             ],
             dest: 'public/css',
-            ext: '.css',
+            ext: '.less.css',
             extDot: 'last'
           }
         ]
