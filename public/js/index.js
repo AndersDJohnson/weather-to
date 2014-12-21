@@ -59,61 +59,71 @@ require([
 
   }]);
 
+  weatherTo.service('conditionEngine', [
+    'settings',
+    function (settings) {
 
-  var getTemperartureFromCondition = function (condition) {
-    var temperature;
-    if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
-      temperature = condition.apparentTemperature;
-    }
-    else {
-      temperature = condition.temperature;
-    }
-    return temperature;
-  };
+      var conditionEngine = {};
+
+      conditionEngine.getTemperartureFromCondition = function (condition) {
+        var temperature;
+        if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
+          temperature = condition.apparentTemperature;
+        }
+        else {
+          temperature = condition.temperature;
+        }
+        return temperature;
+      };
 
 
-  var conditionMatchesCategory = function (cond, cat) {
-    if (! cond) {
-      $log.warn('no cond:', cond);
-      return false;
-    }
-    if (! cat) {
-      $log.warn('no cat:', cat);
-      return false;
-    }
+      conditionEngine.conditionMatchesCategory = function (cond, cat) {
+        if (! cond) {
+          $log.warn('no cond:', cond);
+          return false;
+        }
+        if (! cat) {
+          $log.warn('no cat:', cat);
+          return false;
+        }
 
-    var condTemp = getTemperartureFromCondition(cond);
-    if (! condTemp) {
-      $log.warn('no cond temp:', condTemp);
-      return false;
+        var condTemp = conditionEngine.getTemperartureFromCondition(cond);
+        if (! condTemp) {
+          $log.warn('no cond temp:', condTemp);
+          return false;
+        }
+        // TODO: apparent temperature support for categories?
+        var catTemp = cat.temperature;
+        if (! catTemp) {
+          $log.warn('no cat temp:', catTemp);
+          return false;
+        }
+        var min = catTemp.min;
+        var max = catTemp.max;
+        if ( ! ( angular.isNumber(min) && angular.isNumber(max) ) ) {
+          $log.warn('no min and max on cat temp:', catTemp);
+          return false;
+        }
+        if (condTemp >= catTemp.min && condTemp < catTemp.max) {
+          return true;
+        }
+        return false;
+      };
+
+      return conditionEngine;
     }
-    // TODO: apparent temperature support for categories?
-    var catTemp = cat.temperature;
-    if (! catTemp) {
-      $log.warn('no cat temp:', catTemp);
-      return false;
-    }
-    var min = catTemp.min;
-    var min = catTemp.max;
-    if ( ! ( angular.isNumber(min) && angular.isNumber(max) ) ) {
-      $log.warn('no min and max on cat temp:', catTemp);
-      return false;
-    }
-    if (condTemp >= catTemp.min && condTemp < catTemp.max) {
-      return true;
-    }
-    return false;
-  };
+  ]);
+
 
 
   weatherTo.controller('AppController', [
     '$scope', '$q', '$log',
     'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
-    'categories','locations', 'settings',
+    'categories','locations', 'settings', 'conditionEngine',
     function (
       $scope, $q, $log,
       scopeModal, geocoder, geolocator, forecastIo,
-      categories, locations, settings
+      categories, locations, settings, conditionEngine
     ) {
 
       $scope.modal = scopeModal;
@@ -305,7 +315,7 @@ require([
 
               condition.durationSeconds = 60 * 60;
 
-              var matches = conditionMatchesCategory(condition, cat);
+              var matches = conditionEngine.conditionMatchesCategory(condition, cat);
 
               if (matches) {
 
