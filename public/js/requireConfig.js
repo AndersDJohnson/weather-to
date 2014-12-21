@@ -25,6 +25,9 @@ require.config({
     "angular-aria": "../bower_components/angular-aria/angular-aria"
   },
   shim: {
+    bootstrap: {
+      deps: ["jquery"]
+    },
     angular: {
       exports: "angular",
       deps: [

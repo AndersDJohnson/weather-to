@@ -2,6 +2,7 @@ require([
   'angular',
   'moment',
   'lodash',
+  'bootstrap',
   'angular-aria',
   'angular-moment',
   'angular-bootstrap',
@@ -470,7 +471,7 @@ require([
     ['$scope', '$log', 'scopeModal', 'forecastIo', 'conditionsEngine',
     function ($scope, $log, scopeModal, forecastIo, conditionsEngine) {
 
-    $scope.current = {};
+    $scope.current = null;
 
     $scope.$watch('location', function (loc) {
       // $log.log('location change', arguments);
