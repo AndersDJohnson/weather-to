@@ -1,16 +1,33 @@
-define(['angular'], function (angular) {
+define(['angular', 'httpDelayer'], function (angular) {
 
-  var geocoderModule = angular.module('geocoder', []);
+  var geocoderModule = angular.module('geocoder', ['httpDelayer']);
+
+
+  var config = {
+    google: {
+      serverApiKey: null,
+      url: 'https://maps.googleapis.com/maps/api/geocode/json'
+    },
+    httpDelayer: {
+      id: 'geocoder',
+      delay: null
+    }
+  };
+
+
+  geocoderModule.config([
+    '$httpProvider', 'httpDelayer',
+    function ($httpProvider, httpDelayer) {
+      httpDelayer($httpProvider, config.httpDelayer);
+    }
+  ]);
+
 
   geocoderModule.provider('geocoder', [function () {
 
-    var config = this.config = {
-      google: {
-        serverApiKey: null
-      }
-    };
+    this.config = config;
 
-    var url = 'https://maps.googleapis.com/maps/api/geocode/json';
+    var url = config.google.url;
 
     this.$get = [
       '$http', '$q', '$log',
@@ -30,6 +47,7 @@ define(['angular'], function (angular) {
 
           $http.
             get(url, {
+              id: 'geocoder',
               cache: cache,
               params: {
                 key: key,
@@ -67,6 +85,7 @@ define(['angular'], function (angular) {
 
           $http.
             get(url, {
+              id: 'geocoder',
               cache: cache,
               params: {
                 key: key,

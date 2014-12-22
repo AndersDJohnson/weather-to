@@ -52,6 +52,9 @@ require([
 
       forecastIoProvider.config.apiKey = '82f9b0c2328032d8cb168d72ce202fbe';
 
+      // TODO: remove delays in production
+      geocoderProvider.config.httpDelayer.delay = 10000;
+      forecastIoProvider.config.httpDelayer.delay = 5000;
   }]);
 
 

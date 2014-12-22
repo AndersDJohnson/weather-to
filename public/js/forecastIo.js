@@ -1,17 +1,33 @@
 /**
  * https://developer.forecast.io/docs/v2
  */
-define(['angular', 'lodash'], function (angular, _) {
+define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
 
-  var forecastIoModule = angular.module('forecastIo', []);
+  var forecastIoModule = angular.module('forecastIo', [
+    'httpDelayer'
+  ]);
+
+
+  var config = {
+    apiKey: null,
+    httpDelayer: {
+      id: 'forecastIo',
+      delay: null
+    }
+  };
+
+
+  forecastIoModule.config([
+    '$httpProvider', 'httpDelayer',
+    function ($httpProvider, httpDelayer) {
+      httpDelayer($httpProvider, config.httpDelayer);
+    }
+  ]);
+
 
   forecastIoModule.provider('forecastIo', [function () {
 
-    var config = this.config = {
-      google: {
-        serverApiKey: null
-      }
-    };
+    this.config = config;
 
     this.$get = [
       '$log', '$http', '$q',
@@ -176,6 +192,7 @@ define(['angular', 'lodash'], function (angular, _) {
 
           $http.
             jsonp(url, {
+              id: 'forecastIo',
               cache: cache,
               params: {
                 callback: 'JSON_CALLBACK'
