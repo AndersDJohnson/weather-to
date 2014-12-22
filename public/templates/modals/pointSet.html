@@ -25,8 +25,9 @@
       </div>
       <div>
         <!-- <b>Conditions:</b>  -->
-        <span ng-repeat="(cond, bool) in pointSet.conditions">
-          {{ conditionsByIcon[cond].summary || cond }}{{$last ? '' : ', '}}
+        <span ng-repeat="cond in pointSet.conditions">
+          <span class="wt-pointset-summary-weather-icon wt-weather-icon wi wi-{{ getIconClassForIcon(cond.icon) }}"></span>
+          {{ cond.summary }}{{$last ? '' : ', '}}
         </span>
       </div>
     </div>
@@ -45,7 +46,10 @@
       <tbody>
         <tr ng-repeat="point in pointSet.points">
           <td><span>{{ point.timePretty }}</span></td>
-          <td><span>{{ point.summary }}</span></td>
+          <td>
+            <span class="wt-pointset-table-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(point) }}"></span>
+            <span>{{ point.summary }}</span>
+          </td>
           <td><span>{{ point.temperature | number:format.number }}&deg;</span></td>
           <td><span>{{ point.apparentTemperature | number:format.number }}&deg;</span></td>
         </tr>

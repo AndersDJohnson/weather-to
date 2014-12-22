@@ -23,16 +23,15 @@ define(['angular', 'lodash'], function (angular, _) {
         /**
          * https://erikflowers.github.io/weather-icons/
          */
-        forecastIo.getIconClassForPoint = function (point, options) {
+        forecastIo.getIconClassForIcon = function (icon, options) {
           options = angular.extend({
             prefix: '' // 'wi-'
           }, options);
 
-          if (! point) {
+          if (! icon) {
             return '';
           }
 
-          var icon = point.icon;
           var iconClass;
 
           var condition = forecastIo.conditionsByIcon[icon];
@@ -48,6 +47,13 @@ define(['angular', 'lodash'], function (angular, _) {
             iconClass = options.prefix + iconClass;
           }
           return iconClass;
+        };
+
+        forecastIo.getIconClassForPoint = function (point, options) {
+          if (! point) {
+            return '';
+          }
+          return forecastIo.getIconClassForIcon(point.icon);
         };
 
 

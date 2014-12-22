@@ -162,7 +162,11 @@ function (
                   sets.push(set);
                 }
 
-                set.conditions[point.icon] = true;
+                var conditionsKey = point.summary + '-' + point.icon;
+                set.conditions[conditionsKey] = {
+                  icon: point.icon,
+                  summary: point.summary
+                };
 
                 set.points.push(point);
               }

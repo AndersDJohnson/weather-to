@@ -91,7 +91,7 @@ require([
       $scope.conditions = forecastIo.conditions;
       $scope.conditionsByIcon = forecastIo.conditionsByIcon;
       $scope.getIconClassForPoint = forecastIo.getIconClassForPoint;
-
+      $scope.getIconClassForIcon = forecastIo.getIconClassForIcon;
 
       $scope.showCategories = function () {
         scopeModal('categories', $scope).
