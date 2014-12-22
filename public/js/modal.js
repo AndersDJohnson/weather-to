@@ -18,7 +18,7 @@ define(['angular'], function (angular) {
 
         var modalOptions = {
           templateUrl: 'templates/modals/' + templateId + '.html',
-          controller: 'ModalInstanceCtrl'
+          controller: 'ModalInstanceController'
         };
 
         $log.log('scope types', scope.constructor, $rootScope.constructor);
@@ -59,7 +59,7 @@ define(['angular'], function (angular) {
   ]);
 
 
-  modalModule.controller('ModalInstanceCtrl',
+  modalModule.controller('ModalInstanceController',
     ['$log', '$scope', '$modalInstance',
     function ($log, $scope, $modalInstance) {
 
