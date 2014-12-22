@@ -188,8 +188,6 @@ function (
 
               var matches = conditionsEngine.pointMatchesCategory(point, cat);
 
-              $log.log(point, matches);
-
               if (matches) {
                 daily.push(point);
               }
@@ -235,8 +233,6 @@ function (
               });
 
               set.averages = averages;
-
-              $log.log('averages', averages, totals, points);
             });
 
 

@@ -8,7 +8,9 @@
 
       <div class="wt-current-location">
         {{ location.name }}
-        <span class="wt-current-location-resolving" ng-show="location.resolving">(...)</span>
+        <span class="wt-current-location-resolving" ng-show="location.resolving">
+          (...)
+        </span>
       </div>
 
       <div class="wt-current-data">
@@ -17,13 +19,18 @@
           <span class="wt-current-temp-actual">
             {{ current.temperature | number:format.number }}&deg;
           </span>
+
           <span class="wt-current-temp-apparent">
             feels like {{ current.apparentTemperature | number:format.number }}&deg;
           </span>
         </div>
 
-        <div class="wt-current-summary">
-          {{ current.summary }}
+        <div>
+          <span class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></span>
+
+          <span  class="wt-current-summary">
+            {{ current.summary }}
+          </span>
         </div>
 
       </div>

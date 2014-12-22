@@ -14,10 +14,42 @@ define(['angular', 'lodash'], function (angular, _) {
     };
 
     this.$get = [
-      '$http', '$q',
-      function ($http, $q) {
+      '$log', '$http', '$q',
+      function ($log, $http, $q) {
 
         var forecastIo = {};
+
+
+        /**
+         * https://erikflowers.github.io/weather-icons/
+         */
+        forecastIo.getIconClassForPoint = function (point, options) {
+          options = angular.extend({
+            prefix: '' // 'wi-'
+          }, options);
+
+          if (! point) {
+            return '';
+          }
+
+          var icon = point.icon;
+          var iconClass;
+
+          var condition = forecastIo.conditionsByIcon[icon];
+
+          if (! condition) {
+            return '';
+          }
+          if (condition.weatherIcon) {
+            iconClass = condition.weatherIcon;
+          }
+
+          if (! iconClass) {
+            iconClass = options.prefix + iconClass;
+          }
+          return iconClass;
+        };
+
 
         /**
          * https://developer.forecast.io/docs/v2#data-points
@@ -26,52 +58,62 @@ define(['angular', 'lodash'], function (angular, _) {
           clearDay: {
             index: 0,
             icon: 'clear-day',
-            summary: 'Clear Day'
+            summary: 'Clear Day',
+            weatherIcon: 'day-sunny'
           },
           clearNight: {
             index: 1,
             icon: 'clear-night',
-            summary: 'Clear Night'
+            summary: 'Clear Night',
+            weatherIcon: 'night-clear'
           },
           rain: {
             index: 2,
             icon: 'rain',
-            summary: 'Rain'
+            summary: 'Rain',
+            weatherIcon: 'rain'
           },
           snow: {
             index: 3,
             icon: 'snow',
-            summary: 'Snow'
+            summary: 'Snow',
+            weatherIcon: 'snow'
           },
           sleet: {
             index: 4,
             icon: 'sleet',
-            summary: 'Sleet'
+            summary: 'Sleet',
+            weatherIcon: 'sleet'
           },
           wind: {
             index: 5,
             icon: 'wind',
-            summary: 'Wind'
+            summary: 'Wind',
+            weatherIcon: 'strong-wind'
           },
           fog: {
             index: 6,
             icon: 'fog',
-            summary: 'Fog'
+            summary: 'Fog',
+            weatherIcon: 'fog'
           },
           cloudy: {
             index: 7,
             icon: 'cloudy',
-            summary: 'Cloudy'
+            summary: 'Cloudy',
+            weatherIcon: 'cloudy'
           },
           partlyCloudyDay: {
             index: 8,
             icon: 'partly-cloudy-day',
-            summary: 'Partly Cloudy Day'
+            summary: 'Partly Cloudy Day',
+            weatherIcon: 'day-cloudy'
           },
           partlyCloudNight: {
             index: 9,
             icon: 'partly-cloudy-night',
-            summary: 'Partly Cloudy Night'
+            summary: 'Partly Cloudy Night',
+            weatherIcon: 'night-partly-cloudy'
           }
         };
 
