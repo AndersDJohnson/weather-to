@@ -2,12 +2,14 @@
 
   <h3>Agenda</h3>
 
+  <h4>Hourly</h4>
+
   <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
     <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
 
       <div class="media">
         <div class="media-left">
-          <button class="wt-list-toggle" ng-click="collapses[cat.id] = ! collapses[cat.id]" ng-disabled="pointSetsByCat[cat.id].length == 0">
+          <button class="wt-list-toggle" ng-click="collapses[cat.id] = ! collapses[cat.id]" ng-disabled="pointSetsByCat[cat.id].hourly.length == 0">
             <span ng-show="collapses[cat.id]"><span class="fa fa-plus-square"><span class="sr-only">Expand</span></span></span>
             <span ng-hide="collapses[cat.id]"><span class="fa fa-minus-square"><span class="sr-only">Collapse</span></span></span>
           </button>
@@ -18,8 +20,8 @@
             <span>
               {{ cat.name }}
             </span>
-            <span class="badge" ng-if="pointSetsByCat[cat.id].length">
-              {{ pointSetsByCat[cat.id].length }}
+            <span class="badge" ng-if="pointSetsByCat[cat.id].hourly.length">
+              {{ pointSetsByCat[cat.id].hourly.length }}
             </span>
           </div>
           <!--
@@ -40,7 +42,7 @@
       <ul collapse="collapses[cat.id]"
         class="wt-agenda-list wt-agenda-list-point-set list-unstyled"
       >
-        <li ng-repeat="pointSet in pointSetsByCat[cat.id]"
+        <li ng-repeat="pointSet in pointSetsByCat[cat.id].hourly"
           class="wt-agenda-list-item wt-agenda-list-item-point-set"
         >
 
@@ -71,6 +73,86 @@
 
         </li>
       </ul>
+
     </li>
   </ul>
+
+
+  <h4>Daily</h4>
+
+
+  <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
+    <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
+
+      <div class="media">
+        <div class="media-left">
+          <button class="wt-list-toggle" ng-click="collapses[cat.id] = ! collapses[cat.id]" ng-disabled="pointSetsByCat[cat.id].daily.length == 0">
+            <span ng-show="collapses[cat.id]"><span class="fa fa-plus-square"><span class="sr-only">Expand</span></span></span>
+            <span ng-hide="collapses[cat.id]"><span class="fa fa-minus-square"><span class="sr-only">Collapse</span></span></span>
+          </button>
+        </div>
+
+        <div class="media-body">
+          <div>
+            <span>
+              {{ cat.name }}
+            </span>
+            <span class="badge" ng-if="pointSetsByCat[cat.id].daily.length">
+              {{ pointSetsByCat[cat.id].daily.length }}
+            </span>
+          </div>
+          <!--
+          <div>
+            <div>
+              {{ cat.temperature.min }} - {{ cat.temperature.max }}
+            </div>
+            <div>
+              <span ng-repeat="(cond, bool) in cat.conditions">
+                {{ conditionsByIcon[cond].summary }}{{$last ? '' : ', '}}
+              </span>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+
+      <ul collapse="collapses[cat.id]"
+        class="wt-agenda-list wt-agenda-list-point-set list-unstyled"
+      >
+        <li ng-repeat="point in pointSetsByCat[cat.id].daily"
+          class="wt-agenda-list-item wt-agenda-list-item-point-set"
+        >
+
+          <div class="media">
+
+            <div class="media-left">
+
+              <span class="wt-bullet"></span>
+
+            </div>
+
+            <div class="media-body">
+
+              <div>
+                <a ng-click="modal('point', this)">
+                  {{ point.time | amCalendar }}
+                </a>
+
+                <!--
+                <button class="wt-button-unstyled" ng-click="modal('pointSet', this)">
+                  <span class="fa fa-info"><span class="sr-only">Info</span></span>
+                </button>
+                -->
+              </div>
+
+            </div>
+          </div>
+
+        </li>
+      </ul>
+
+    </li>
+  </ul>
+
+
 </div>

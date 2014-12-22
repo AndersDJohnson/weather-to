@@ -30,6 +30,28 @@ function (
         return temperature;
       };
 
+      conditionsEngine.getTemperatureMinFromCondition = function (condition) {
+        var temperatureMin;
+        if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
+          temperatureMin = condition.apparentTemperatureMin;
+        }
+        else {
+          temperatureMin = condition.temperatureMin;
+        }
+        return temperatureMin;
+      };
+
+      conditionsEngine.getTemperatureMaxFromCondition = function (condition) {
+        var temperatureMax;
+        if (settings.settings.apparentTemperatures && condition.apparentTemperature) {
+          temperatureMax = condition.apparentTemperatureMax;
+        }
+        else {
+          temperatureMax = condition.temperatureMax;
+        }
+        return temperatureMax;
+      };
+
 
       conditionsEngine.pointMatchesCategory = function (point, cat) {
         if (! point) {
@@ -44,9 +66,18 @@ function (
         var matches = false;
 
         var pointTemp = conditionsEngine.getTemperatureFromCondition(point);
+        var pointTempMin;
+        var pointTempMax;
         if (! pointTemp) {
-          $log.warn('no point temp:', pointTemp);
-          return false;
+          pointTempMin = conditionsEngine.getTemperatureMinFromCondition(point);
+          pointTempMax = conditionsEngine.getTemperatureMaxFromCondition(point);
+        }
+        else {
+          pointTempMin = pointTemp;
+          pointTempMax = pointTemp;
+        }
+        if (! (pointTempMin && pointTempMax)) {
+          $log.warn('no point temp min or max:', pointTempMin, pointTempMax);
         }
         // TODO: apparent temperature support for categories?
         var catTemp = cat.temperature;
@@ -61,7 +92,7 @@ function (
           return false;
         }
 
-        if (pointTemp >= min && pointTemp < max) {
+        if (pointTempMin >= min && pointTempMax < max) {
           matches = true;
         }
 
@@ -106,8 +137,11 @@ function (
             var lastMatches = false;
 
             var hourlyData = result.hourly.data || [];
+            var dailyData = result.daily.data || [];
 
             hourlyData.forEach(function (point) {
+
+              point.type = 'hourly';
 
               var timePretty = moment.unix(point.time);
               // condition.timePretty = timePretty.fromNow();
@@ -141,6 +175,27 @@ function (
               lastMatches = matches;
             });
 
+
+            var daily = [];
+
+            dailyData.forEach(function (point) {
+
+              point.type = 'daily';
+
+              var timePretty = moment.unix(point.time);
+              // condition.timePretty = timePretty.fromNow();
+              point.timePretty = timePretty.calendar();
+
+              var matches = conditionsEngine.pointMatchesCategory(point, cat);
+
+              $log.log(point, matches);
+
+              if (matches) {
+                daily.push(point);
+              }
+            });
+
+
             sets.forEach(function (set) {
               var points = set.points;
               if (! points) {
@@ -159,6 +214,9 @@ function (
               var last = points[length - 1];
               set.end = last.time;
               set.endDate = moment.unix(set.end).toDate();
+
+              set.rangePretty = moment(set.startDate).calendar() + ' - ' + moment(set.endDate).calendar();
+
 
               // get averages
 
@@ -179,14 +237,15 @@ function (
               set.averages = averages;
 
               $log.log('averages', averages, totals, points);
-
             });
 
-            pointSetsByCat[cat.id] = sets;
 
-            // cat.pointSetsLength = sets.length;
+            pointSetsByCat[cat.id] = pointSetsByCat[cat.id] || {};
+            pointSetsByCat[cat.id].hourly = sets;
+            pointSetsByCat[cat.id].daily = daily;
 
           });
+
 
           $log.log('computeCats resolving', pointSetsByCat);
           deferred.resolve(pointSetsByCat);
