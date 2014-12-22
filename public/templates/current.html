@@ -8,9 +8,7 @@
 
       <div class="wt-current-location">
         {{ location.name }}
-        <span class="wt-current-location-resolving" ng-show="location.resolving">
-          (...)
-        </span>
+        <span class="fa fa-spinner fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
       </div>
 
       <div class="wt-current-data">
