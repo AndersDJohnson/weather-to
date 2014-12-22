@@ -1,5 +1,16 @@
 module.exports = function (grunt) {
 
+  var _ = grunt.util._;
+
+  var jshintSettings = {
+    "es5": false,
+    "browser": true,
+    "undef": true,
+    "globals": {
+      "require": true,
+      "define": true
+    }
+  };
 
   grunt.initConfig({
 
@@ -23,20 +34,19 @@ module.exports = function (grunt) {
 
     jshint: {
       dev: {
-        options: {
-          // force: true,
-          force: false,
-          jshintrc: true
-        },
+        options: _.extend({
+          force: false, // true to not fail
+          devel: true,
+          debug: true
+        }, jshintSettings),
         files: {
           src: ['public/js/**/*.js']
         }
       },
       build: {
-        options: {
-          force: false,
-          jshintrc: true
-        },
+        options: _.extend({
+          force: false
+        }, jshintSettings),
         files: {
           src: ['public/js/**/*.js']
         }

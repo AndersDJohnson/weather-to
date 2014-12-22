@@ -1,9 +1,0 @@
-{
-  "es5": false,
-  "browser": true,
-  "undef": true,
-  "globals": {
-    "require": true,
-    "define": true
-  }
-}
