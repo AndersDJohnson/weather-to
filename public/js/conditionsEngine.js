@@ -101,8 +101,8 @@ function (
             var pointIcon = point.icon;
             var catconditions = point.conditions;
 
-            _.forEach(catconditions, function (catpointition) {
-              var pointition = forecastIo.conditions[catpointition.key];
+            _.forEach(catconditions, function (catCondition) {
+              var pointition = forecastIo.conditions[catCondition.key];
               if (pointition.icon && pointition.icon == pointIcon) {
                 matches = true;
                 return false;
