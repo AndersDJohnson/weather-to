@@ -14,6 +14,7 @@ Weather Application
 
 ## TODO
 
+* "Powered by Forecast" badge (legal)
 * grunt-angular-templates
 * angular-hint
 * https://docs.angularjs.org/guide/production#disabling-debug-data
