@@ -14,16 +14,73 @@ body {
   background: #fff;
 }
 
-.wt-current-weather-icon {
-  font-size: 3em;
+.wt-init-loading {
+  display: table;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  .wt-init-loading-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .wt-spinner {
+    font-size: 64px;
+  }
+  .wt-init-loading-text {
+    font-size: 1.5em;
+    line-height: 1em;
+  }
+}
+
+.wt-current-data {
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+.wt-current-temp {
+  padding-left: 0.5em;
+}
+
+.wt-current-temp-row-1 {
+  vertical-align: bottom;
+
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
 }
 
 .wt-current-temp-actual {
+  text-align: center;
   font-size: 3em;
+  line-height: 1em;
+  font-weight: bold;
 }
 
-.wt-current-summary {
+.wt-current-temp-apparent {
+  padding-left: 0.25em;
+}
+.wt-current-temp-apparent-text {
+  font-size: 0.75em;
+  line-height: 1em;
+}
+.wt-current-temp-apparent-number {
+  font-size: 1.75em;
+  line-height: 1em;
+}
+
+.wt-current-weather-icon {
+  font-size: 5em;
+}
+
+.wt-current-summary-text {
   font-size: 1.5em;
+  line-height: 1em;
 }
 
 .wt-agenda-list-category .wt-agenda-list {
@@ -31,9 +88,10 @@ body {
 }
 
 .wt-list-toggle {
-  min-width: 2em;
-  text-align: center;
   .wt-button-unstyled;
+  min-width: 2em;
+  font-size: 0.8em;
+  text-align: center;
 
   &[disabled] {
     opacity: 0.5;

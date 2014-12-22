@@ -13,22 +13,23 @@
 
       <div class="wt-current-data">
 
+        <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
+
         <div class="wt-current-temp">
-          <span class="wt-current-temp-actual">
-            {{ current.temperature | number:format.number }}&deg;
-          </span>
-
-          <span class="wt-current-temp-apparent">
-            feels like {{ current.apparentTemperature | number:format.number }}&deg;
-          </span>
-        </div>
-
-        <div>
-          <span class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></span>
-
-          <span  class="wt-current-summary">
+          <div class="wt-current-temp-row-1">
+            <div class="wt-current-temp-actual">
+              {{ current.temperature | number:format.numberShort }}&deg;
+            </div>
+            <div class="wt-current-temp-apparent">
+              <div class="wt-current-temp-apparent-text">feels</div>
+              <div class="wt-current-temp-apparent-number">
+                {{ current.apparentTemperature | number:format.numberShort }}&deg;
+              </div>
+            </div>
+          </div>
+          <div class="wt-current-summary-text">
             {{ current.summary }}
-          </span>
+          </div>
         </div>
 
       </div>

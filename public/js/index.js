@@ -53,8 +53,8 @@ require([
       forecastIoProvider.config.apiKey = '82f9b0c2328032d8cb168d72ce202fbe';
 
       // TODO: remove delays in production
-      geocoderProvider.config.httpDelayer.delay = 10000;
-      forecastIoProvider.config.httpDelayer.delay = 5000;
+      geocoderProvider.config.httpDelayer.delay = 2000;
+      forecastIoProvider.config.httpDelayer.delay = 2000;
   }]);
 
 
@@ -88,7 +88,8 @@ require([
       $scope.settings = settings.settings;
 
       $scope.format = {
-        number: 1
+        number: 1,
+        numberShort: 0
       };
 
       $scope.conditions = forecastIo.conditions;
