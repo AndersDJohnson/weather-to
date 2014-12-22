@@ -16,6 +16,7 @@ Weather Application
 
 * Features
 ** "Powered by Forecast" badge (legal)
+** F/C switch
 ** Link locations to Google Maps
 ** Add to Google Calendar for category matches
 ** http://bootstrapvalidator.com/
