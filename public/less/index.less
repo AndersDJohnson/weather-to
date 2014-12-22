@@ -5,14 +5,34 @@
 @weather-icons-path: "../bower_components/weather-icons/font";
 
 html {
-  overflow: scroll;
-  overflow-y: scroll;
-  overflow-x: auto;
+
 }
 
+
 body {
-  background: #fff;
+  /*overflow: scroll;*/
+  /*overflow-y: scroll;*/
+  /*overflow-x: auto;*/
 }
+
+.wt-button-unstyled {
+  border: 0px;
+  background: transparent;
+}
+
+@text-color-active: lighten(@text-color, 40%);
+
+.wt-link-unstyled {
+  &, &:link, &:visited, &:active, &:hover {
+    color: @text-color;
+    text-decoration: none;
+  }
+
+  &:hover {
+    color: @text-color-active;
+  }
+}
+
 
 .wt-init-loading {
   display: table;
@@ -27,7 +47,7 @@ body {
   }
 
   .wt-spinner {
-    font-size: 36px;
+    font-size: 4em;
   }
 
   .wt-init-loading-text {
@@ -37,7 +57,13 @@ body {
   }
 }
 
+
 .wt-current-data {
+
+  a {
+    .wt-link-unstyled;
+  }
+
   & > * {
     display: table-cell;
     vertical-align: middle;
@@ -86,6 +112,14 @@ body {
   line-height: 1em;
 }
 
+// current location
+
+.wt-current-location {
+  a {
+    .wt-link-unstyled;
+  }
+}
+
 .wt-current-location-edit-btn {
   .wt-button-unstyled;
 }
@@ -105,11 +139,6 @@ body {
   &[disabled] {
     opacity: 0.5;
   }
-}
-
-.wt-button-unstyled {
-  border: 0px;
-  background: transparent;
 }
 
 .wt-bullet::after {

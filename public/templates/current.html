@@ -4,36 +4,39 @@
 
     <div ng-style="{visibility: current ? '' : 'hidden'}">
 
-      <button ng-click="modal('current', {current: current})" class="pull-right">i</button>
-
       <div class="wt-current-data">
 
-        <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
+        <a class="wt-current-location-edit-btn" ng-click="showCurrent()">
 
-        <div class="wt-current-temp">
-          <div class="wt-current-temp-row-1">
-            <div class="wt-current-temp-actual">
-              {{ current.temperature | number:format.numberShort }}&deg;
-            </div>
-            <div class="wt-current-temp-apparent">
-              <div class="wt-current-temp-apparent-text">feels</div>
-              <div class="wt-current-temp-apparent-number">
-                {{ current.apparentTemperature | number:format.numberShort }}&deg;
+          <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
+
+          <div class="wt-current-temp">
+            <div class="wt-current-temp-row-1">
+              <div class="wt-current-temp-actual">
+                {{ current.temperature | number:format.numberShort }}&deg;
+              </div>
+              <div class="wt-current-temp-apparent">
+                <div class="wt-current-temp-apparent-text">feels</div>
+                <div class="wt-current-temp-apparent-number">
+                  {{ current.apparentTemperature | number:format.numberShort }}&deg;
+                </div>
               </div>
             </div>
-          </div>
-          <div class="wt-current-summary-text">
-            {{ current.summary }}
-          </div>
+            <div class="wt-current-summary-text">
+              {{ current.summary }}
+            </div>
+
+          </a>
+
         </div>
 
       </div>
 
       <div class="wt-current-location">
-        <button class="wt-current-location-edit-btn" ng-click="showLocations()">
-          <span class="fa fa-edit"></span>
-        </button>
-        {{ location.name }}
+        <a class="wt-current-location-edit-btn" ng-click="showLocations()">
+          <span class="fa fa-location-arrow"></span>
+          {{ location.name }}
+        </a>
         <span class="fa fa-spinner fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
       </div>
 

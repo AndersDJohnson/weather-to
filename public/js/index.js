@@ -97,6 +97,7 @@ require([
       $scope.getIconClassForPoint = forecastIo.getIconClassForPoint;
       $scope.getIconClassForIcon = forecastIo.getIconClassForIcon;
 
+
       $scope.showCategories = function () {
         scopeModal('categories', $scope).
           result.then(function (result) {
@@ -477,6 +478,12 @@ require([
     function ($scope, $log, scopeModal, forecastIo, conditionsEngine) {
 
     $scope.current = null;
+
+
+    $scope.showCurrent = function () {
+      scopeModal('current', $scope);
+    };
+
 
     $scope.$watch('location', function (loc) {
       // $log.log('location change', arguments);
