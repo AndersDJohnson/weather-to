@@ -14,12 +14,17 @@ Weather Application
 
 ## TODO
 
-* "Powered by Forecast" badge (legal)
-* grunt-angular-templates
-* angular-hint
-* https://docs.angularjs.org/guide/production#disabling-debug-data
-* ng-strict-di
-* ng-annotate / ng-min
-* http://bootstrapvalidator.com/
+* Features
+** "Powered by Forecast" badge (legal)
+** Link locations to Google Maps
+** Add to Google Calendar for category matches
+** http://bootstrapvalidator.com/
 
-
+* Development
+** grunt-angular-templates
+** angular-hint
+** https://docs.angularjs.org/guide/production#disabling-debug-data
+** ng-strict-di
+** ng-annotate / ng-min
+** https://github.com/johnpapa/angularjs-styleguide
+** http://briantford.com/blog/huuuuuge-angular-apps
