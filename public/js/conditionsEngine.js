@@ -1,7 +1,8 @@
 define([
   'angular',
   'moment',
-  'lodash'
+  'lodash',
+  'moment.calendarWithoutTime'
 ],
 function (
   angular,
@@ -129,21 +130,35 @@ function (
       };
 
 
+      conditionsEngine.setPointTimes = function (point) {
+        // get time span
+
+        var aMoment = moment.unix(point.time);
+
+        point.date = aMoment.toDate();
+
+        point.timePretty = {
+          calendar: aMoment.calendar(),
+          calendarWithoutTime: aMoment.calendar(null, true)
+        };
+      };
+
+
       conditionsEngine._computeCatsWithCats = function (cats, location) {
 
         var deferred = $q.defer();
 
         var pointSetsByCat = {};
 
+
+
         forecastIo.get(location).then(function (result) {
 
           $log.log('cats', cats);
-          if (! _.isArray(cats)) {
+          if (! angular.isArray(cats)) {
             throw new Error("cats must be array");
           }
           cats.forEach(function (cat) {
-
-            // TODO: sort by time?
 
             var sets = [];
             var set;
@@ -156,10 +171,6 @@ function (
             hourlyData.forEach(function (point) {
 
               point.type = 'hourly';
-
-              var timePretty = moment.unix(point.time);
-              // condition.timePretty = timePretty.fromNow();
-              point.timePretty = timePretty.calendar();
 
               point.durationSeconds = 60 * 60;
 
@@ -197,10 +208,6 @@ function (
 
               point.type = 'daily';
 
-              var timePretty = moment.unix(point.time);
-              // condition.timePretty = timePretty.fromNow();
-              point.timePretty = timePretty.calendar();
-
               var matches = conditionsEngine.pointMatchesCategory(point, cat);
 
               if (matches) {
@@ -208,6 +215,7 @@ function (
                 set.type = 'daily';
 
                 set.first = point;
+                conditionsEngine.setPointTimes(set.first);
 
                 daily.push(set);
               }
@@ -225,13 +233,11 @@ function (
                 return;
               }
 
-              // get time span
+              set.first = points[0];
+              set.last = points[length - 1];
 
-              var first = set.first = points[0];
-              var last = set.last = points[length - 1];
-
-              first.date = moment.unix(first.time).toDate();
-              last.date = moment.unix(last.time).toDate();
+              conditionsEngine.setPointTimes(set.first);
+              conditionsEngine.setPointTimes(set.last);
 
 
               // get averages
