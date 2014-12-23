@@ -63,7 +63,10 @@ body {
 }
 
 .wt-current-data {
+  .clearfix;
+
   & > a {
+    float: left;
     .wt-link-unstyled;
     display: block;
 
@@ -141,10 +144,15 @@ body {
   padding-left: 2em;
 }
 
-.wt-agenda-list-item-point-set {
-  a {
-    .wt-link-unstyled;
-  }
+.wt-agenda-list-item {
+}
+
+.wt-agenda-list-item-link {
+  .wt-link-unstyled;
+}
+
+.wt-agenda-list-item-icon {
+  margin-right: 0.5em;
 }
 
 .wt-list-toggle {

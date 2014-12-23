@@ -31,14 +31,14 @@
           class="wt-agenda-list wt-agenda-list-point-set list-unstyled"
         >
           <li ng-repeat="pointSet in pointSetsByCat[cat.id].all"
-            class="wt-agenda-list-item wt-agenda-list-item-point-set"
+            class="wt-agenda-list-item"
           >
 
             <div class="media">
 
               <div class="media-left">
 
-                <span class="wt-bullet"></span>
+                <!-- <span class="wt-bullet"></span> -->
 
               </div>
 
@@ -46,12 +46,14 @@
 
                 <div ng-switch on="pointSet.type">
                   <div ng-switch-when="hourly">
-                    <a ng-click="modal('pointSet', this)">
+                    <a class="wt-agenda-list-item-link" ng-click="modal('pointSet', this)">
+                      <span class="wt-agenda-list-item-icon fa fa-clock-o"></span>
                       {{ pointSet.first.timePretty.calendar }} - {{ pointSet.last.timePretty.calendar }}
                     </a>
                   </div>
                   <div ng-switch-when="daily">
-                    <a ng-click="modal('point', {point: pointSet.first})">
+                    <a class="wt-agenda-list-item-link" ng-click="modal('point', {point: pointSet.first})">
+                      <span class="wt-agenda-list-item-icon fa fa-calendar"></span>
                       {{ pointSet.first.timePretty.calendarWithoutTime }}
                     </a>
                   </div>
