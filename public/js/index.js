@@ -121,6 +121,14 @@ require([
       };
 
 
+      var showGetLocationError = function (err) {
+        $scope.$safeApply(function () {
+          $scope.locationError = err;
+        });
+        scopeModal('getLocationError', $scope);
+      };
+
+
       $scope.showSettings = function () {
         var settingsFormModel = angular.copy(settings.settings);
         var scope = {
@@ -216,18 +224,22 @@ require([
         var deferred = $q.defer();
         var promise = deferred.promise;
 
-        geolocator.locate().then(function (position) {
-          var location = {
-            name: 'Current location',
-            coords: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-          };
+        geolocator.locate().
+          then(function (position) {
+            var location = {
+              name: 'Current location',
+              coords: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              }
+            };
 
-          // resolve with just coordinates since it's sufficient to request weather
-          deferred.resolve(location);
-        });
+            // resolve with just coordinates since it's sufficient to request weather
+            deferred.resolve(location);
+          },
+          function (err) {
+            deferred.reject(err);
+          });
 
         return promise;
       };
@@ -235,46 +247,48 @@ require([
 
       $scope.getCurrentLocation = function () {
 
-        $scope.location = {
-          resolving: true
-        };
+        var promise = getCurrentLocation().
+          then(function (location) {
+            location.resolving = true;
+            $scope.$safeApply(function () {
+              $scope.location = location;
+            });
 
-        getCurrentLocation().then(function (location) {
-          location.resolving = true;
-          $scope.$safeApply(function () {
-            $scope.location = location;
-          })
+            // setTimeout(function () {
+            // now lazily attempt to update the current coordinate location with reverse geocoded city
+            geocoder.reverse(location, {
+              result_type: 'locality'
+            }).
+              then(
+                function (result) {
+                  $log.log('reverse result', result);
+                  var results = result.results;
+                  if (results && results.length > 0) {
+                    var locality = results[0];
+                    if (locality && locality.formatted_address) {
 
-          // setTimeout(function () {
-          // now lazily attempt to update the current coordinate location with reverse geocoded city
-          geocoder.reverse(location, {
-            result_type: 'locality'
-          }).
-            then(
-              function (result) {
-                $log.log('reverse result', result);
-                var results = result.results;
-                if (results && results.length > 0) {
-                  var locality = results[0];
-                  if (locality && locality.formatted_address) {
+                      var convertedLocation = locationConverter.convert(locality);
 
-                    var convertedLocation = locationConverter.convert(locality);
-
-                    $scope.$safeApply(function () {
-                      location.resolving = false;
-                      location.name = 'Current location (' + convertedLocation.name + ')';
-                    });
+                      $scope.$safeApply(function () {
+                        location.resolving = false;
+                        location.name = 'Current location (' + convertedLocation.name + ')';
+                      });
+                    }
                   }
-                }
-              },
-              function (err) {
-                $log.error(err);
+                },
+                function (err) {
+                  $log.error(err);
 
-                location.resolving = false;
-              }
-            );
-          // }, 1000);
-        });
+                  location.resolving = false;
+                }
+              );
+            // }, 1000);
+          },
+          function (err) {
+            showGetLocationError(err);
+          });
+
+        return promise;
       };
 
 
@@ -464,7 +478,10 @@ require([
       });
 
 
-      $scope.getCurrentLocation();
+      $scope.getCurrentLocation().
+        catch(function (err) {
+          showGetLocationError(err);
+        });
 
 
     }

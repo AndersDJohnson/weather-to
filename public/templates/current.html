@@ -49,7 +49,9 @@
 
     </div>
     <div ng-if="! location">
-      No location chosen.
+      <p>
+        No location. Select with <a ng-click="showLocations(); close()">Locations</a>.
+      </p>
     </div>
 
   </div>
