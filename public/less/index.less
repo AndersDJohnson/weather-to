@@ -20,16 +20,19 @@ body {
   background: transparent;
 }
 
-@text-color-active: lighten(@text-color, 40%);
+//@text-color-active: lighten(@text-color, 40%);
+//@text-color-active: @link-hover-color;
+@text-color-active: @link-color;
 
-.wt-link-unstyled {
-  &, &:link, &:visited, &:active, &:hover {
+.wt-link-subtle {
+  &, &:link, &:visited, &:hover, &:active {
     color: @text-color;
     text-decoration: none;
   }
 
-  &:hover {
+  &:hover, &:active {
     color: @text-color-active;
+    //text-shadow: 0px 0px 2px rgba(0,100,255,0.5);
   }
 }
 
@@ -67,7 +70,7 @@ body {
 
   & > a {
     float: left;
-    .wt-link-unstyled;
+    .wt-link-subtle;
     display: block;
 
     & > * {
@@ -84,7 +87,7 @@ body {
 .wt-current-temp-row-1 {
   vertical-align: bottom;
 
-  & > * {
+  & > div {
     display: table-cell;
     vertical-align: middle;
   }
@@ -100,10 +103,12 @@ body {
 .wt-current-temp-apparent {
   padding-left: 0.25em;
 }
+
 .wt-current-temp-apparent-text {
   font-size: 0.75em;
   line-height: 1em;
 }
+
 .wt-current-temp-apparent-number {
   font-size: 1.75em;
   line-height: 1em;
@@ -123,14 +128,10 @@ body {
 
 .wt-current-location {
   font-size: 0.75em;
-
-  & > a {
-    .wt-link-unstyled;
-  }
 }
 
-.wt-current-location-edit-btn {
-  .wt-button-unstyled;
+.wt-current-location-link {
+  .wt-link-subtle;
 }
 
 .wt-current-time {
@@ -148,7 +149,7 @@ body {
 }
 
 .wt-agenda-list-item-link {
-  .wt-link-unstyled;
+  .wt-link-subtle;
 }
 
 .wt-agenda-list-item-icon {

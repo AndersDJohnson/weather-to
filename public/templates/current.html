@@ -6,7 +6,7 @@
 
       <div class="wt-current-data">
 
-        <a class="wt-current-location-edit-btn" ng-click="showCurrent()">
+        <a class="wt-current-show-link" ng-click="showCurrent()">
 
           <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
 
@@ -32,7 +32,7 @@
       </div>
 
       <div class="wt-current-location">
-        <a class="wt-current-location-edit-btn" ng-click="showLocations()">
+        <a class="wt-current-location-link" ng-click="showLocations()">
           <span class="fa fa-location-arrow"></span>
           <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
           <span class="wt-current-location-name">
