@@ -4,6 +4,17 @@
 @import "../bower_components/weather-icons/weather-icons/weather-icons";
 @weather-icons-path: "../bower_components/weather-icons/font";
 
+
+/**
+ * Disabled labels (and within disabled fieldsets) get cursor. 
+ */
+fieldset[disabled] label,
+fieldset.disabled label,
+label[disabled], label.disabled {
+  cursor: @cursor-disabled;
+}
+
+
 html {
 
 }
