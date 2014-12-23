@@ -20,6 +20,7 @@ Weather Application
 ** Link locations to Google Maps
 ** Add to Google Calendar for category matches
 ** http://bootstrapvalidator.com/
+** https://github.com/wenzhixin/bootstrap-table
 
 * Development
 ** grunt-angular-templates
