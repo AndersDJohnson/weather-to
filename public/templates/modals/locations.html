@@ -12,8 +12,14 @@
 
   <div>
 
-    <button ng-click="getCurrentLocation(); close()">Detect location</button>
-    <button ng-click="showAddLocation(); close()">Add location</button>
+    <button class="btn btn-primary" ng-click="getCurrentLocation(); close()">
+      <span class="fa fa-location-arrow"></span>
+      Detect current location
+    </button>
+    <button class="btn btn-success" ng-click="showAddLocation(); close()">
+      <span class="fa fa-plus"></span>
+      New
+    </button>
 
   </div>
 
