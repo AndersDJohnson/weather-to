@@ -38,14 +38,15 @@
 
     <div class="container">
 
-      <div ng-controller="CurrentController">
+      <div class="row">
 
-        <div ng-include="'templates/current.html'"></div>
+        <div class="col-sm-6 col-sm-push-6">
+          <div ng-include="'templates/current.html'"></div>
+        </div>
 
-      </div>
-
-
-      <div ng-include="'templates/agenda.html'"></div>
+        <div class="col-sm-6 col-sm-pull-6">
+          <div ng-include="'templates/agenda.html'"></div>
+        </div>
 
       <!-- <div ng-include="'templates/timeline.html'"></div> -->
 
