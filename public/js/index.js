@@ -58,6 +58,8 @@ require([
       geocoderProvider.config.httpDelayer.delay = 2000;
       forecastIoProvider.config.httpDelayer.delay = 2000;
       geolocatorProvider.config.delay = 2000;
+
+      // geolocatorProvider.config.fail = true;
   }]);
 
 
@@ -126,7 +128,7 @@ require([
         $scope.$safeApply(function () {
           $scope.locationError = err;
         });
-        scopeModal('getLocationError', $scope);
+        // scopeModal('getLocationError', $scope);
       };
 
 
@@ -221,7 +223,7 @@ require([
       };
 
 
-      var getCurrentLocation = function () {
+      var _getCurrentLocation = function () {
         var deferred = $q.defer();
         var promise = deferred.promise;
 
@@ -249,10 +251,11 @@ require([
       $scope.getCurrentLocation = function () {
 
         $scope.$safeApply(function () {
+          $scope.locationError = null;
           $scope.refreshingLocation = true;
         });
 
-        var promise = getCurrentLocation().
+        var promise = _getCurrentLocation().
           then(function (location) {
 
             $scope.$safeApply(function () {
@@ -300,12 +303,13 @@ require([
               $scope.location = null;
             });
             showGetLocationError(err);
-          }).
-          finally(function () {
-            $scope.$safeApply(function () {
-              $scope.refreshingLocation = false;
-            });
+          }
+        ).
+        finally(function () {
+          $scope.$safeApply(function () {
+            $scope.refreshingLocation = false;
           });
+        });
 
         return promise;
       };

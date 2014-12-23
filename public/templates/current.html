@@ -2,51 +2,48 @@
 
   <div class="wt-current">
 
-    <div ng-if="! refreshingLocation &amp;&amp; ! location">
-      <p>
-        No location. Select with <a ng-click="showLocations(); close()">Locations</a>.
-      </p>
-    </div>
-
-
     <div ng-if="refreshingLocation || location">
 
-      <div ng-if="! refreshingLocation">
-        <div ng-if="refreshingForecast || ! current" class="wt-current-loading-forecast">
+      <div class="wt-current-data">
+        <div class="wt-current-data-weather-container">
 
-          <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-loading-forecast-icon"></span>
-          <span class="wt-current-loading-forecast-text"></span>
+          <div ng-if="! refreshingLocation">
+            <div ng-if="refreshingForecast || ! current" class="wt-current-loading-forecast">
 
-        </div>
+              <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-loading-forecast-icon"></span>
+              <span class="wt-current-loading-forecast-text"></span>
+
+            </div>
 
 
-        <div ng-if="! refreshingForecast &amp;&amp; current">
+            <div ng-if="! refreshingForecast &amp;&amp; current">
 
-          <div class="wt-current-data">
-            <a class="wt-current-show-link" ng-click="showCurrent()">
+              <a class="wt-current-show-link wt-current-data-weather" ng-click="showCurrent()">
 
-              <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
+                <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
 
-              <div class="wt-current-temp">
-                <div class="wt-current-temp-row-1">
-                  <div class="wt-current-temp-actual">
-                    {{ current.temperature | number:format.numberShort }}&deg;
-                  </div>
-                  <div class="wt-current-temp-apparent">
-                    <div class="wt-current-temp-apparent-text">feels</div>
-                    <div class="wt-current-temp-apparent-number">
-                      {{ current.apparentTemperature | number:format.numberShort }}&deg;
+                <div class="wt-current-temp">
+                  <div class="wt-current-temp-row-1">
+                    <div class="wt-current-temp-actual">
+                      {{ current.temperature | number:format.numberShort }}&deg;
+                    </div>
+                    <div class="wt-current-temp-apparent">
+                      <div class="wt-current-temp-apparent-text">feels</div>
+                      <div class="wt-current-temp-apparent-number">
+                        {{ current.apparentTemperature | number:format.numberShort }}&deg;
+                      </div>
                     </div>
                   </div>
+                  <div class="wt-current-summary-text">
+                    {{ current.summary }}
+                  </div>
                 </div>
-                <div class="wt-current-summary-text">
-                  {{ current.summary }}
-                </div>
-              </div>
-            </a>
-          </div>
+              </a>
 
+            </div>
+          </div>
         </div>
+
       </div>
 
 
