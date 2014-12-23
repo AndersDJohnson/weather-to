@@ -236,14 +236,16 @@ function (
               set.first = points[0];
               set.last = points[length - 1];
 
-              conditionsEngine.setPointTimes(set.first);
-              conditionsEngine.setPointTimes(set.last);
+
+              angular.forEach(points, function (point) {
+                conditionsEngine.setPointTimes(point);
+              });
 
 
               // get averages
 
               var totals = {};
-              _.forEach(points, function (point) {
+              angular.forEach(points, function (point) {
                 totals.temperature = totals.temperature || 0;
                 totals.temperature += point.temperature;
                 totals.apparentTemperature = totals.apparentTemperature || 0;
@@ -252,7 +254,7 @@ function (
               });
 
               var averages = {};
-              _.forEach(totals, function (total, key) {
+              angular.forEach(totals, function (total, key) {
                 averages[key] = total / length;
               });
 

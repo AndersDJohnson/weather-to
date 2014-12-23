@@ -44,7 +44,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="point in pointSet.points">
-          <td><span>{{ point.timePretty }}</span></td>
+          <td><span>{{ point.timePretty.calendar }}</span></td>
           <td>
             <span class="wt-pointset-table-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(point) }}"></span>
             <span>{{ point.summary }}</span>
