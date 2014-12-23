@@ -3,8 +3,7 @@
   <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
   <h3 class="modal-title">
-    <!-- {{cat.name}}: {{ pointSet.start | amCalendar }} - {{ pointSet.end | amCalendar }} -->
-    {{ pointSet.start | amCalendar }} - {{ pointSet.end | amCalendar }}
+    {{ pointSet.first.time | amCalendar }} - {{ pointSet.last.time | amCalendar }}
   </h3>
 
 </div>

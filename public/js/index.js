@@ -438,11 +438,11 @@ require([
 
   //       _.each($scope.cats, function (cat) {
 
-  //         var conditionSets = $scope.pointSetsByCat[cat.id];
+  //         var conditionSets = $scope.pointSetsByCat[cat.id].hourly;
 
   //         _.each(conditionSets, function (conditionSet) {
 
-  //           var row = [cat.name, conditionSet.startDate, conditionSet.endDate, ''];
+  //           var row = [cat.name, conditionSet.first.date, conditionSet.last.date, ''];
   //           row.push();
   //           rows.push(row);
   //         });

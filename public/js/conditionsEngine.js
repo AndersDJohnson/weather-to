@@ -115,6 +115,20 @@ function (
       };
 
 
+      var newSet = function () {
+        var set = {
+          points: [],
+          next: null,
+          conditions: {},
+          start: null,
+          startDate: null,
+          end: null,
+          endDate: null
+        };
+        return set;
+      };
+
+
       conditionsEngine._computeCatsWithCats = function (cats, location) {
 
         var deferred = $q.defer();
@@ -154,11 +168,8 @@ function (
               if (matches) {
 
                 if (! set || ! lastMatches) {
-                  set = {
-                    points: [],
-                    next: null,
-                    conditions: {}
-                  };
+                  set = newSet();
+                  set.type = 'hourly';
                   sets.push(set);
                 }
 
@@ -193,7 +204,12 @@ function (
               var matches = conditionsEngine.pointMatchesCategory(point, cat);
 
               if (matches) {
-                daily.push(point);
+                var set = newSet();
+                set.type = 'daily';
+
+                set.first = point;
+
+                daily.push(set);
               }
             });
 
@@ -211,13 +227,11 @@ function (
 
               // get time span
 
-              set.start = points[0].time;
-              set.startDate = moment.unix(set.start).toDate();
-              var last = points[length - 1];
-              set.end = last.time;
-              set.endDate = moment.unix(set.end).toDate();
+              var first = set.first = points[0];
+              var last = set.last = points[length - 1];
 
-              set.rangePretty = moment(set.startDate).calendar() + ' - ' + moment(set.endDate).calendar();
+              first.date = moment.unix(first.time).toDate();
+              last.date = moment.unix(last.time).toDate();
 
 
               // get averages
@@ -239,10 +253,18 @@ function (
               set.averages = averages;
             });
 
+            var pointSet = pointSetsByCat[cat.id] = pointSetsByCat[cat.id] || {};
 
-            pointSetsByCat[cat.id] = pointSetsByCat[cat.id] || {};
-            pointSetsByCat[cat.id].hourly = sets;
-            pointSetsByCat[cat.id].daily = daily;
+            pointSet.hourly = sets;
+            pointSet.daily = daily;
+
+            var all = [].concat(sets).concat(daily);
+
+            all = _.sortBy(all, function (pointSet) {
+              return pointSet.first.time;
+            });
+
+            pointSet.all = all;
 
           });
 
