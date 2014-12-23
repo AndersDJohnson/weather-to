@@ -43,7 +43,8 @@
 
       <div class="wt-current-time">
         <span class="fa fa-clock-o"></span>
-        <span am-time-ago="current.time" am-preprocess="unix"></span>
+        <span am-time-ago="current.time" am-preprocess="unix"
+          tooltip-placement="bottom" tooltip="{{ current.time | amCalendar }}"></span>
       </div>
 
     </div>
