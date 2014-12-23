@@ -63,14 +63,14 @@ body {
 }
 
 .wt-current-data {
-
-  a {
+  & > a {
     .wt-link-unstyled;
-  }
+    display: block;
 
-  & > * {
-    display: table-cell;
-    vertical-align: middle;
+    & > * {
+      display: table-cell;
+      vertical-align: middle;
+    }
   }
 }
 
@@ -119,7 +119,9 @@ body {
 // current location
 
 .wt-current-location {
-  a {
+  font-size: 0.75em;
+
+  & > a {
     .wt-link-unstyled;
   }
 }
@@ -128,10 +130,21 @@ body {
   .wt-button-unstyled;
 }
 
+.wt-current-time {
+  font-size: 0.75em;
+}
+
+
 // agenda
 
 .wt-agenda-list-category .wt-agenda-list {
   padding-left: 2em;
+}
+
+.wt-agenda-list-item-point-set {
+  a {
+    .wt-link-unstyled;
+  }
 }
 
 .wt-list-toggle {

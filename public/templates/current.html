@@ -25,19 +25,25 @@
             <div class="wt-current-summary-text">
               {{ current.summary }}
             </div>
+          </div>
 
-          </a>
-
-        </div>
+        </a>
 
       </div>
 
       <div class="wt-current-location">
         <a class="wt-current-location-edit-btn" ng-click="showLocations()">
           <span class="fa fa-location-arrow"></span>
-          {{ location.name }}
+          <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
+          <span class="wt-current-location-name">
+            {{ location.name }}
+          </span>
         </a>
-        <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
+      </div>
+
+      <div class="wt-current-time">
+        <span class="fa fa-clock-o"></span>
+        <span am-time-ago="current.time" am-preprocess="unix"></span>
       </div>
 
     </div>
