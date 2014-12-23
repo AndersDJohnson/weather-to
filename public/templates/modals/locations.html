@@ -23,14 +23,30 @@
 
   </div>
 
-  <ul class="list-unstyled">
-    <li ng-repeat="loc in locations track by loc.id">
-
-      <button ng-click="removeLocation(loc)">x</button>
-
-      <a ng-click="setLocation(loc); close()">{{ loc.name }}</a>
-
-    </li>
-  </ul>
+  <div ng-if="locations.length">
+    <table class="table table-striped table-condensed wt-table wt-table-locations">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="loc in locations track by loc.id">
+          <td class="td-expand">
+            <a ng-click="setLocation(loc); close()">
+              {{ loc.name }}
+            </a>
+          </td>
+          <td class="td-shrink text-right">
+            <button class="btn btn-sm btn-danger" ng-click="removeLocation(loc)">
+              <span class="fa fa-trash"></span>
+              <span class="sr-only">Delete</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </div>

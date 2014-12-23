@@ -153,6 +153,7 @@ body {
 
 .wt-current-weather-icon {
   font-size: 3em;
+  padding-top: 0.25em;
   padding-bottom: 0.25em;
 
   @media screen and (min-width: @screen-ms-min) {
@@ -227,7 +228,8 @@ body {
 }
 
 
-.wt-table-categories {
+.wt-table {
+  & > thead > tr > td,
   & > tbody > tr > td {
     vertical-align: middle;
   }
