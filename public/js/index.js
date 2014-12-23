@@ -241,7 +241,9 @@ require([
 
         getCurrentLocation().then(function (location) {
           location.resolving = true;
-          $scope.location = location;
+          $scope.$safeApply(function () {
+            $scope.location = location;
+          })
 
           // setTimeout(function () {
           // now lazily attempt to update the current coordinate location with reverse geocoded city
@@ -260,7 +262,7 @@ require([
 
                     $scope.$safeApply(function () {
                       location.resolving = false;
-                      location.name = convertedLocation.name;
+                      location.name = 'Current location (' + convertedLocation.name + ')';
                     });
                   }
                 }
