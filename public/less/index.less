@@ -15,6 +15,16 @@ body {
   /*overflow-x: auto;*/
 }
 
+/**
+ * http://stackoverflow.com/a/8230953
+ */
+.td-shrink {
+    white-space: nowrap;
+}
+.td-expand {
+    width: 99%;
+}
+
 .wt-button-unstyled {
   border: 0px;
   background: transparent;
@@ -169,4 +179,11 @@ body {
 
 .wt-bullet::after {
   content: "\002022";
+}
+
+
+.wt-table-categories {
+  & > tbody > tr > td {
+    vertical-align: middle;
+  }
 }

@@ -10,17 +10,35 @@
 
 <div class="modal-body">
 
-  <ul class="list-unstyled">
-    <li ng-repeat="cat in cats">
+  <table class="table table-striped table-condensed wt-table wt-table-categories">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="cat in cats">
+        <td class="td-expand">
+          {{ cat.name }}
+        </td>
+        <td class="td-shrink text-right">
+          <button class="btn btn-sm btn-default" ng-click="editCategory(cat)">
+            <span class="fa fa-pencil"></span>
+            <span class="sr-only">Edit</span>
+          </button>
+          <button class="btn btn-sm btn-danger" ng-click="removeCategory(cat)">
+            <span class="fa fa-trash"></span>
+            <span class="sr-only">Delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-      <button ng-click="editCategory(cat)">e</button>
-      <button ng-click="removeCategory(cat)">x</button>
-
-      {{ cat.name }}
-
-    </li>
-  </ul>
-
-  <button ng-click="addCategory()">Add</button>
+  <button class="btn btn-success" ng-click="addCategory()">
+    <span class="fa fa-plus"></span>
+    New
+  </button>
 
 </div>
