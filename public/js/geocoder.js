@@ -1,4 +1,4 @@
-define(['angular', 'httpDelayer'], function (angular) {
+define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
 
   var geocoderModule = angular.module('geocoder', ['httpDelayer']);
 
@@ -38,8 +38,15 @@ define(['angular', 'httpDelayer'], function (angular) {
         var cache = true;
 
 
-        geocoder.get = function (address) {
+        geocoder.get = function (address, options) {
+
+          options = _.defaults({}, options, {
+            cache: true
+          });
+
           var deferred = $q.defer();
+
+          var cache = options.cache;
 
           $log.log('geocoding address', address);
 
@@ -66,13 +73,18 @@ define(['angular', 'httpDelayer'], function (angular) {
 
 
         geocoder.reverse = function (position, options) {
+
+          options = _.defaults({}, options, {
+            cache: true,
+            result_type: []
+          });
+
           var deferred = $q.defer();
 
           $log.log('reverse geocoding position', position, options);
 
-          options = options || {};
-          options.result_type = options.result_type || [];
           var result_type = options.result_type;
+          var cache = options.cache;
 
           if (! angular.isArray(result_type) && result_type.indexOf('|') === -1) {
             result_type = [result_type];

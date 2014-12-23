@@ -40,9 +40,10 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
          * https://erikflowers.github.io/weather-icons/
          */
         forecastIo.getIconClassForIcon = function (icon, options) {
-          options = angular.extend({
+
+          options = _.defaults({}, options, {
             prefix: '' // 'wi-'
-          }, options);
+          });
 
           if (! icon) {
             return '';
@@ -139,7 +140,7 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           }
         };
 
-        _.each(forecastIo.conditions, function (condition, key) {
+        angular.forEach(forecastIo.conditions, function (condition, key) {
           condition.key = key;
         });
 
@@ -155,12 +156,16 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           .value();
 
 
-        forecastIo.get = function (location) {
+        forecastIo.get = function (location, options) {
+
+          options = _.defaults({}, options, {
+            cache: true
+          });
 
           var deferred = $q.defer();
           var promise = deferred.promise;
 
-          var cache = true;
+          var cache = options.cache;
 
           var lat;
           var lng;

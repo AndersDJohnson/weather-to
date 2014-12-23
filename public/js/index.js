@@ -86,6 +86,8 @@ require([
 
       $scope.modal = scopeModal;
 
+
+      $scope.current = null;
       $scope.cats = [];
       $scope.locations = [];
 
@@ -133,6 +135,11 @@ require([
           result.then(function (result) {
             $log.log('result', result);
           });
+      };
+
+
+      $scope.showCurrent = function () {
+        scopeModal('current', $scope);
       };
 
 
@@ -319,8 +326,8 @@ require([
       };
 
 
-      var _scopingComputeCatsWithCats = function (cats, loc) {
-        conditionsEngine.computeCats(cats, loc).
+      var _scopingComputeCatsWithCats = function (cats, loc, options) {
+        conditionsEngine.computeCats(cats, loc, options).
           then(function (result) {
             $scope.$safeApply(function () {
               $scope.pointSetsByCat = result;
@@ -328,35 +335,56 @@ require([
           });
       };
 
-      var scopingComputeCats = function (cats, loc) {
+      var scopingComputeCats = function (cats, loc, options) {
         cats = cats || $scope.cats;
         loc = loc || $scope.location;
 
         if (! cats) {
           categories.query().then(function (cats) {
-            _scopingComputeCatsWithCats(cats, location);
+            $scope.cats = cats;
+            $scope.$safeApply();
+            _scopingComputeCatsWithCats(cats, loc, options);
           });
         }
         else {
-          _scopingComputeCatsWithCats(cats, loc);
+          _scopingComputeCatsWithCats(cats, loc, options);
         }
       };
+
+
+      var scopingGetForecastForLocation = function (loc, options) {
+        $log.log('scopingGetForecastForLocation', arguments);
+        forecastIo.get(loc, options).
+          then(function (result) {
+            // $log.log('current result', result);
+            var current = result.currently;
+            $scope.$safeApply(function () {
+              // this should trigger 'current.time' watch, which re-compute cats
+              $scope.current = current;
+            });
+          });
+      };
+
+
+      $scope.refreshForecast = function () {
+        $log.log('refresh forecast', arguments);
+        var loc = $scope.location;
+        scopingGetForecastForLocation(loc, {
+          cache: false
+        });
+      };
+
+
+      $scope.$watch('current.time', function () {
+        $log.log('current.time change - re-computing cats', arguments);
+        scopingComputeCats();
+      });
 
 
       $scope.$watch('location', function (loc) {
         if (loc) {
           $log.log('location change', arguments);
-          if ( ! $scope.cats || $scope.cats.length === 0 ) {
-            categories.query().then(function (cats) {
-              $scope.$safeApply(function () {
-                $scope.cats = cats;
-                // should trigger watch on 'cats'
-              });
-            });
-          }
-          else {
-            scopingComputeCats(null, loc);
-          }
+          scopingGetForecastForLocation(loc);
         }
       }, true);
 
@@ -482,28 +510,6 @@ require([
   weatherTo.controller('CurrentController',
     ['$scope', '$log', 'scopeModal', 'forecastIo', 'conditionsEngine',
     function ($scope, $log, scopeModal, forecastIo, conditionsEngine) {
-
-    $scope.current = null;
-
-
-    $scope.showCurrent = function () {
-      scopeModal('current', $scope);
-    };
-
-
-    $scope.$watch('location', function (loc) {
-      // $log.log('location change', arguments);
-
-      if (loc) {
-        forecastIo.get(loc).then(function (result) {
-          // $log.log('current result', result);
-          var current = result.currently;
-          $scope.current = current;
-        });
-      }
-
-    }, true);
-
 
     }
   ]);

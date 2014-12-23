@@ -144,15 +144,20 @@ function (
       };
 
 
-      conditionsEngine._computeCatsWithCats = function (cats, location) {
+      conditionsEngine._computeCatsWithCats = function (cats, location, options) {
+
+        options = _.defaults({}, options, {
+          
+        });
 
         var deferred = $q.defer();
 
         var pointSetsByCat = {};
 
 
-
-        forecastIo.get(location).then(function (result) {
+        forecastIo.get(location, {
+          cache: options.cache
+        }).then(function (result) {
 
           $log.log('cats', cats);
           if (! angular.isArray(cats)) {
@@ -286,7 +291,7 @@ function (
       };
 
 
-      conditionsEngine.computeCats = function (cats, location) {
+      conditionsEngine.computeCats = function (cats, location, options) {
 
         var deferred = $q.defer();
 
@@ -296,7 +301,7 @@ function (
           deferred.reject('must provide cats');
         }
 
-        deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location));
+        deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location, options));
 
         return deferred.promise;
       };

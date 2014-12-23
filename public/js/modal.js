@@ -1,4 +1,4 @@
-define(['angular'], function (angular) {
+define(['angular', 'lodash'], function (angular, _) {
 
   var modalModule = angular.module('modal', []);
 
@@ -13,7 +13,8 @@ define(['angular'], function (angular) {
 
       var scopeModal = function (templateId, scope, options) {
 
-        options = angular.extend({}, defaultOptions, options);
+        options = _.defaults({}, options, defaultOptions);
+
         scope = scope || {};
 
         var modalOptions = {

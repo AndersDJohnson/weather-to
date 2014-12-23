@@ -10,8 +10,6 @@ define(['angular'], function (angular) {
     options.delay = options.delay || 0;
     options.id = options.id || null;
 
-    console.log('options', options);
-
     $httpProvider.interceptors.push([
       '$log', '$q', '$timeout',
       function($log, $q, $timeout) {
