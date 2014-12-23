@@ -34,10 +34,15 @@ define(['angular'], function (angular) {
             }
 
             var delay = options.delay;
-            $log.log('http delay', delay, response.config.url, response);
-            $timeout(function() {
+            if (delay) {
+              $log.log('http delayed', delay, response.config.url, response);
+              $timeout(function() {
+                defer.resolve(response);
+              }, delay);
+            }
+            else {
               defer.resolve(response);
-            }, delay);
+            }
 
             return promise;
           }
