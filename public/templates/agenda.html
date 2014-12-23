@@ -3,78 +3,90 @@
   <div class="wt-agenda">
 
     <h3>Forecast
-      <span class="wt-agenda-thru small" ng-show="forecast.daily.last">
+      <span class="wt-agenda-thru small" ng-show="! refreshingForecast && forecast.daily.last">
         thru {{ forecast.daily.last.time | amCalendar }}
       </span>
     </h3>
 
-    <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
-      <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
 
-        <div class="media">
-          <div class="media-left">
-            <button class="wt-list-toggle" ng-click="collapses[cat.id] = ! collapses[cat.id]" ng-disabled="pointSetsByCat[cat.id].all.length == 0">
-              <span ng-show="collapses[cat.id]"><span class="fa fa-plus"></span><span class="sr-only">Expand</span></span>
-              <span ng-hide="collapses[cat.id]"><span class="fa fa-minus"></span><span class="sr-only">Collapse</span></span>
-            </button>
-          </div>
+    <div ng-if="refreshingForecast">
 
-          <div class="media-body">
-            <div class="wt-agenda-list-item-category-label">
-              <span class="wt-agenda-list-item-category-name">
-                {{ cat.name }}
-              </span>
-              <span class="badge wt-agenda-list-item-category-badge"
-                ng-if="pointSetsByCat[cat.id].all.length">
-                {{ pointSetsByCat[cat.id].all.length }}
-              </span>
+      <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-agenda-loading-icon-forecast"></span>
+
+    </div>
+
+
+    <div ng-if="! refreshingForecast">
+
+      <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
+        <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
+
+          <div class="media">
+            <div class="media-left">
+              <button class="wt-list-toggle" ng-click="collapses[cat.id] = ! collapses[cat.id]" ng-disabled="pointSetsByCat[cat.id].all.length == 0">
+                <span ng-show="collapses[cat.id]"><span class="fa fa-plus"></span><span class="sr-only">Expand</span></span>
+                <span ng-hide="collapses[cat.id]"><span class="fa fa-minus"></span><span class="sr-only">Collapse</span></span>
+              </button>
+            </div>
+
+            <div class="media-body">
+              <div class="wt-agenda-list-item-category-label">
+                <span class="wt-agenda-list-item-category-name">
+                  {{ cat.name }}
+                </span>
+                <span class="badge wt-agenda-list-item-category-badge"
+                  ng-if="pointSetsByCat[cat.id].all.length">
+                  {{ pointSetsByCat[cat.id].all.length }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <ul collapse="collapses[cat.id]"
-          class="wt-agenda-list wt-agenda-list-match list-unstyled"
-        >
-          <li ng-repeat="pointSet in pointSetsByCat[cat.id].all"
-            class="wt-agenda-list-item-match"
+          <ul collapse="collapses[cat.id]"
+            class="wt-agenda-list wt-agenda-list-match list-unstyled"
           >
+            <li ng-repeat="pointSet in pointSetsByCat[cat.id].all"
+              class="wt-agenda-list-item-match"
+            >
 
-            <div class="media">
+              <div class="media">
 
-              <div class="media-left">
+                <div class="media-left">
 
-                <!-- <span class="wt-bullet"></span> -->
+                  <!-- <span class="wt-bullet"></span> -->
 
-              </div>
-
-              <div class="media-body">
-
-                <div ng-switch on="pointSet.type">
-                  <div ng-switch-when="hourly">
-                    <a class="wt-agenda-list-item-match-link" ng-click="modal('pointSet', this)">
-                      <span class="wt-agenda-list-item-match-icon fa fa-clock-o"></span>
-                      {{ pointSet.first.timePretty.calendar }} &ndash; {{ pointSet.last.timePretty.calendar }}
-                    </a>
-                  </div>
-                  <div ng-switch-when="daily">
-                    <a class="wt-agenda-list-item-match-link" ng-click="modal('point', {point: pointSet.first})">
-                      <span class="wt-agenda-list-item-match-icon fa fa-calendar"></span>
-                      {{ pointSet.first.timePretty.calendarWithoutTime }}
-                    </a>
-                  </div>
-                  <div ng-switch-default>
-                    ...
-                  </div>
                 </div>
 
+                <div class="media-body">
+
+                  <div ng-switch on="pointSet.type">
+                    <div ng-switch-when="hourly">
+                      <a class="wt-agenda-list-item-match-link" ng-click="modal('pointSet', this)">
+                        <span class="wt-agenda-list-item-match-icon fa fa-clock-o"></span>
+                        {{ pointSet.first.timePretty.calendar }} &ndash; {{ pointSet.last.timePretty.calendar }}
+                      </a>
+                    </div>
+                    <div ng-switch-when="daily">
+                      <a class="wt-agenda-list-item-match-link" ng-click="modal('point', {point: pointSet.first})">
+                        <span class="wt-agenda-list-item-match-icon fa fa-calendar"></span>
+                        {{ pointSet.first.timePretty.calendarWithoutTime }}
+                      </a>
+                    </div>
+                    <div ng-switch-default>
+                      ...
+                    </div>
+                  </div>
+
+                </div>
               </div>
-            </div>
 
-          </li>
-        </ul>
+            </li>
+          </ul>
 
-      </li>
-    </ul>
+        </li>
+      </ul>
+
+    </div>
 
   </div>
 
