@@ -86,6 +86,7 @@ require([
 
       $scope.modal = scopeModal;
 
+      var forecast;
 
       $scope.current = null;
       $scope.cats = [];
@@ -326,14 +327,28 @@ require([
       };
 
 
-      var _scopingComputeCatsWithCats = function (cats, loc, options) {
-        conditionsEngine.computeCats(cats, loc, options).
+      var _scopingComputeCatsWithCatsAndForecast = function (cats, forecast, options) {
+        conditionsEngine.computeCats(cats, forecast, options).
           then(function (result) {
             $scope.$safeApply(function () {
               $scope.pointSetsByCat = result;
             });
           });
       };
+
+
+      var _scopingComputeCatsWithCats = function (cats, loc, options) {
+        if (forecast) {
+          _scopingComputeCatsWithCatsAndForecast(cats, forecast, options);
+        }
+        else {
+          scopingGetForecastForLocation(loc).
+            then(function (forecast) {
+              _scopingComputeCatsWithCatsAndForecast(cats, forecast, options);
+            });
+        }
+      };
+
 
       var scopingComputeCats = function (cats, loc, options) {
         cats = cats || $scope.cats;
@@ -353,16 +368,25 @@ require([
 
 
       var scopingGetForecastForLocation = function (loc, options) {
+        var deferred = $q.defer();
+        var promise = deferred.promise;
+
         $log.log('scopingGetForecastForLocation', arguments);
         forecastIo.get(loc, options).
           then(function (result) {
+            // set the controller-global variable
+            forecast = result;
             // $log.log('current result', result);
             var current = result.currently;
             $scope.$safeApply(function () {
               // this should trigger 'current.time' watch, which re-compute cats
               $scope.current = current;
+              deferred.resolve(result);
             });
+          }, function (err) {
+            deferred.reject(err);
           });
+        return promise;
       };
 
 

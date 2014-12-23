@@ -144,7 +144,7 @@ function (
       };
 
 
-      conditionsEngine._computeCatsWithCats = function (cats, location, options) {
+      conditionsEngine._computeCatsWithCats = function (cats, forecast, options) {
 
         options = _.defaults({}, options, {
           
@@ -154,132 +154,125 @@ function (
 
         var pointSetsByCat = {};
 
-
-        forecastIo.get(location, {
-          cache: options.cache
-        }).then(function (result) {
-
           $log.log('cats', cats);
           if (! angular.isArray(cats)) {
             throw new Error("cats must be array");
           }
           cats.forEach(function (cat) {
 
-            var sets = [];
-            var set;
+          var sets = [];
+          var set;
 
-            var lastMatches = false;
+          var lastMatches = false;
 
-            var hourlyData = result.hourly.data || [];
-            var dailyData = result.daily.data || [];
+          var hourlyData = forecast.hourly.data || [];
+          var dailyData = forecast.daily.data || [];
 
-            hourlyData.forEach(function (point) {
+          hourlyData.forEach(function (point) {
 
-              point.type = 'hourly';
+            point.type = 'hourly';
 
-              point.durationSeconds = 60 * 60;
+            point.durationSeconds = 60 * 60;
 
-              var matches = conditionsEngine.pointMatchesCategory(point, cat);
+            var matches = conditionsEngine.pointMatchesCategory(point, cat);
 
-              if (matches) {
+            if (matches) {
 
-                if (! set || ! lastMatches) {
-                  set = newSet();
-                  set.type = 'hourly';
-                  sets.push(set);
-                }
-
-                var conditionsKey = point.summary + '-' + point.icon;
-                set.conditions[conditionsKey] = {
-                  icon: point.icon,
-                  summary: point.summary
-                };
-
-                set.points.push(point);
-              }
-              else {
-                if (set) {
-                  set.next = point;
-                }
+              if (! set || ! lastMatches) {
+                set = newSet();
+                set.type = 'hourly';
+                sets.push(set);
               }
 
-              lastMatches = matches;
-            });
+              var conditionsKey = point.summary + '-' + point.icon;
+              set.conditions[conditionsKey] = {
+                icon: point.icon,
+                summary: point.summary
+              };
 
-
-            var daily = [];
-
-            dailyData.forEach(function (point) {
-
-              point.type = 'daily';
-
-              var matches = conditionsEngine.pointMatchesCategory(point, cat);
-
-              if (matches) {
-                var set = newSet();
-                set.type = 'daily';
-
-                set.first = point;
-                conditionsEngine.setPointTimes(set.first);
-
-                daily.push(set);
+              set.points.push(point);
+            }
+            else {
+              if (set) {
+                set.next = point;
               }
-            });
+            }
 
-
-            sets.forEach(function (set) {
-              var points = set.points;
-              if (! points) {
-                return;
-              }
-
-              var length = points.length;
-              if (length === 0) {
-                return;
-              }
-
-              set.first = points[0];
-              set.last = points[length - 1];
-
-
-              angular.forEach(points, function (point) {
-                conditionsEngine.setPointTimes(point);
-              });
-
-
-              // get averages
-
-              var totals = {};
-              angular.forEach(points, function (point) {
-                totals.temperature = totals.temperature || 0;
-                totals.temperature += point.temperature;
-                totals.apparentTemperature = totals.apparentTemperature || 0;
-                totals.apparentTemperature += point.apparentTemperature;
-                // TODO: more fields
-              });
-
-              var averages = {};
-              angular.forEach(totals, function (total, key) {
-                averages[key] = total / length;
-              });
-
-              set.averages = averages;
-            });
-
-            var pointSet = pointSetsByCat[cat.id] = pointSetsByCat[cat.id] || {};
-
-            pointSet.hourly = sets;
-            pointSet.daily = daily;
-
-            var all = [].concat(sets).concat(daily);
-
-            all = _.sortBy(all, function (pointSet) {
-              return pointSet.first.time;
-            });
-
-            pointSet.all = all;
-
+            lastMatches = matches;
           });
+
+
+          var daily = [];
+
+          dailyData.forEach(function (point) {
+
+            point.type = 'daily';
+
+            var matches = conditionsEngine.pointMatchesCategory(point, cat);
+
+            if (matches) {
+              var set = newSet();
+              set.type = 'daily';
+
+              set.first = point;
+              conditionsEngine.setPointTimes(set.first);
+
+              daily.push(set);
+            }
+          });
+
+
+          sets.forEach(function (set) {
+            var points = set.points;
+            if (! points) {
+              return;
+            }
+
+            var length = points.length;
+            if (length === 0) {
+              return;
+            }
+
+            set.first = points[0];
+            set.last = points[length - 1];
+
+
+            angular.forEach(points, function (point) {
+              conditionsEngine.setPointTimes(point);
+            });
+
+
+            // get averages
+
+            var totals = {};
+            angular.forEach(points, function (point) {
+              totals.temperature = totals.temperature || 0;
+              totals.temperature += point.temperature;
+              totals.apparentTemperature = totals.apparentTemperature || 0;
+              totals.apparentTemperature += point.apparentTemperature;
+              // TODO: more fields
+            });
+
+            var averages = {};
+            angular.forEach(totals, function (total, key) {
+              averages[key] = total / length;
+            });
+
+            set.averages = averages;
+          });
+
+          var pointSet = pointSetsByCat[cat.id] = pointSetsByCat[cat.id] || {};
+
+          pointSet.hourly = sets;
+          pointSet.daily = daily;
+
+          var all = [].concat(sets).concat(daily);
+
+          all = _.sortBy(all, function (pointSet) {
+            return pointSet.first.time;
+          });
+
+          pointSet.all = all;
 
 
           $log.log('computeCats resolving', pointSetsByCat);
@@ -291,7 +284,7 @@ function (
       };
 
 
-      conditionsEngine.computeCats = function (cats, location, options) {
+      conditionsEngine.computeCats = function (cats, forecast, options) {
 
         var deferred = $q.defer();
 
@@ -301,7 +294,7 @@ function (
           deferred.reject('must provide cats');
         }
 
-        deferred.resolve(conditionsEngine._computeCatsWithCats(cats, location, options));
+        deferred.resolve(conditionsEngine._computeCatsWithCats(cats, forecast, options));
 
         return deferred.promise;
       };
