@@ -3,7 +3,8 @@ define(['angular', 'lodash'], function (angular, _) {
   var geolocatorModule = angular.module('geolocator', []);
 
   var config = {
-    delay: 0
+    delay: 0,
+    fail: false
   };
 
   geolocatorModule.provider('geolocator', [function () {
@@ -37,6 +38,12 @@ define(['angular', 'lodash'], function (angular, _) {
           });
 
           var deferred = $q.defer();
+          var promise = deferred.promise;
+
+          if (config.fail) {
+            deferred.reject(config.fail);
+            return promise;
+          }
 
           var geolocation = navigator.geolocation;
 
@@ -59,7 +66,7 @@ define(['angular', 'lodash'], function (angular, _) {
             error(deferred, 'unsupported');
           }
 
-          return deferred.promise;
+          return promise;
         };
 
         return geolocator;
