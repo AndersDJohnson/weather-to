@@ -47,8 +47,8 @@ require([
 
 
   weatherTo.config([
-    'geocoderProvider', 'forecastIoProvider',
-    function (geocoderProvider, forecastIoProvider) {
+    'geocoderProvider', 'forecastIoProvider', 'geolocatorProvider',
+    function (geocoderProvider, forecastIoProvider, geolocatorProvider) {
 
       geocoderProvider.config.google.serverApiKey = 'AIzaSyDmjRbBjb6x4YGyQm8CKG21Kocsix-D3kY';
 
@@ -57,6 +57,7 @@ require([
       // TODO: remove delays in production
       geocoderProvider.config.httpDelayer.delay = 2000;
       forecastIoProvider.config.httpDelayer.delay = 2000;
+      geolocatorProvider.config.delay = 5000;
   }]);
 
 

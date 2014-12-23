@@ -2,11 +2,17 @@ define(['angular'], function (angular) {
 
   var geolocatorModule = angular.module('geolocator', []);
 
+  var config = {
+    delay: 0
+  };
+
   geolocatorModule.provider('geolocator', [function () {
 
+    this.config = config;
+
     this.$get = [
-      '$q', '$log',
-      function ($q, $log) {
+      '$q', '$log', '$timeout',
+      function ($q, $log, $timeout) {
 
         var geolocator = {};
 
@@ -17,11 +23,25 @@ define(['angular'], function (angular) {
 
           if (geolocation) {
             geolocation.getCurrentPosition(function (position) {
-              deferred.resolve(position);
+              if (config.delay) {
+                $timeout(function () {
+                  deferred.resolve(position);
+                }, config.delay);
+              }
+              else {
+                deferred.resolve(position);
+              }
             });
           }
           else {
-            return deferred.reject('unsupported');
+            if (config.delay) {
+              $timeout(function () {
+                deferred.reject('unsupported');
+              }, config.delay);
+            }
+            else {
+              deferred.reject('unsupported');
+            }
           }
 
           return deferred.promise;
