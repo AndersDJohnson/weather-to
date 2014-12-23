@@ -398,10 +398,26 @@ require([
 
       $scope.refreshForecast = function () {
         $log.log('refresh forecast', arguments);
+
+        if ($scope.refreshingForecast) {
+          $log.log('already refreshing forecast');
+          return;
+        }
+
         var loc = $scope.location;
+
+        $scope.$safeApply(function () {
+          $scope.refreshingForecast = true;
+        });
+
         scopingGetForecastForLocation(loc, {
           cache: false
-        });
+        }).
+          finally(function () {
+            $scope.$safeApply(function () {
+              $scope.refreshingForecast = false;
+            });
+          });
       };
 
 
