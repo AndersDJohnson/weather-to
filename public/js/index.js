@@ -86,8 +86,7 @@ require([
 
       $scope.modal = scopeModal;
 
-      var forecast;
-
+      $scope.forecast = null;
       $scope.current = null;
       $scope.cats = [];
       $scope.locations = [];
@@ -338,6 +337,7 @@ require([
 
 
       var _scopingComputeCatsWithCats = function (cats, loc, options) {
+        var forecast = $scope.forecast;
         if (forecast) {
           _scopingComputeCatsWithCatsAndForecast(cats, forecast, options);
         }
@@ -373,15 +373,21 @@ require([
 
         $log.log('scopingGetForecastForLocation', arguments);
         forecastIo.get(loc, options).
-          then(function (result) {
-            // set the controller-global variable
-            forecast = result;
+          then(function (forecast) {
+            $log.log('forecast', forecast);
+
+            // transform
+            forecast.daily.last = forecast.daily.data[forecast.daily.data.length - 1];
+
+            var current = forecast.currently;
+
             // $log.log('current result', result);
-            var current = result.currently;
             $scope.$safeApply(function () {
+              // set the controller-global variable
+              $scope.forecast = forecast;
               // this should trigger 'current.time' watch, which re-compute cats
               $scope.current = current;
-              deferred.resolve(result);
+              deferred.resolve(forecast);
             });
           }, function (err) {
             deferred.reject(err);

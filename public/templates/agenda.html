@@ -2,7 +2,11 @@
 
   <div class="wt-agenda">
 
-    <h3>Forecast</h3>
+    <h3>Forecast
+      <span class="wt-agenda-thru small" ng-show="forecast.daily.last">
+        thru {{ forecast.daily.last.time | amCalendar }}
+      </span>
+    </h3>
 
     <ul class="wt-agenda-list wt-agenda-list-category list-unstyled">
       <li ng-repeat="cat in cats" class="wt-agenda-list-item wt-agenda-list-item-category">
