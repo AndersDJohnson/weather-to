@@ -2,57 +2,91 @@
 
   <div class="wt-current">
 
-    <div ng-style="{visibility: current ? '' : 'hidden'}">
 
-      <div class="wt-current-data">
+    <!-- <div ng-if="refreshingLocation">
+      <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-loading-icon-location"></span>
+      <span class="wt-current-loading-text-location">Location...</span>
+    </div> -->
 
-        <a class="wt-current-show-link" ng-click="showCurrent()">
 
-          <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
-
-          <div class="wt-current-temp">
-            <div class="wt-current-temp-row-1">
-              <div class="wt-current-temp-actual">
-                {{ current.temperature | number:format.numberShort }}&deg;
-              </div>
-              <div class="wt-current-temp-apparent">
-                <div class="wt-current-temp-apparent-text">feels</div>
-                <div class="wt-current-temp-apparent-number">
-                  {{ current.apparentTemperature | number:format.numberShort }}&deg;
-                </div>
-              </div>
-            </div>
-            <div class="wt-current-summary-text">
-              {{ current.summary }}
-            </div>
-          </div>
-
-        </a>
-
-      </div>
-
-      <div class="wt-current-location">
-        <a class="wt-current-location-link" ng-click="showLocations()">
-          <span class="fa fa-location-arrow"></span>
-          <span class="wt-current-location-name">
-            {{ location.name }}
-          </span>
-          <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving" ng-show="location.resolving"></span>
-        </a>
-      </div>
-
-      <div class="wt-current-time">
-        <span class="fa fa-clock-o"></span>
-        <span am-time-ago="current.time" am-preprocess="unix"
-          tooltip-placement="bottom" tooltip="{{ current.time | amCalendar }}"></span>
-      </div>
-
-    </div>
-    <div ng-if="! location">
+    <div ng-if="! refreshingLocation &amp;&amp; ! location">
       <p>
         No location. Select with <a ng-click="showLocations(); close()">Locations</a>.
       </p>
     </div>
+
+
+    <div ng-if="refreshingLocation || location">
+
+      <div ng-if="! refreshingLocation">
+        <div ng-if="refreshingForecast || ! current">
+
+          <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-loading-icon-forecast"></span>
+          <span class="wt-current-loading-text-forecast">Forecast...</span>
+
+        </div>
+
+
+        <div ng-if="! refreshingForecast &amp;&amp; current">
+
+          <div class="wt-current-data">
+            <a class="wt-current-show-link" ng-click="showCurrent()">
+
+              <div class="wt-current-weather-icon wt-weather-icon wi wi-{{ getIconClassForPoint(current) }}"></div>
+
+              <div class="wt-current-temp">
+                <div class="wt-current-temp-row-1">
+                  <div class="wt-current-temp-actual">
+                    {{ current.temperature | number:format.numberShort }}&deg;
+                  </div>
+                  <div class="wt-current-temp-apparent">
+                    <div class="wt-current-temp-apparent-text">feels</div>
+                    <div class="wt-current-temp-apparent-number">
+                      {{ current.apparentTemperature | number:format.numberShort }}&deg;
+                    </div>
+                  </div>
+                </div>
+                <div class="wt-current-summary-text">
+                  {{ current.summary }}
+                </div>
+              </div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="wt-current-location">
+        <a class="wt-current-location-link" ng-click="showLocations()">
+          <span ng-if="! refreshingLocation">
+            <span class="fa fa-location-arrow"></span>
+            <span class="wt-current-location-name">
+              {{ location.name }}
+            </span>
+            <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving"
+              ng-show="location.resolving"></span>
+          </span>
+          <span ng-if="refreshingLocation">
+            <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-refreshing"></span>
+            <span class="wt-current-location-locating">
+              Locating...
+            </span>
+          </span>
+        </a>
+      </div>
+
+
+      <div ng-if="current.time">
+        <div class="wt-current-time">
+          <span class="fa fa-clock-o"></span>
+          <span am-time-ago="current.time" am-preprocess="unix"
+            tooltip-placement="bottom" tooltip="{{ current.time | amCalendar }}"></span>
+        </div>
+      </div>
+
+    </div>
+
 
   </div>
 

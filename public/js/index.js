@@ -57,7 +57,7 @@ require([
       // TODO: remove delays in production
       geocoderProvider.config.httpDelayer.delay = 2000;
       forecastIoProvider.config.httpDelayer.delay = 2000;
-      geolocatorProvider.config.delay = 5000;
+      geolocatorProvider.config.delay = 2000;
   }]);
 
 
@@ -248,11 +248,16 @@ require([
 
       $scope.getCurrentLocation = function () {
 
+        $scope.$safeApply(function () {
+          $scope.refreshingLocation = true;
+        });
+
         var promise = getCurrentLocation().
           then(function (location) {
-            location.resolving = true;
+
             $scope.$safeApply(function () {
               $scope.location = location;
+              location.resolving = true;
             });
 
             // setTimeout(function () {
@@ -275,18 +280,31 @@ require([
                         location.name = 'Current location (' + convertedLocation.name + ')';
                       });
                     }
+                    else {
+                      $log.error('could not resolve locality');
+                    }
                   }
                 },
                 function (err) {
                   $log.error(err);
 
-                  location.resolving = false;
+                  $scope.$safeApply(function () {
+                    location.resolving = false;
+                  });
                 }
               );
             // }, 1000);
           },
           function (err) {
+            $scope.$safeApply(function () {
+              $scope.location = null;
+            });
             showGetLocationError(err);
+          }).
+          finally(function () {
+            $scope.$safeApply(function () {
+              $scope.refreshingLocation = false;
+            });
           });
 
         return promise;
@@ -388,6 +406,10 @@ require([
         var deferred = $q.defer();
         var promise = deferred.promise;
 
+        $scope.$safeApply(function () {
+          $scope.refreshingForecast = true;
+        });
+
         $log.log('scopingGetForecastForLocation', arguments);
         forecastIo.get(loc, options).
           then(function (forecast) {
@@ -408,6 +430,11 @@ require([
             });
           }, function (err) {
             deferred.reject(err);
+          }).
+          finally(function () {
+            $scope.$safeApply(function () {
+              $scope.refreshingForecast = false;
+            });
           });
         return promise;
       };
@@ -423,18 +450,9 @@ require([
 
         var loc = $scope.location;
 
-        $scope.$safeApply(function () {
-          $scope.refreshingForecast = true;
-        });
-
         scopingGetForecastForLocation(loc, {
           cache: false
-        }).
-          finally(function () {
-            $scope.$safeApply(function () {
-              $scope.refreshingForecast = false;
-            });
-          });
+        });
       };
 
 
