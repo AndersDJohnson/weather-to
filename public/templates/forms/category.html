@@ -9,12 +9,13 @@
 
     <div class="form-group">
       <label class="control-label col-sm-2"
-        for="catFormModel.name">
+        for="catForm.name">
         Name
       </label>
       <div class="col-sm-10">
         <input type="text" class="form-control"
-          id="catFormModel.name"
+          id="catForm.name"
+          name="name"
           ng-model="catFormModel.name"
           autofocus
         />
@@ -25,33 +26,47 @@
       <legend>Temperature</legend>
 
       <div class="form-group">
-        <div class="col-xs-6">
+        <div class="col-xs-6" ng-class="{
+          'has-error': catForm.temperature_min.$invalid &amp;&amp; catForm.temperature_min.$dirty
+        }">
           <label class="control-label col-xs-4 text-right"
-            for="catFormModel.temperature.max">
+            for="catForm.temperature_min">
             Min
           </label>
           <div class="col-xs-8">
             <input type="number" class="form-control"
-              id="catFormModel.temperature.min"
+              id="catForm.temperature_min"
+              name="temperature_min"
               ng-model="catFormModel.temperature.min"
               required
             />
           </div>
+          <div class="help-block" ng-if="catForm.temperature_min.$dirty">
+            <div ng-messages="catForm.temperature_min.$error"
+              ng-messages-include="templates/messages/simple.html"></div>
+          </div>
         </div>
 
-        <div class="col-xs-6">
+        <div class="col-xs-6" ng-class="{
+          'has-error': catForm.temperature_max.$invalid &amp;&amp; catForm.temperature_max.$dirty
+        }">
           <div>
             <label class="control-label col-xs-4 text-right"
-              for="catFormModel.temperature.max">
+              for="catForm.temperature_max">
               Max
             </label>
             <div class="col-xs-8">
               <input type="number" class="form-control"
-                id="catFormModel.temperature.max"
+                id="catForm.temperature_max"
+                name="temperature_max"
                 ng-model="catFormModel.temperature.max"
                 required
               />
             </div>
+          </div>
+          <div class="help-block" ng-if="catForm.temperature_max.$dirty">
+            <div ng-messages="catForm.temperature_max.$error"
+              ng-messages-include="templates/messages/simple.html"></div>
           </div>
         </div>
       </div>
@@ -62,9 +77,10 @@
     <!-- <legend>Conditions</legend> -->
 
     <div class="checkbox">
-      <label for="catFormModel.conditionsEnabled">
+      <label for="catForm.conditionsEnabled">
         <input type="checkbox"
-          id="catFormModel.conditionsEnabled"
+          id="catForm.conditionsEnabled"
+          name="conditionsEnabled"
           ng-model="catFormModel.conditionsEnabled"
         />
         Conditions
@@ -75,9 +91,10 @@
 
       <div class="form-group">
         <div class="col-xs-6 col-sm-4" ng-repeat="condition in conditions">
-          <label class="checkbox-inline" for="catFormModel.conditions.{{ condition.key }}">
+          <label class="checkbox-inline" for="catForm.conditions_{{ condition.key }}">
             <input type="checkbox"
-              id="catFormModel.conditions.{{ condition.key }}"
+              id="catForm.conditions_{{ condition.key }}"
+              name="conditions_{{ condition.key }}"
               ng-model="catFormModel.conditions[condition.key]"
               ng-disabled="! catFormModel.conditionsEnabled"
             />
@@ -89,6 +106,7 @@
     </fieldset>
   </fieldset>
 
-  <button class="btn btn-success" type="submit">Save</button>
+  <button class="btn btn-success" type="submit" ng-disabled="catForm.$invalid">Save</button>
+    <button type="button" class="btn btn-default" ng-if="weatherTo.debug" ng-click="$log.log(catFormModel)">JSON</button>
 
 </form>

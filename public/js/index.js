@@ -3,6 +3,7 @@ require([
   'moment',
   'lodash',
   'bootstrap',
+  'angular-messages',
   'angular-aria',
   'angular-moment',
   'angular-bootstrap',
@@ -26,6 +27,7 @@ require([
 
   var weatherTo = angular.module('weatherTo',
     [
+      'ngMessages',
       'ngAria',
       'angularMoment',
       'ui.bootstrap',
@@ -69,14 +71,18 @@ require([
 
 
   weatherTo.controller('AppController', [
-    '$scope', '$q', '$log',
+    '$scope', '$q', '$log', '$rootScope',
     'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
     'categories','locations', 'settings', 'conditionsEngine', 'locationConverter',
     function (
-      $scope, $q, $log,
+      $scope, $q, $log, $rootScope,
       scopeModal, geocoder, geolocator, forecastIo,
       categories, locations, settings, conditionsEngine, locationConverter
     ) {
+
+      $rootScope.weatherTo = {};
+      $rootScope.weatherTo.debug = true;
+      $rootScope.$log = $log;
 
       $scope.modal = scopeModal;
 
