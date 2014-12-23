@@ -4,6 +4,8 @@
 @import "../bower_components/weather-icons/weather-icons/weather-icons";
 @weather-icons-path: "../bower_components/weather-icons/font";
 
+@import "_bootstrap-ms";
+
 
 /**
  * Disabled labels (and within disabled fieldsets) get cursor. 
@@ -150,8 +152,12 @@ body {
 }
 
 .wt-current-weather-icon {
-  font-size: 5em;
+  font-size: 3em;
   padding-bottom: 0.25em;
+
+  @media screen and (min-width: @screen-ms-min) {
+    font-size: 5em;
+  }
 }
 
 .wt-current-summary-text {
