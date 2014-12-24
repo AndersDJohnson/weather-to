@@ -14,7 +14,7 @@ function (
     'categories'
   ]);
 
-  conditionsEngineModule.service('conditionsEngine', [
+  conditionsEngineModule.factory('conditionsEngine', [
     '$log', '$q', 'forecastIo', 'settings',
     function ($log, $q, forecastIo, settings) {
 

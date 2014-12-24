@@ -2,7 +2,7 @@ define(['angular'], function (angular) {
 
   var locationConverterModule = angular.module('locationConverter', []);
 
-  locationConverterModule.service('locationConverter', [
+  locationConverterModule.factory('locationConverter', [
     function () {
 
       var locationConverter = {};

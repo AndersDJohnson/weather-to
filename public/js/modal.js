@@ -3,7 +3,7 @@ define(['angular', 'lodash'], function (angular, _) {
   var modalModule = angular.module('modal', []);
 
 
-  modalModule.service('scopeModal', [
+  modalModule.factory('scopeModal', [
     '$log', '$modal', '$rootScope',
     function ($log, $modal, $rootScope) {
 
