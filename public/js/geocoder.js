@@ -80,6 +80,17 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           });
 
           var deferred = $q.defer();
+          var promise = deferred.promise;
+
+          if (! position) {
+            deferred.reject('position required');
+            return promise;
+          }
+
+          if (! position.coords) {
+            deferred.reject('position.coords required');
+            return promise;
+          }
 
           $log.log('reverse geocoding position', position, options);
 
@@ -91,7 +102,10 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           }
           result_type  = result_type.join('|');
 
-          var latlng = position.coords.lat  + ',' + position.coords.lng;
+          var lat = position.coords.lat || position.coords.latitude;
+          var lng = position.coords.lng || position.coords.longitude;
+
+          var latlng = lat  + ',' + lng;
 
           var key = config.google.serverApiKey;
 
