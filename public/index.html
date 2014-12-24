@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="wt-footer-fixed">
   <head>
     <title>WeatherTo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,16 +8,38 @@
   </head>
   <body>
 
-    <div ng-include="'templates/index.html'">
+    <div class="wt-body-stretch">
 
-      <div class="wt-init-loading">
-        <div class="wt-init-loading-inner">
-          <div><span class="fa fa-circle-o-notch fa-spin wt-spinner"></span></div>
-          <div class="wt-init-loading-text">Loading...</span></div>
+      <div ng-include="'templates/index.html'">
+
+        <header class="navbar navbar-default wt-navbar" role="banner">
+          <div class="container">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">
+                <span class="wi wi-day-cloudy"></span>
+                WeatherTo
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="wt-init-loading">
+          <div class="wt-init-loading-inner">
+            <div><span class="fa fa-circle-o-notch fa-spin wt-spinner"></span></div>
+            <!-- <div class="wt-init-loading-text">Loading...</span></div> -->
+          </div>
         </div>
+
       </div>
 
+      <div class="wt-footer-push"></div>
     </div>
+
+    <footer role="contentinfo">
+      <div class="container">
+        Copyright &copy; 2015 <a href="http://andrz.me" target="_blank">Anders D. Johnson</a> | Data powered by <a href="http://forecast.io/" target="_blank">Forecast</a>.
+      </div>
+    </footer>
 
     <script src="bower_components/requirejs/require.js"></script>
     <script src="js/requireConfig.js"></script>

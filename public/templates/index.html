@@ -1,66 +1,66 @@
-<div>
+<div ng-controller="AppController">
 
-  <div ng-controller="AppController">
+  <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+    <div class="container">
+      <span class="skiplink-text">Skip to main content</span>
+    </div>
+  </a>
 
-    <a id="skippy" class="sr-only sr-only-focusable" href="#content">
-      <div class="container">
-        <span class="skiplink-text">Skip to main content</span>
+  <header class="navbar navbar-default wt-navbar" role="banner">
+    <div class="container">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed"
+          data-toggle="collapse"
+          data-target="#wt-navbar-collapse-1"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#">
+          <span class="wi wi-day-cloudy"></span>
+          WeatherTo
+        </a>
       </div>
-    </a>
 
-    <header class="navbar navbar-default wt-navbar" role="banner">
-      <div class="container">
+      <nav class="collapse navbar-collapse" id="wt-navbar-collapse-1" role="navigation">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a ng-click="showCategories()">
+              <span class="fa fa-list-ul"></span>
+              Categories
+            </a>
+          </li>
+          <li>
+            <a ng-click="showLocations()">
+              <span class="fa fa-globe"></span>
+              Locations
+            </a>
+          </li>
+          <li>
+            <a ng-click="refreshForecast()">
+              <span class="fa fa-refresh" ng-class="{
+                'fa-spin': refreshingForecast
+              }"></span>
+              Refresh
+            </a>
+          </li>
+          <li>
+            <a ng-click="showSettings()">
+              <span class="fa fa-cog"></span>
+              Settings
+            </a>
+          </li>
+        </ul>
+      </nav>
 
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed"
-            data-toggle="collapse"
-            data-target="#wt-navbar-collapse-1"
-          >
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    </div>
+  </header>
 
-          <a class="navbar-brand" href="#">
-            <span class="wi wi-day-cloudy"></span>
-            WeatherTo
-          </a>
-        </div>
-
-        <nav class="collapse navbar-collapse" id="wt-navbar-collapse-1" role="navigation">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a ng-click="showCategories()">
-                <span class="fa fa-list-ul"></span>
-                Categories
-              </a>
-            </li>
-            <li>
-              <a ng-click="showLocations()">
-                <span class="fa fa-globe"></span>
-                Locations
-              </a>
-            </li>
-            <li>
-              <a ng-click="refreshForecast()">
-                <span class="fa fa-refresh" ng-class="{
-                  'fa-spin': refreshingForecast
-                }"></span>
-                Refresh
-              </a>
-            </li>
-            <li>
-              <a ng-click="showSettings()">
-                <span class="fa fa-cog"></span>
-                Settings
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-      </div>
-    </header>
+  <div id="content">
 
     <div class="wt-location-bar clearfix">
       <div class="container">
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    <div id="content" class="container">
+    <div class="wt-main container">
 
       <div class="row">
 

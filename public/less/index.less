@@ -8,6 +8,10 @@
 @import "_bootstrap-ms";
 
 
+@bg-off-light: #eee;
+@footer-height: 120px;
+
+
 /**
  * Disabled labels (and within disabled fieldsets) get cursor. 
  */
@@ -31,17 +35,38 @@ a {
   height: 100%;
 }
 
+html.wt-footer-fixed {
+  height: 100%;
+
+  body {
+    height: 100%;
+  }
+
+  .wt-body-stretch {
+    min-height: 100%;
+    margin-bottom: -1 * @footer-height;
+  }
+
+  .wt-footer-push {
+    height: @footer-height;
+  }
+
+  footer {
+    height: @footer-height;
+  }
+}
+
 
 html {
 
 }
-
 
 body {
   /*overflow: scroll;*/
   /*overflow-y: scroll;*/
   /*overflow-x: auto;*/
 }
+
 
 /**
  * http://stackoverflow.com/a/8230953
@@ -77,14 +102,28 @@ body {
 
 .wt-navbar {
   margin-bottom: 0;
-  }
+}
 
-#content {
+.wt-main {
   padding-top: @grid-gutter-width / 2;
+}
+
+footer {
+  padding-top: @grid-gutter-width / 2;
+  background: @bg-off-light;
+  border-top: 1px solid @navbar-default-border;
 }
 
 
 .wt-init-loading {
+  padding-top: 2em;
+  text-align: center;
+
+  .wt-spinner {
+    font-size: 4em;
+  }
+
+  /*
   display: table;
   width: 100%;
   height: 100%;
@@ -96,21 +135,18 @@ body {
     text-align: center;
   }
 
-  .wt-spinner {
-    font-size: 4em;
-  }
-
   .wt-init-loading-text {
     margin-top: 0.5em;
     font-size: 1em;
     line-height: 1em;
   }
+  */
 }
 
 
 .wt-location-bar {
-  background: #ddd;
-  border-bottom: 1px solid #ccc;
+  background: @bg-off-light;
+  border-bottom: 1px solid @navbar-default-border;
   padding: 0.5em 0;
 }
 
