@@ -16,6 +16,29 @@
 @btn-primary-color:              black;
 @btn-primary-bg:                 @gold;
 
+@navbar-default-color:             @text-color;
+@navbar-default-bg:                @gold;
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+
+// Navbar links
+@navbar-default-link-color:                @text-color;
+@navbar-default-link-hover-color:          black;
+@navbar-default-link-hover-bg:             darken(@navbar-default-bg, 10%);
+@navbar-default-link-active-color:         @navbar-default-link-hover-color;
+@navbar-default-link-active-bg:            @navbar-default-link-hover-bg;
+@navbar-default-link-disabled-color:       #ccc;
+@navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               @navbar-default-link-color;
+@navbar-default-brand-hover-color:         darken(@navbar-default-brand-color, 10%);
+@navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+@navbar-default-toggle-hover-bg:           transparent;
+@navbar-default-toggle-icon-bar-bg:        @navbar-default-link-color;
+@navbar-default-toggle-border-color:       @navbar-default-link-color;
+
 
 /**
  * Disabled labels (and within disabled fieldsets) get cursor. 
@@ -105,9 +128,11 @@ body {
 }
 
 
+/*
 header.wt-header {
   background-color: @gold;
 }
+*/
 
 
 .wt-navbar {
@@ -156,7 +181,7 @@ footer {
 
 .wt-location-bar {
   background: @bg-off-light;
-  border-bottom: 1px solid @navbar-default-border;
+  border-bottom: 1px solid darken(@bg-off-light, 6.5%);
   padding: 0.5em 0;
 }
 
