@@ -4,7 +4,10 @@ define(['angular', 'lodash'], function (angular, _) {
 
   var config = {
     delay: 0,
-    fail: false
+    fail: false,
+    timeout: 5000,
+    enableHighAccuracy: false,
+    maximumAge: 0
   };
 
   geolocatorModule.provider('geolocator', [function () {
@@ -32,9 +35,9 @@ define(['angular', 'lodash'], function (angular, _) {
         geolocator.locate = function (options) {
 
           options = _.defaults(options, {
-            enableHighAccuracy: false,
-            timeout: 10000,
-            maximumAge: 0
+            enableHighAccuracy: config.enableHighAccuracy,
+            timeout: config.timeout,
+            maximumAge: config.maximumAge
           });
 
           var deferred = $q.defer();
@@ -48,19 +51,22 @@ define(['angular', 'lodash'], function (angular, _) {
           var geolocation = navigator.geolocation;
 
           if (geolocation) {
-            geolocation.getCurrentPosition(function (position) {
-              $log.log('geolocator positioned', position);
-              if (config.delay) {
-                $timeout(function () {
+            geolocation.getCurrentPosition(
+              function (position) {
+                if (config.delay) {
+                  $timeout(function () {
+                    deferred.resolve(position);
+                  }, config.delay);
+                }
+                else {
                   deferred.resolve(position);
-                }, config.delay);
-              }
-              else {
-                deferred.resolve(position);
-              }
-            }, function (err) {
-              error(deferred, err);
-            });
+                }
+              },
+              function (err) {
+                error(deferred, err);
+              },
+              options
+            );
           }
           else {
             error(deferred, 'unsupported');
