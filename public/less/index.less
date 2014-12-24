@@ -8,7 +8,8 @@
 @import "_bootstrap-ms";
 
 
-@bg-off-light: #eee;
+@off-light-bg: #eee;
+@off-light-border: darken(@off-light-bg, 6.5%);
 @footer-height: 120px;
 @gold: #ffcd33; // #ffc000
 
@@ -145,8 +146,8 @@ header.wt-header {
 
 footer {
   padding-top: @grid-gutter-width / 2;
-  background: @bg-off-light;
-  border-top: 1px solid @navbar-default-border;
+  background: @off-light-bg;
+  border-top: 1px solid @off-light-border;
 }
 
 
@@ -180,8 +181,8 @@ footer {
 
 
 .wt-location-bar {
-  background: @bg-off-light;
-  border-bottom: 1px solid darken(@bg-off-light, 6.5%);
+  background: @off-light-bg;
+  border-bottom: 1px solid @off-light-border;
   padding: 0.5em 0;
 }
 
