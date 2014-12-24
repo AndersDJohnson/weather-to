@@ -89,6 +89,10 @@ require([
 
       $scope.modal = scopeModal;
 
+      $scope.refreshing = true;
+      $scope.refreshingLocation = false;
+      $scope.refreshingForecast = false;
+
       $scope.forecast = null;
       $scope.current = null;
       $scope.cats = [];
@@ -125,9 +129,6 @@ require([
 
 
       var showGetLocationError = function (err) {
-        $scope.$safeApply(function () {
-          $scope.locationError = err;
-        });
         // scopeModal('getLocationError', $scope);
       };
 
@@ -223,26 +224,20 @@ require([
       };
 
 
-      var _getCurrentLocation = function () {
+      var _getCurrentPosition = function () {
         var deferred = $q.defer();
         var promise = deferred.promise;
 
         geolocator.locate().
-          then(function (position) {
-            var location = {
-              name: 'Current location',
-              coords: {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-              }
-            };
-
-            // resolve with just coordinates since it's sufficient to request weather
-            deferred.resolve(location);
-          },
-          function (err) {
-            deferred.reject(err);
-          });
+          then(
+            function (position) {
+              // resolve with just coordinates since it's sufficient to request weather
+              deferred.resolve(position);
+            },
+            function (err) {
+              deferred.reject(err);
+            }
+          );
 
         return promise;
       };
@@ -253,19 +248,31 @@ require([
         $scope.$safeApply(function () {
           $scope.locationError = null;
           $scope.refreshingLocation = true;
+
+          $scope.location = {
+            name: 'Current location',
+            resolving: false
+          };
         });
 
-        var promise = _getCurrentLocation().
-          then(function (location) {
+        var promise = _getCurrentPosition();
+
+        var error = function (err) {
+          $log.error(err);
+          // deferred.reject(err);
+          return promise;
+        };
+
+        promise.
+          then(function (position) {
 
             $scope.$safeApply(function () {
-              $scope.location = location;
-              location.resolving = true;
+              $scope.location.coords = position.coords;
+              $scope.location.resolving = true;
             });
 
-            // setTimeout(function () {
             // now lazily attempt to update the current coordinate location with reverse geocoded city
-            geocoder.reverse(location, {
+            geocoder.reverse(position, {
               result_type: 'locality'
             }).
               then(
@@ -279,33 +286,34 @@ require([
                       var convertedLocation = locationConverter.convert(locality);
 
                       $scope.$safeApply(function () {
-                        location.resolving = false;
-                        location.name = 'Current location (' + convertedLocation.name + ')';
+                        $scope.location.resolving = false;
+                        $scope.location.name = 'Current location (' + convertedLocation.name + ')';
                       });
                     }
                     else {
-                      $log.error('could not resolve locality');
+                      error('no results for locality');
                     }
                   }
                 },
                 function (err) {
-                  $log.error(err);
-
-                  $scope.$safeApply(function () {
-                    location.resolving = false;
-                  });
+                  error('could not reverse geocode for locality');
                 }
-              );
-            // }, 1000);
+              ).
+              finally(function () {
+                $scope.$safeApply(function () {
+                  $scope.location.resolving = false;
+                });
+              });
           },
           function (err) {
             $scope.$safeApply(function () {
-              $scope.location = null;
+              $scope.locationError = err;
             });
             showGetLocationError(err);
           }
-        ).
-        finally(function () {
+        );
+
+        promise.finally(function () {
           $scope.$safeApply(function () {
             $scope.refreshingLocation = false;
           });
@@ -340,6 +348,7 @@ require([
         $scope.locationResults = [];
 
         locations.save(loc).then(function (loc) {
+          $scope.locationError = null;
           $scope.setLocation(loc);
         });
 
@@ -410,12 +419,20 @@ require([
         var deferred = $q.defer();
         var promise = deferred.promise;
 
+        if (! (loc && loc.coords)) {
+          $log.warn('scopingGetForecastForLocation: no location');
+          deferred.reject('no location');
+          return promise;
+        }
+
+        var coords = loc.coords;
+
         $scope.$safeApply(function () {
           $scope.refreshingForecast = true;
         });
 
-        $log.log('scopingGetForecastForLocation', arguments);
-        forecastIo.get(loc, options).
+        $log.log('scopingGetForecastForLocation: called with', arguments);
+        forecastIo.get(coords, options).
           then(function (forecast) {
             $log.log('forecast', forecast);
 
@@ -433,6 +450,7 @@ require([
               deferred.resolve(forecast);
             });
           }, function (err) {
+            $log.error('scopingGetForecastForLocation: error', err);
             deferred.reject(err);
           }).
           finally(function () {
@@ -460,6 +478,13 @@ require([
       };
 
 
+      $scope.$watch('refreshingLocation || refreshingForecast', function () {
+        $scope.$safeApply(function () {
+          $scope.refreshing = $scope.refreshingLocation || $scope.refreshingForecast;
+        });
+      });
+
+
       $scope.$watch('current.time', function () {
         $log.log('current.time change - re-computing cats', arguments);
         scopingComputeCats();
@@ -467,10 +492,7 @@ require([
 
 
       $scope.$watch('location', function (loc) {
-        if (loc) {
-          $log.log('location change', arguments);
-          scopingGetForecastForLocation(loc);
-        }
+        scopingGetForecastForLocation(loc);
       }, true);
 
 
@@ -501,10 +523,7 @@ require([
       });
 
 
-      $scope.getCurrentLocation().
-        catch(function (err) {
-          showGetLocationError(err);
-        });
+      $scope.getCurrentLocation();
 
 
     }
