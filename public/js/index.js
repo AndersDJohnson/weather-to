@@ -622,6 +622,8 @@ require([
   ]);
 
 
-  angular.bootstrap(document, ['weatherTo']);
+  angular.bootstrap(document, ['weatherTo'], {
+    strictDi: true
+  });
 
 });

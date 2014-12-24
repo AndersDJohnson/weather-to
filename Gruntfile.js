@@ -17,12 +17,16 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:build',
     'copy:build',
+    'template:build',
+    'htmlmin:build',
+    'cssmin:build',
+    // 'cssmin:buildVendor',
+    // 'ngAnnotate:build',
+    'jshint:build',
     'requirejs:build',
     'concat:build',
     'uglify:build',
-    'cssmin:build',
-    'template:build',
-    'htmlmin:build'
+    // 'uglify:buildVendor',
   ]);
 
   grunt.initConfig({
@@ -89,14 +93,7 @@ module.exports = function (grunt) {
         },
         files: [
           {
-            expand: true,
-            cwd: 'public',
-            src: [
-              'index.tmpl.html',
-            ],
-            dest: 'public',
-            ext: '.html',
-            extDot: 'first'
+            'public/index.html': ['public/index.tmpl.html']
           }
         ]
       },
@@ -108,14 +105,7 @@ module.exports = function (grunt) {
         },
         files: [
           {
-            expand: true,
-            cwd: 'public',
-            src: [
-              'index.tmpl.html',
-            ],
-            dest: 'build',
-            ext: '.html',
-            extDot: 'first'
+            'build/index.html': ['public/index.tmpl.html']
           }
         ]
       }
@@ -154,6 +144,23 @@ module.exports = function (grunt) {
               '**/*.css',
               '!bower_components/**'
             ],
+            dest: 'build',
+            ext: '.min.css',
+            extDot: 'last'
+          }
+        ]
+      },
+      buildVendor: {
+        options: {
+          // sourceMap: true
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'build',
+            src: [
+              'bower_components/**/*.css'
+            ],
             dest: 'build'
           }
         ]
@@ -174,7 +181,24 @@ module.exports = function (grunt) {
               '!bower_components/**'
             ],
             dest: 'build',
-            ext: '.min.js'
+            ext: '.min.js',
+            extDot: 'last'
+          }
+        ]
+      },
+      buildVendor: {
+        options: {
+          sourceMap: true
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'build',
+            src: [
+              'bower_components/**/*.js',
+              '!bower_components/jquery/**' // parse error
+            ],
+            dest: 'build'
           }
         ]
       }
@@ -199,6 +223,33 @@ module.exports = function (grunt) {
             }
           ]
         }
+      }
+    },
+
+    ngAnnotate: {
+      dev: {
+        files: [
+          {
+            expand: true,
+            cwd: 'public',
+            src: [
+              '**/*.js',
+              '!bower_components/jquery/**' // parse error
+            ]
+          }
+        ]
+      },
+      build: {
+        files: [
+          {
+            expand: true,
+            cwd: 'build',
+            src: [
+              '**/*.js',
+              '!bower_components/jquery/**' // parse error
+            ]
+          }
+        ]
       }
     },
 
