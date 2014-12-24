@@ -68,8 +68,8 @@ require([
   });
 
 
-  weatherTo.run([function () {
-
+  weatherTo.run(['$log', function ($log) {
+    $log.log('running...');
   }]);
 
 
