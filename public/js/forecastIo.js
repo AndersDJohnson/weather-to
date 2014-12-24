@@ -156,7 +156,7 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           .value();
 
 
-        forecastIo.get = function (location, options) {
+        forecastIo.get = function (coords, options) {
 
           options = _.defaults({}, options, {
             cache: true
@@ -169,17 +169,18 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
 
           var lat;
           var lng;
-          if (location) {
-            if (location.coords) {
-              lat = location.coords.lat;
-              if (! angular.isNumber(lat)) {
-                lat = location.coords.latitude;
-              }
-              lng = location.coords.lng;
-              if (! angular.isNumber(lng)) {
-                lng = location.coords.longitude;
-              }
+          if (coords) {
+            lat = coords.lat;
+            if (! angular.isNumber(lat)) {
+              lat = coords.latitude;
             }
+            lng = coords.lng;
+            if (! angular.isNumber(lng)) {
+              lng = coords.longitude;
+            }
+          }
+          else {
+            deferred.reject('must provide coords');
           }
 
           if ( ! ( angular.isNumber(lat) && angular.isNumber(lng) ) ) {
