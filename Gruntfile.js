@@ -14,6 +14,12 @@ module.exports = function (grunt) {
     }
   };
 
+  grunt.registerTask('dev', [
+    'template:dev',
+    'less:dev',
+    'jshint:dev'
+  ]);
+
   grunt.registerTask('build', [
     'clean:build',
     'copy:build',
@@ -325,7 +331,7 @@ module.exports = function (grunt) {
           '!public/css/**/*.less.css',
           '!public/bower_components/**'
         ],
-        tasks: ['jshint:dev', 'less:dev']
+        tasks: ['dev']
       }
     }
 
