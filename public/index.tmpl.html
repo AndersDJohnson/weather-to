@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="wt-footer-fixed">
+<html class="wt-footer-fixed" ng-strict-di>
   <head>
     <title>WeatherTo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,13 +41,15 @@
       </div>
     </footer>
 
-    
+    <% if(dev) { %>
       <script src="bower_components/requirejs/require.js"></script>
       <script src="js/requireConfig.js"></script>
       <script src="js/index.js"></script>
 
       <script src="//localhost:35729/livereload.js"></script>
-    
+    <% } else { %>
+      <script src="js/index-build.min.js"></script>
+    <% } %>
 
   </body>
 </html>
