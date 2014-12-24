@@ -3,4 +3,5 @@ public/bower_components
 npm-debug.log
 
 public/css/**/*.less.css
+public/index.html
 build
