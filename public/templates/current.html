@@ -46,31 +46,7 @@
 
       </div>
 
-
-      <div class="wt-current-location">
-        <a class="wt-current-location-link" ng-click="showLocations()">
-          <span ng-if="! refreshingLocation">
-            <span class="fa fa-location-arrow"></span>
-            <span class="wt-current-location-name">
-              {{ location.name }}
-            </span>
-            <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-current-location-resolving"
-              ng-show="location.resolving"></span>
-          </span>
-        </a>
-      </div>
-
-
-      <div ng-if="current.time">
-        <div class="wt-current-time">
-          <span class="fa fa-clock-o"></span>
-          <span am-time-ago="current.time" am-preprocess="unix"
-            tooltip-placement="bottom" tooltip="{{ current.time | amCalendar }}"></span>
-        </div>
-      </div>
-
     </div>
-
 
   </div>
 
