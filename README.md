@@ -15,10 +15,15 @@ Weather Application
 ## TODO
 
 * Features
-** "Powered by Forecast" badge (legal)
 ** F/C switch
 ** Link locations to Google Maps
 ** Add to Google Calendar for category matches
+** Add your own API key
+** Persist categories for locations
+*** Local storage
+*** Import / export
+*** Dropbox
+*** Google Drive
 ** http://bootstrapvalidator.com/
 ** https://github.com/wenzhixin/bootstrap-table
 
