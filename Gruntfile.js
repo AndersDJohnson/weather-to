@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     'htmlmin:build',
     'cssmin:build',
     // 'cssmin:buildVendor',
-    'ngAnnotate:build',
+    // 'ngAnnotate:build',
     'jshint:build',
     'requirejs:build',
     'concat:build',
@@ -47,6 +47,7 @@ module.exports = function (grunt) {
   grunt.registerTask('postinstall', [
     'bower-install-simple:prod',
     'bower:main',
+    'ngAnnotate:dev',
     'less:dev',
     'build'
   ]);
