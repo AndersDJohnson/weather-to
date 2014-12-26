@@ -12,6 +12,17 @@ Weather Application
 * See what days match up to your settings and display accordingly.
 
 
+## Heroku
+
+https://weather-to.herokuapp.com
+
+### Buildpacks
+
+```sh
+heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+```
+
+
 ## TODO
 
 * Features
