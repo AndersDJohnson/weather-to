@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
+
   var _ = grunt.util._;
 
   var jshintSettings = {
@@ -35,7 +36,22 @@ module.exports = function (grunt) {
     // 'uglify:buildVendor',
   ]);
 
+  grunt.registerTask('postinstall', [
+    'bower-install-simple:prod',
+    'bower:main',
+    'build'
+  ]);
+
+
   grunt.initConfig({
+
+    'bower-install-simple': {
+      prod: {
+        options: {
+          production: true
+        }
+      }
+    },
 
     bower: {
       main: {
@@ -68,7 +84,16 @@ module.exports = function (grunt) {
     },
 
     clean: {
-      build: ['build']
+      build: {
+        options: {
+          force: true
+        },
+        files: [
+          {
+            src: ['build']
+          }
+        ]
+      }
     },
 
     copy: {
