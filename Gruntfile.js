@@ -15,10 +15,18 @@ module.exports = function (grunt) {
     }
   };
 
+
   grunt.registerTask('dev', [
     'template:dev',
     'less:dev',
     'jshint:dev'
+  ]);
+
+  grunt.registerTask('buildDev', [
+    'bower-install-simple:dev',
+    'ngAnnotate:dev',
+    'bower:main',
+    'dev'
   ]);
 
   grunt.registerTask('build', [
@@ -28,7 +36,7 @@ module.exports = function (grunt) {
     'htmlmin:build',
     'cssmin:build',
     // 'cssmin:buildVendor',
-    // 'ngAnnotate:build',
+    'ngAnnotate:build',
     'jshint:build',
     'requirejs:build',
     'concat:build',
@@ -46,6 +54,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     'bower-install-simple': {
+      dev: {},
       prod: {
         options: {
           production: true
@@ -266,7 +275,8 @@ module.exports = function (grunt) {
             src: [
               '**/*.js',
               '!bower_components/jquery/**' // parse error
-            ]
+            ],
+            dest: 'public'
           }
         ]
       },
@@ -278,7 +288,8 @@ module.exports = function (grunt) {
             src: [
               '**/*.js',
               '!bower_components/jquery/**' // parse error
-            ]
+            ],
+            dest: 'build'
           }
         ]
       }
