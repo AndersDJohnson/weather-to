@@ -8,7 +8,7 @@ define(['angular', 'resourceArray'], function (angular) {
       '$q', '$log', 'resourceArray',
       function ($q, $log, resourceArray) {
 
-        var nextId = 4;
+        var nextId = 5;
 
         var cats = [
           {
