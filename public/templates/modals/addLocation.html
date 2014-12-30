@@ -10,18 +10,24 @@
 
 <div class="modal-body">
 
-  <form>
+  <form name="locationSearchForm">
     <input type="text" autofocus
-      ng-model="address" name="addressField"
-      ng-change="onAddressChange(address)"
+      ng-model="locationSearchText"
+      id="locationSearchForm.locationSearchText"
+      name="locationSearchText"
+      ng-change="onLocationSearchTextChange(locationSearchText)"
     />
+    <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-location-searching"
+      ng-show="locationSearching"></span>
   </form>
-  <ol class="list-unstyled">
-    <li ng-repeat="loc in locationResults">
-      <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
 
-      <button ng-click="addLocation(loc)">+</button>
-    </li>
-  </ol>
+  <div ng-hide="locationSearching">
+    <ol class="list-unstyled">
+      <li ng-repeat="loc in locationResults">
+        <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
+        <button ng-click="addLocation(loc)">+</button>
+      </li>
+    </ol>
+  </div>
 
 </div>

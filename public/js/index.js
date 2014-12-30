@@ -323,19 +323,34 @@ require([
       };
 
 
-      $scope.onAddressChange = function (address) {
-        $log.log('addressChange', address);
-        geocoder.get(address).
+      var latestLocationSearchTextChangePromise;
+
+
+      $scope.onLocationSearchTextChange = function (locationSearchText) {
+        $log.log('onLocationSearchTextChange', locationSearchText);
+        var thisPromise = geocoder.get(locationSearchText);
+        latestLocationSearchTextChangePromise = thisPromise;
+        $log.log('this vs latest', thisPromise, latestLocationSearchTextChangePromise);
+
+        $scope.$safeApply(function () {
+          $scope.locationSearching = true;
+        });
+
+        thisPromise.
           then(function (result) {
+
+            // ignore all by latest responses
+            if (thisPromise !== latestLocationSearchTextChangePromise) {
+              return;
+            }
 
             var locationResults = _.map(result.results, function (val) {
               var location = locationConverter.convert(val);
               return location;
             });
 
-            $log.log('loc res', locationResults);
-
             $scope.$safeApply(function () {
+              $scope.locationSearching = false;
               $scope.locationResults = locationResults;
             });
           });
