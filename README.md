@@ -26,23 +26,23 @@ heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-mult
 ## TODO
 
 * Features
-** F/C switch
-** Link locations to Google Maps
-** Add to Google Calendar for category matches
-** Add your own API key
-** Persist categories for locations
-*** Local storage
-*** Import / export
-*** Dropbox
-*** Google Drive
-** http://bootstrapvalidator.com/
-** https://github.com/wenzhixin/bootstrap-table
+ * F/C switch
+ * Link locations to Google Maps
+ * Add to Google Calendar for category matches
+ * Add your own API key
+ * Persist categories for locations
+    * Local storage
+    * Import / export
+    * Dropbox
+    * Google Drive
+ * http://bootstrapvalidator.com/
+ * https://github.com/wenzhixin/bootstrap-table
 
 * Development
-** grunt-angular-templates
-** angular-hint
-** https://docs.angularjs.org/guide/production#disabling-debug-data
-** ng-strict-di
-** ng-annotate / ng-min
-** https://github.com/johnpapa/angularjs-styleguide
-** http://briantford.com/blog/huuuuuge-angular-apps
+ * grunt-angular-templates
+ * angular-hint
+ * https://docs.angularjs.org/guide/production#disabling-debug-data
+ * ng-strict-di
+ * ng-annotate / ng-min
+ * https://github.com/johnpapa/angularjs-styleguide
+ * http://briantford.com/blog/huuuuuge-angular-apps
