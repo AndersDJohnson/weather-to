@@ -1,5 +1,7 @@
 # WeatherTo
 
+Weather activity planning. Demo app in AngularJS. https://weather-to.herokuapp.com
+
 ## Tests
 
 ### Unit
