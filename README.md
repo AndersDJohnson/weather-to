@@ -1,5 +1,26 @@
 # WeatherTo
 
+## Tests
+
+### Unit
+
+Run Karma tests:
+```
+npm run test:unit
+```
+
+### End-to-end
+
+Run Protractor tests:
+```
+npm i -g webdriver-manager
+webdriver-manager update
+webdriver-manager start
+
+npm run serve
+npm run test:e2e
+```
+
 
 ## Requirements
 

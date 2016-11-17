@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('buildDev', [
     'bower-install-simple:dev',
-    'ngAnnotate:dev',
+    // 'ngAnnotate:dev',
     'bower:main',
     'dev'
   ]);
