@@ -1,4 +1,10 @@
-define([], function () {
+define([
+    'angular',
+    'lodash'
+], function (
+    angular,
+    _
+) {
     return [
         '$scope', '$q', '$log', '$rootScope',
         'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
@@ -54,7 +60,9 @@ define([], function () {
             };
 
 
-            var showGetLocationError = function (err) {
+            var showGetLocationError = function (
+              //err
+            ) {
                 // scopeModal('getLocationError', $scope);
             };
 
@@ -124,7 +132,7 @@ define([], function () {
                 $scope.modal('editCategory', scope).
                 result.then(function (result) {
                     $log.log('result', result);
-                    categories.save(result.catFormModel).then(function (cat) {
+                    categories.save(result.catFormModel).then(function () {
                         categories.query().then(function (cats) {
                             $scope.$safeApply(function () {
                                 $scope.cats = cats;
@@ -221,7 +229,7 @@ define([], function () {
                                     }
                                 }
                             },
-                            function (err) {
+                            function () {
                                 error('could not reverse geocode for locality');
                             }
                         ).
