@@ -1,3 +1,4 @@
+/* eslint-env node */
 // Karma configuration
 // Generated on Thu Nov 17 2016 11:59:02 GMT-0600 (Central Standard Time)
 
@@ -25,7 +26,7 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-        'public/bower_components/**/test/**/*.js'
+      'public/bower_components/**/test/**/*.js'
     ],
 
 
@@ -70,5 +71,5 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
-  })
-}
+  });
+};
