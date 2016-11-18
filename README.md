@@ -1,4 +1,4 @@
-# WeatherTo
+# WeatherTo [![Build Status](https://travis-ci.org/AndersDJohnson/weather-to.svg?branch=master)](https://travis-ci.org/AndersDJohnson/weather-to)
 
 Weather activity planning. Demo app. https://weather-to.herokuapp.com
 
