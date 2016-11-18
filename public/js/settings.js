@@ -9,8 +9,7 @@ define(['angular'], function (angular) {
     };
 
     this.$get = [
-      '$q', '$log',
-      function ($q, $log) {
+      function () {
 
         var settings = {};
 

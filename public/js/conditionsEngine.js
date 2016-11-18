@@ -144,11 +144,7 @@ function (
       };
 
 
-      conditionsEngine._computeCatsWithCats = function (cats, forecast, options) {
-
-        options = _.defaults({}, options, {
-          
-        });
+      conditionsEngine._computeCatsWithCats = function (cats, forecast) {
 
         var deferred = $q.defer();
 

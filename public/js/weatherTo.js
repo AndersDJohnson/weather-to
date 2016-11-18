@@ -51,8 +51,8 @@ define([
 
 
   weatherTo.config([
-    'geocoderProvider', 'forecastIoProvider', 'geolocatorProvider',
-    function (geocoderProvider, forecastIoProvider, geolocatorProvider) {
+    'geocoderProvider', 'forecastIoProvider',
+    function (geocoderProvider, forecastIoProvider) {
 
       geocoderProvider.config.google.serverApiKey = 'AIzaSyDmjRbBjb6x4YGyQm8CKG21Kocsix-D3kY';
 

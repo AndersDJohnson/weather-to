@@ -35,13 +35,13 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
 
         var geocoder = {};
 
-        var cache = true;
+        var defaultCache = true;
 
 
         geocoder.get = function (address, options) {
 
           options = _.defaults({}, options, {
-            cache: true
+            cache: defaultCache
           });
 
           var deferred = $q.defer();

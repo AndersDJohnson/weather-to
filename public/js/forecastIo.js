@@ -66,7 +66,7 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           return iconClass;
         };
 
-        forecastIo.getIconClassForPoint = function (point, options) {
+        forecastIo.getIconClassForPoint = function (point) {
           if (! point) {
             return '';
           }
@@ -144,7 +144,7 @@ define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
           condition.key = key;
         });
 
-        forecastIo.conditionsByIcon = _.transform(forecastIo.conditions, function (result, value, key) {
+        forecastIo.conditionsByIcon = _.transform(forecastIo.conditions, function (result, value) {
           result[value.icon] = value;
         });
 
