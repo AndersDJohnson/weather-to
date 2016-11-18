@@ -8,7 +8,9 @@
     "serve": "serve public",
     "postinstall": "bower install && grunt -v postinstall",
     "test": "npm run test:lint && npm run test:unit:phantom",
-    "test:lint": "eslint public/js/**/*.js",
+    "test:lint": "npm run test:lint:src && npm run test:lint:test",
+    "test:lint:src": "eslint public/js/**/*.js",
+    "test:lint:test": "eslint -c .eslintrc.test.js protractor.conf.js karma.conf.js test/**/*.js",
     "test:unit:phantom": "karma start --single-run --browsers PhantomJS",
     "test:unit:browser": "karma start --single-run",
     "test:e2e": "protractor protractor.conf.js"
@@ -19,6 +21,7 @@
   "devDependencies": {
     "bower": "^1.3.12",
     "eslint": "^3.10.2",
+    "eslint-plugin-jasmine": "^2.1.0",
     "grunt": "^0.4.5",
     "grunt-bower-requirejs": "^2.0.0",
     "grunt-cli": "^0.1.13",
