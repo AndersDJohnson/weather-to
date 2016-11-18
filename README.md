@@ -10,6 +10,8 @@ Demos technologies:
 * RequireJS
 * Bootstrap 3
 * Grunt
+* npm scripts
+* Travis CI
 
 ## Tests
 
