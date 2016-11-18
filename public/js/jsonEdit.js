@@ -4,7 +4,7 @@
 
 define(['angular'], function (angular) {
 
-    'use strict';
+  'use strict';
 
     /*
     example usage: <textarea json-edit="myObject" rows="8" class="form-control"></textarea>
@@ -18,84 +18,84 @@ define(['angular'], function (angular) {
     As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
      */
 
-    var jsonEdit = angular.module('jsonEdit', [])
+  var jsonEdit = angular.module('jsonEdit', [])
         .directive('jsonEdit', function () {
-            return {
-                restrict: 'A',
-                require: 'ngModel',
-                template: '<textarea ng-model="jsonEditing"></textarea>',
-                replace : true,
-                scope: {
-                    model: '=jsonEdit'
-                },
-                link: function (scope, element, attrs, ngModelCtrl) {
+          return {
+            restrict: 'A',
+            require: 'ngModel',
+            template: '<textarea ng-model="jsonEditing"></textarea>',
+            replace : true,
+            scope: {
+              model: '=jsonEdit'
+            },
+            link: function (scope, element, attrs, ngModelCtrl) {
 
-                    function setEditing (value) {
-                        scope.jsonEditing = angular.copy(fromJSON2String(value));
-                    }
+              function setEditing (value) {
+                scope.jsonEditing = angular.copy(fromJSON2String(value));
+              }
 
-                    function updateModel (value) {
-                        scope.model = string2JSON(value);
-                    }
+              function updateModel (value) {
+                scope.model = string2JSON(value);
+              }
 
-                    function setValid() {
-                        ngModelCtrl.$setValidity('json', true);
-                    }
+              function setValid() {
+                ngModelCtrl.$setValidity('json', true);
+              }
 
-                    function setInvalid () {
-                        ngModelCtrl.$setValidity('json', false);
-                    }
+              function setInvalid () {
+                ngModelCtrl.$setValidity('json', false);
+              }
 
-                    function string2JSON(text) {
-                        try {
-                            return angular.fromJson(text);
-                        } catch (err) {
-                            setInvalid();
-                            return text;
-                        }
-                    }
+              function string2JSON(text) {
+                try {
+                  return angular.fromJson(text);
+                } catch (err) {
+                  setInvalid();
+                  return text;
+                }
+              }
 
-                    function fromJSON2String(object) {
+              function fromJSON2String(object) {
                         // better than JSON.stringify(), because it formats + filters $$hashKey etc.
                         // NOTE that this will remove all $-prefixed values
-                        return angular.toJson(object, true);
-                    }
+                return angular.toJson(object, true);
+              }
 
-                    function isValidJson(model) {
-                        var flag = true;
-                        try {
-                            angular.fromJson(model);
-                        } catch (err) {
-                            flag = false;
-                        }
-                        return flag;
-                    }
+              function isValidJson(model) {
+                var flag = true;
+                try {
+                  angular.fromJson(model);
+                } catch (err) {
+                  flag = false;
+                }
+                return flag;
+              }
 
                     //init
-                    setEditing(scope.model);
+              setEditing(scope.model);
 
                     //check for changes going out
-                    scope.$watch('jsonEditing', function (newval, oldval) {
-                        if (newval != oldval) {
-                            if (isValidJson(newval)) {
-                                setValid();
-                                updateModel(newval);
-                            } else {
-                                setInvalid();
-                            }
-                        }
-                    }, true);
+              scope.$watch('jsonEditing', function (newval, oldval) {
+                if (newval != oldval) {
+                  if (isValidJson(newval)) {
+                    setValid();
+                    updateModel(newval);
+                  } else {
+                    setInvalid();
+                  }
+                }
+              }, true);
 
                     //check for changes coming in
-                    scope.$watch('model', function (newval, oldval) {
-                        if (newval != oldval) {
-                            setEditing(newval);
-                        }
-                    }, true);
-
+              scope.$watch('model', function (newval, oldval) {
+                if (newval != oldval) {
+                  setEditing(newval);
                 }
-            };
+              }, true);
+
+            }
+          };
         });
 
-    return jsonEdit;
+  return jsonEdit;
 });

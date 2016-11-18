@@ -1,9 +1,9 @@
 define([], function () {
-    return ['$scope',
-        function ($scope) {
+  return ['$scope',
+    function ($scope) {
 
-            $scope.collapses = {};
+      $scope.collapses = {};
 
-        }
-    ];
+    }
+  ];
 });

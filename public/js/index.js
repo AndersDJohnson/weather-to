@@ -1,12 +1,12 @@
 require([
-    'angular',
-    'weatherTo'
+  'angular',
+  'weatherTo'
 ], function (
   angular
 ) {
 
-    angular.bootstrap(document, ['weatherTo'], {
-        strictDi: true
-    });
+  angular.bootstrap(document, ['weatherTo'], {
+    strictDi: true
+  });
 
 });
