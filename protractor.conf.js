@@ -1,4 +1,6 @@
 exports.config = {
-    seleniumAddress: 'http://localhost:4444/wd/hub',
-    specs: ['e2e/main-spec.js']
+  seleniumAddress: 'http://localhost:4444/wd/hub',
+  specs: [
+    'e2e-tests/**/*.js'
+  ]
 };
