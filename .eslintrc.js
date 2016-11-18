@@ -4,6 +4,9 @@ module.exports = {
         "amd": true
     },
     "extends": "eslint:recommended",
+    "plugins": [
+      "angular"
+    ],
     "rules": {
         "indent": [
             "error",
