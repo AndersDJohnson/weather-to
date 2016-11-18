@@ -12,7 +12,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('buildDev', [
-    'bower-install-simple:dev',
     'ngAnnotate:dev',
     'bowerRequirejs:main',
     'dev'
@@ -33,7 +32,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('postinstall', [
-    'bower-install-simple:prod',
     'bowerRequirejs:main',
     'ngAnnotate:dev',
     'less:dev',
@@ -42,15 +40,6 @@ module.exports = function (grunt) {
 
 
   grunt.initConfig({
-
-    'bower-install-simple': {
-      dev: {},
-      prod: {
-        options: {
-          production: true
-        }
-      }
-    },
 
     bowerRequirejs: {
       main: {
