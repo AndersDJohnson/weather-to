@@ -1,6 +1,15 @@
 # WeatherTo
 
-Weather activity planning. Demo app in AngularJS. https://weather-to.herokuapp.com
+Weather activity planning. Demo app. https://weather-to.herokuapp.com
+
+Demos technologies:
+* AngularJS
+* Jasmine
+* Karma
+* Protractor
+* RequireJS
+* Bootstrap 3
+* Grunt
 
 ## Tests
 
