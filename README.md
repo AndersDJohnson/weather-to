@@ -19,7 +19,7 @@ Demos technologies:
 
 Run Karma tests:
 ```
-npm run test:unit
+npm run test:unit:browser
 ```
 
 ### End-to-end
