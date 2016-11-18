@@ -14,7 +14,7 @@ module.exports = function (grunt) {
   grunt.registerTask('buildDev', [
     'bower-install-simple:dev',
     'ngAnnotate:dev',
-    'bower:main',
+    'bowerRequirejs:main',
     'dev'
   ]);
 
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('postinstall', [
     'bower-install-simple:prod',
-    'bower:main',
+    'bowerRequirejs:main',
     'ngAnnotate:dev',
     'less:dev',
     'build'
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
       }
     },
 
-    bower: {
+    bowerRequirejs: {
       main: {
         rjsConfig: 'public/js/requireConfig.js',
         options: {
