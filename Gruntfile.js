@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('buildDev', [
     'bower-install-simple:dev',
-    // 'ngAnnotate:dev',
+    'ngAnnotate:dev',
     'bower:main',
     'dev'
   ]);
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     'htmlmin:build',
     'cssmin:build',
     // 'cssmin:buildVendor',
-    // 'ngAnnotate:build',
+    'ngAnnotate:build',
     'jshint:build',
     'requirejs:build',
     'concat:build',
@@ -276,7 +276,9 @@ module.exports = function (grunt) {
             cwd: 'public',
             src: [
               '**/*.js',
-              '!bower_components/jquery/**' // parse error
+              // parse errors
+              '!bower_components/jquery/**',
+              '!bower_components/bootstrap/grunt/change-version.js'
             ],
             dest: 'public'
           }
