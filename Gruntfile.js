@@ -5,21 +5,10 @@ module.exports = function (grunt) {
 
   var _ = grunt.util._;
 
-  var jshintSettings = {
-    es5: false,
-    browser: true,
-    undef: true,
-    globals: {
-      require: true,
-      define: true
-    }
-  };
-
 
   grunt.registerTask('dev', [
     'template:dev',
-    'less:dev',
-    'jshint:dev'
+    'less:dev'
   ]);
 
   grunt.registerTask('buildDev', [
@@ -37,7 +26,6 @@ module.exports = function (grunt) {
     'cssmin:build',
     // 'cssmin:buildVendor',
     'ngAnnotate:build',
-    'jshint:build',
     'requirejs:build',
     'concat:build',
     'uglify:build',
@@ -314,27 +302,6 @@ module.exports = function (grunt) {
             dest: 'build/js/index-build.js',
           }
         ]
-      }
-    },
-
-    jshint: {
-      dev: {
-        options: _.extend({
-          force: false, // true to not fail
-          devel: true,
-          debug: true
-        }, jshintSettings),
-        files: {
-          src: ['public/js/**/*.js']
-        }
-      },
-      build: {
-        options: _.extend({
-          force: false
-        }, jshintSettings),
-        files: {
-          src: ['public/js/**/*.js']
-        }
       }
     },
 
