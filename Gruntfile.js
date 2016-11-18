@@ -5,6 +5,12 @@ module.exports = function (grunt) {
 
   var _ = grunt.util._;
 
+  var ngAnnotateFiles = [
+    '**/*.js',
+    // parse errors
+    '!bower_components/jquery/**',
+    '!bower_components/bootstrap/grunt/change-version.js'
+  ];
 
   grunt.registerTask('dev', [
     'template:dev',
@@ -251,12 +257,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'public',
-            src: [
-              '**/*.js',
-              // parse errors
-              '!bower_components/jquery/**',
-              '!bower_components/bootstrap/grunt/change-version.js'
-            ],
+            src: ngAnnotateFiles,
             dest: 'public'
           }
         ]
@@ -266,10 +267,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'build',
-            src: [
-              '**/*.js',
-              '!bower_components/jquery/**' // parse error
-            ],
+            src: ngAnnotateFiles,
             dest: 'build'
           }
         ]
