@@ -12,6 +12,7 @@ Demos technologies:
 * Grunt
 * npm scripts
 * Travis CI
+* Heroku
 
 ## Tests
 
