@@ -192,15 +192,15 @@ define([], function () {
                 promise.
                 then(function (position) {
 
-                        $scope.$safeApply(function () {
-                            $scope.location.coords = position.coords;
-                            $scope.location.resolving = true;
-                        });
+                    $scope.$safeApply(function () {
+                        $scope.location.coords = position.coords;
+                        $scope.location.resolving = true;
+                    });
 
                         // now lazily attempt to update the current coordinate location with reverse geocoded city
-                        geocoder.reverse(position, {
-                            result_type: 'locality'
-                        }).
+                    geocoder.reverse(position, {
+                        result_type: 'locality'
+                    }).
                         then(
                             function (result) {
                                 $log.log('reverse result', result);
@@ -230,7 +230,7 @@ define([], function () {
                                 $scope.location.resolving = false;
                             });
                         });
-                    },
+                },
                     function (err) {
                         $scope.$safeApply(function () {
                             $scope.locationError = err;

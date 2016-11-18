@@ -97,5 +97,5 @@ define(['angular'], function (angular) {
             };
         });
 
-  return jsonEdit;
+    return jsonEdit;
 });

@@ -1,26 +1,26 @@
 define(['angular'], function (angular) {
 
-  var settingsModule = angular.module('settings', []);
+    var settingsModule = angular.module('settings', []);
 
-  settingsModule.provider('settings', [function () {
+    settingsModule.provider('settings', [function () {
 
-    var settingsObject = this.settingsObject = {
-      apparentTemperatures: false
-    };
+        var settingsObject = this.settingsObject = {
+            apparentTemperatures: false
+        };
 
-    this.$get = [
-      '$q', '$log',
-      function ($q, $log) {
+        this.$get = [
+            '$q', '$log',
+            function ($q, $log) {
 
-        var settings = {};
+                var settings = {};
 
-        settings.settings = settingsObject;
+                settings.settings = settingsObject;
 
-        return settings;
-      }
-    ];
+                return settings;
+            }
+        ];
 
-  }]);
+    }]);
 
-  return settingsModule;
+    return settingsModule;
 });

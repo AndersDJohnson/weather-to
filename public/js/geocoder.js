@@ -1,144 +1,144 @@
 define(['angular', 'lodash', 'httpDelayer'], function (angular, _) {
 
-  var geocoderModule = angular.module('geocoder', ['httpDelayer']);
+    var geocoderModule = angular.module('geocoder', ['httpDelayer']);
 
 
-  var config = {
-    google: {
-      serverApiKey: null,
-      url: 'https://maps.googleapis.com/maps/api/geocode/json'
-    },
-    httpDelayer: {
-      id: 'geocoder',
-      delay: null
-    }
-  };
+    var config = {
+        google: {
+            serverApiKey: null,
+            url: 'https://maps.googleapis.com/maps/api/geocode/json'
+        },
+        httpDelayer: {
+            id: 'geocoder',
+            delay: null
+        }
+    };
 
 
-  geocoderModule.config([
-    '$httpProvider', 'httpDelayer',
-    function ($httpProvider, httpDelayer) {
-      httpDelayer($httpProvider, config.httpDelayer);
-    }
-  ]);
+    geocoderModule.config([
+        '$httpProvider', 'httpDelayer',
+        function ($httpProvider, httpDelayer) {
+            httpDelayer($httpProvider, config.httpDelayer);
+        }
+    ]);
 
 
-  geocoderModule.provider('geocoder', [function () {
+    geocoderModule.provider('geocoder', [function () {
 
-    this.config = config;
+        this.config = config;
 
-    var url = config.google.url;
+        var url = config.google.url;
 
-    this.$get = [
-      '$http', '$q', '$log',
-      function ($http, $q, $log) {
+        this.$get = [
+            '$http', '$q', '$log',
+            function ($http, $q, $log) {
 
-        var geocoder = {};
+                var geocoder = {};
 
-        var cache = true;
+                var cache = true;
 
 
-        geocoder.get = function (address, options) {
+                geocoder.get = function (address, options) {
 
-          options = _.defaults({}, options, {
-            cache: true
-          });
+                    options = _.defaults({}, options, {
+                        cache: true
+                    });
 
-          var deferred = $q.defer();
+                    var deferred = $q.defer();
 
-          var cache = options.cache;
+                    var cache = options.cache;
 
-          $log.log('geocoding address', address);
+                    $log.log('geocoding address', address);
 
-          var key = config.google.serverApiKey;
+                    var key = config.google.serverApiKey;
 
-          $http.
+                    $http.
             get(url, {
-              id: 'geocoder',
-              cache: cache,
-              params: {
-                key: key,
-                address: address
-              }
+                id: 'geocoder',
+                cache: cache,
+                params: {
+                    key: key,
+                    address: address
+                }
             }).
             success(function (data) {
-              deferred.resolve(data);
+                deferred.resolve(data);
             }).
             error(function (err) {
-              deferred.reject(err);
+                deferred.reject(err);
             });
 
-          return deferred.promise;
-        };
+                    return deferred.promise;
+                };
 
 
-        geocoder.reverse = function (position, options) {
+                geocoder.reverse = function (position, options) {
 
-          options = _.defaults({}, options, {
-            cache: true,
-            result_type: []
-          });
+                    options = _.defaults({}, options, {
+                        cache: true,
+                        result_type: []
+                    });
 
-          var deferred = $q.defer();
-          var promise = deferred.promise;
+                    var deferred = $q.defer();
+                    var promise = deferred.promise;
 
-          if (! position) {
-            deferred.reject('position required');
-            return promise;
-          }
+                    if (! position) {
+                        deferred.reject('position required');
+                        return promise;
+                    }
 
-          if (! position.coords) {
-            deferred.reject('position.coords required');
-            return promise;
-          }
+                    if (! position.coords) {
+                        deferred.reject('position.coords required');
+                        return promise;
+                    }
 
-          $log.log('reverse geocoding position', position, options);
+                    $log.log('reverse geocoding position', position, options);
 
-          var result_type = options.result_type;
-          var cache = options.cache;
+                    var result_type = options.result_type;
+                    var cache = options.cache;
 
-          if (! angular.isArray(result_type) && result_type.indexOf('|') === -1) {
-            result_type = [result_type];
-          }
-          result_type  = result_type.join('|');
+                    if (! angular.isArray(result_type) && result_type.indexOf('|') === -1) {
+                        result_type = [result_type];
+                    }
+                    result_type  = result_type.join('|');
 
-          var lat = position.coords.lat || position.coords.latitude;
-          var lng = position.coords.lng || position.coords.longitude;
+                    var lat = position.coords.lat || position.coords.latitude;
+                    var lng = position.coords.lng || position.coords.longitude;
 
-          var latlng = lat  + ',' + lng;
+                    var latlng = lat  + ',' + lng;
 
-          var key = config.google.serverApiKey;
+                    var key = config.google.serverApiKey;
 
-          $http.
+                    $http.
             get(url, {
-              id: 'geocoder',
-              cache: cache,
-              params: {
-                key: key,
-                latlng: latlng,
-                result_type : result_type
-              }
+                id: 'geocoder',
+                cache: cache,
+                params: {
+                    key: key,
+                    latlng: latlng,
+                    result_type : result_type
+                }
             }).
             success(function (data) {
-              deferred.resolve(data);
+                deferred.resolve(data);
             }).
             error(function (data, status, headers, config) {
-              deferred.reject({
-                data: data,
-                status: status,
-                headers: headers,
-                config: config
-              });
+                deferred.reject({
+                    data: data,
+                    status: status,
+                    headers: headers,
+                    config: config
+                });
             });
 
-          return deferred.promise;
-        };
+                    return deferred.promise;
+                };
 
 
-        return geocoder;
-      }];
+                return geocoder;
+            }];
 
-  }]);
+    }]);
 
-  return geocoderModule;
+    return geocoderModule;
 });
