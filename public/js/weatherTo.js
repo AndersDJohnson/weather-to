@@ -20,7 +20,8 @@ define([
   'locations',
   'locationConverter',
   'conditionsEngine',
-  'AngularJS-Scope.SafeApply'//,
+  'AngularJS-Scope.SafeApply',
+  'angular-animate'//,
   // 'goog!visualization,1,packages:[timeline]'
 ], function (
   angular,
@@ -45,7 +46,8 @@ define([
       'categories',
       'locations',
       'locationConverter',
-      'conditionsEngine'
+      'conditionsEngine',
+      'ngAnimate'
     ]
   );
 
@@ -68,7 +70,7 @@ define([
 
 
   weatherTo.constant('angularMomentConfig', {
-    preprocess: 'unix'
+    // preprocess: 'unix'
   });
 
 
