@@ -130,7 +130,8 @@ module.exports = function (grunt) {
       build: {
         options: {
           data: {
-            dev: false
+            dev: false,
+            favicons: favicons
           }
         },
         files: [
