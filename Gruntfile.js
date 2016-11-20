@@ -1,15 +1,16 @@
+/* eslint-env node */
+
 module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
 
-  var _ = grunt.util._;
-
   var ngAnnotateFiles = [
     '**/*.js',
     // parse errors
     '!bower_components/jquery/**',
-    '!bower_components/bootstrap/grunt/change-version.js'
+    '!bower_components/bootstrap/grunt/change-version.js',
+    '!bower_components/moment/{src,locale,templates}/**/*.js'
   ];
 
   grunt.registerTask('dev', [
