@@ -1,9 +1,13 @@
 /* eslint-env node */
 
+var fs = require('fs');
+
 module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
+
+  var favicons = fs.readFileSync('./public/favicons.html');
 
   var ngAnnotateFiles = [
     '**/*.js',
@@ -114,7 +118,8 @@ module.exports = function (grunt) {
       dev: {
         options: {
           data: {
-            dev: true
+            dev: true,
+            favicons: favicons
           }
         },
         files: [
@@ -126,7 +131,8 @@ module.exports = function (grunt) {
       build: {
         options: {
           data: {
-            dev: false
+            dev: false,
+            favicons: favicons
           }
         },
         files: [
