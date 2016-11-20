@@ -10,7 +10,9 @@
     "test": "npm run test:lint && npm run test:unit:phantom",
     "test:lint": "npm run test:lint:src && npm run test:lint:test",
     "test:lint:src": "eslint public/js/**/*.js",
-    "test:lint:test": "eslint -c .eslintrc.test.js protractor.conf.js karma.conf.js test/**/*.js",
+    "test:lint:test": "npm run test:lint:test:protractor && npm run test:lint:test:karma",
+    "test:lint:test:protractor": "eslint -c .eslintrc.protractor.js protractor.conf.js e2e-tests/**/*.js",
+    "test:lint:test:karma": "eslint -c .eslintrc.karma.js karma.conf.js test/**/*.js",
     "test:unit:phantom": "karma start --single-run --browsers PhantomJS",
     "test:unit:browser": "karma start --single-run",
     "test:e2e": "protractor protractor.conf.js"
@@ -24,6 +26,7 @@
     "eslint-config-angular": "^0.5.0",
     "eslint-plugin-angular": "^1.4.1",
     "eslint-plugin-jasmine": "^2.1.0",
+    "eslint-plugin-protractor": "^1.29.1",
     "favicons": "^4.8.3",
     "grunt": "^0.4.5",
     "grunt-bower-requirejs": "^2.0.0",
