@@ -1,11 +1,11 @@
-define(['angular', 'lodash'], function (angular, _) {
+define(['angular', 'lodash', 'angular-animate'], function (angular, _) {
 
   var modalModule = angular.module('modal', []);
 
 
   modalModule.factory('scopeModal', [
-    '$log', '$modal', '$rootScope',
-    function ($log, $modal, $rootScope) {
+    '$log', '$uibModal', '$rootScope',
+    function ($log, $uibModal, $rootScope) {
 
       var defaultOptions = {
         autofocus: true
@@ -34,7 +34,7 @@ define(['angular', 'lodash'], function (angular, _) {
         $log.log('modal scope', scope);
         modalOptions.scope = scope;
 
-        var modalInstance = $modal.open(modalOptions);
+        var modalInstance = $uibModal.open(modalOptions);
 
         modalInstance.opened.then(function () {
           $log.log('opened', this, arguments);
@@ -61,17 +61,17 @@ define(['angular', 'lodash'], function (angular, _) {
 
 
   modalModule.controller('ModalInstanceController',
-    ['$log', '$scope', '$modalInstance',
-      function ($log, $scope, $modalInstance) {
+    ['$log', '$scope', '$uibModalInstance',
+      function ($log, $scope, $uibModalInstance) {
 
         $log.log('modal scope from ctrl', $scope);
 
         $scope.close = function (result) {
-          $modalInstance.close(result);
+          $uibModalInstance.close(result);
         };
 
         $scope.dismiss = function (reason) {
-          $modalInstance.dismiss(reason);
+          $uibModalInstance.dismiss(reason);
         };
       }
     ]);

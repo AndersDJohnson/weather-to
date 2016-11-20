@@ -68,7 +68,7 @@ define([
 
 
   weatherTo.constant('angularMomentConfig', {
-    preprocess: 'unix'
+    // preprocess: 'unix'
   });
 
 
