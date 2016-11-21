@@ -55,6 +55,11 @@ require.config({
         'angular'
       ]
     },
+    'angular-mocks': {
+      deps: [
+        'angular'
+      ]
+    },
     'angular-bootstrap': {
       deps: [
         'angular'
