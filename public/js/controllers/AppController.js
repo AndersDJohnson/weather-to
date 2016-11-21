@@ -1,6 +1,7 @@
 define([
   'angular',
-  'lodash'
+  'lodash',
+  'angular-local-storage'
 ], function (
     angular,
     _
@@ -9,10 +10,12 @@ define([
     '$scope', '$q', '$log', '$rootScope',
     'scopeModal', 'geocoder', 'geolocator', 'forecastIo',
     'categories','locations', 'settings', 'conditionsEngine', 'locationConverter',
+    'localStorageService',
     function (
             $scope, $q, $log, $rootScope,
             scopeModal, geocoder, geolocator, forecastIo,
-            categories, locations, settings, conditionsEngine, locationConverter
+            categories, locations, settings, conditionsEngine, locationConverter,
+            localStorageService
         ) {
 
       $rootScope.env = window.ENV;
@@ -183,10 +186,11 @@ define([
           $scope.locationError = null;
           $scope.refreshingLocation = true;
 
-          $scope.location = {
+          $scope.setLocation({
             name: 'Current location',
-            resolving: false
-          };
+            resolving: false,
+            current: true
+          });
         });
 
         var promise = _getCurrentPosition();
@@ -308,6 +312,13 @@ define([
         $log.log('set location', loc);
 
         $scope.location = loc;
+
+        if (loc.current) {
+          localStorageService.remove('savedLocation');
+        }
+        else {
+          localStorageService.set('savedLocation', loc);
+        }
       };
 
 
@@ -472,9 +483,14 @@ define([
         });
       });
 
+      var savedLocation = localStorageService.get('savedLocation');
 
-      $scope.getCurrentLocation();
-
+      if (savedLocation) {
+        $scope.setLocation(savedLocation);
+      }
+      else {
+        $scope.getCurrentLocation();
+      }
 
     }
   ];
