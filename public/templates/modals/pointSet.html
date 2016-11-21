@@ -3,7 +3,7 @@
   <button type="button" class="close" ng-click="dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
   <h3 class="modal-title">
-    {{ pointSet.first.time | amCalendar }} - {{ pointSet.last.time | amCalendar }}
+    {{ pointSet.first.time * 1000 | amCalendar }} - {{ pointSet.last.time * 1000 | amCalendar }}
   </h3>
 
 </div>
