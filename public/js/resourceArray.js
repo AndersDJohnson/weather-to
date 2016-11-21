@@ -46,6 +46,12 @@ function (
 
           var resource = {};
 
+
+          resource.reset = function () {
+            localStorageService.remove(name + '.started');
+          };
+
+
           resource.query = function () {
             var deferred = $q.defer();
             var promise = deferred.promise;
