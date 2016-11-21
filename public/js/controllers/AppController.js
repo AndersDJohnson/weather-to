@@ -436,6 +436,7 @@ define([
 
       $scope.$watch('current.time', function () {
         $log.log('current.time change - re-computing cats', arguments);
+        $scope.currentTime = $scope.current && $scope.current.time && ($scope.current.time * 1000);
         scopingComputeCats();
       });
 
