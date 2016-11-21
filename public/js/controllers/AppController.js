@@ -15,8 +15,8 @@ define([
             categories, locations, settings, conditionsEngine, locationConverter
         ) {
 
-      $rootScope.weatherTo = {};
-      $rootScope.weatherTo.debug = true;
+      $rootScope.env = window.ENV;
+      $rootScope.debug = ($rootScope.env === 'development');
       $rootScope.$log = $log;
 
       $scope.modal = scopeModal;
