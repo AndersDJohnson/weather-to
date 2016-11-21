@@ -21,7 +21,9 @@ define([
   'locationConverter',
   'conditionsEngine',
   'AngularJS-Scope.SafeApply',
-  'angular-animate'//,
+  'angular-animate',
+  'angular-local-storage'
+  //,
   // 'goog!visualization,1,packages:[timeline]'
 ], function (
   angular,
@@ -47,14 +49,21 @@ define([
       'locations',
       'locationConverter',
       'conditionsEngine',
-      'ngAnimate'
+      'ngAnimate',
+      'LocalStorageModule'
     ]
   );
 
 
   weatherTo.config([
-    'geocoderProvider', 'forecastIoProvider',
-    function (geocoderProvider, forecastIoProvider) {
+    'geocoderProvider',
+    'forecastIoProvider',
+    'localStorageServiceProvider',
+    function (
+      geocoderProvider,
+      forecastIoProvider,
+      localStorageServiceProvider
+    ) {
 
       geocoderProvider.config.google.serverApiKey = 'AIzaSyDmjRbBjb6x4YGyQm8CKG21Kocsix-D3kY';
 
@@ -66,6 +75,8 @@ define([
       // geolocatorProvider.config.delay = 2000;
 
       // geolocatorProvider.config.fail = true;
+
+      localStorageServiceProvider.setPrefix('weather-to');
     }]);
 
 
