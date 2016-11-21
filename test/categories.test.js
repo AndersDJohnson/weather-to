@@ -9,6 +9,7 @@ define(['angular', 'angular-mocks', 'categories'], function (angular) {
     beforeEach(angular.mock.inject(function(_categories_, _$rootScope_) {
       categories = _categories_;
       $rootScope = _$rootScope_;
+      categories.reset();
     }));
 
     it('should exist', function() {

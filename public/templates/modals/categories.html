@@ -8,7 +8,7 @@
 
 </div>
 
-<div class="modal-body">
+<div class="modal-body wt-modal-body-categories">
 
   <table class="table table-striped table-condensed wt-table wt-table-categories">
     <thead>
@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="cat in cats">
+      <tr ng-repeat="cat in cats" class="wt-table-row-categories">
         <td class="td-expand">
           {{ cat.name }}
         </td>
@@ -36,7 +36,7 @@
     </tbody>
   </table>
 
-  <button class="btn btn-success" ng-click="addCategory()">
+  <button class="btn btn-success btn-add-category" ng-click="addCategory()">
     <span class="fa fa-plus"></span>
     New
   </button>
