@@ -5,6 +5,7 @@ config.plugins.push('jasmine');
 config.plugins.push('protractor');
 
 config.env = config.env || {};
+config.env.node = true;
 config.env.jasmine = true;
 config.env.protractor = true;
 
