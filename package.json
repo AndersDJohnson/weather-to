@@ -11,8 +11,8 @@
     "test:lint": "npm run test:lint:src && npm run test:lint:test",
     "test:lint:src": "eslint public/js/**/*.js",
     "test:lint:test": "npm run test:lint:test:protractor && npm run test:lint:test:karma",
-    "test:lint:test:protractor": "eslint -c .eslintrc.protractor.js protractor.conf.js e2e-tests/**/*.js",
-    "test:lint:test:karma": "eslint -c .eslintrc.karma.js karma.conf.js test/**/*.js",
+    "test:lint:test:protractor": "eslint -c e2e-tests/.eslintrc.js protractor.conf.js e2e-tests/**/*.js",
+    "test:lint:test:karma": "eslint -c test/.eslintrc.js karma.conf.js test/**/*.js",
     "test:unit:phantom": "karma start --single-run --browsers PhantomJS",
     "test:unit:browser": "karma start --single-run",
     "test:e2e": "protractor protractor.conf.js"
