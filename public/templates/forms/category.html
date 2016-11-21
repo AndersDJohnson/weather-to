@@ -42,8 +42,9 @@
             />
           </div>
           <div class="help-block" ng-if="catForm.temperature_min.$dirty">
-            <div ng-messages="catForm.temperature_min.$error"
-              ng-messages-include="templates/messages/simple.html"></div>
+            <div ng-messages="catForm.temperature_min.$error">
+              <div ng-messages-include="templates/messages/simple.html"></div>
+            </div>
           </div>
         </div>
 
@@ -65,8 +66,9 @@
             </div>
           </div>
           <div class="help-block" ng-if="catForm.temperature_max.$dirty">
-            <div ng-messages="catForm.temperature_max.$error"
-              ng-messages-include="templates/messages/simple.html"></div>
+            <div ng-messages="catForm.temperature_max.$error">
+              <div ng-messages-include="templates/messages/simple.html"></div>
+            </div>
           </div>
         </div>
       </div>
