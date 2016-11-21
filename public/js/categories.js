@@ -8,8 +8,6 @@ define(['angular', 'resourceArray'], function (angular) {
       '$q', '$log', 'resourceArray',
       function ($q, $log, resourceArray) {
 
-        var nextId = 5;
-
         var cats = [
           {
             id: 1,
@@ -56,7 +54,7 @@ define(['angular', 'resourceArray'], function (angular) {
           }
         ];
 
-        var resource = resourceArray(cats, nextId);
+        var resource = resourceArray('categories', cats);
 
         return resource;
       }];
