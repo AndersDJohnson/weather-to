@@ -34,8 +34,8 @@ function (
 
           var started = localStorageService.get(name + '.started');
 
-          if (started && angular.isArray(existing)) {
-            // ignore default items if started and existing is valid array
+          if (started && angular.isArray(existing) && existing.length > 0) {
+            // ignore default items if started and existing is valid array with items
             array = existing;
           }
 
