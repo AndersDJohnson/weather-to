@@ -79,8 +79,8 @@
 
         <div ng-if="current.time" class="wt-current-time pull-right">
           <span class="fa fa-clock-o"></span>
-          <span am-time-ago="current.time" am-preprocess="unix"
-            tooltip-placement="bottom" tooltip="{{ current.time | amCalendar }}"></span>
+          <span am-time-ago="currentTime"
+            tooltip-placement="bottom" uib-tooltip="{{ currentTime | amCalendar }}"></span>
         </div>
 
       </div>

@@ -10,24 +10,69 @@
 
 <div class="modal-body">
 
-  <form name="locationSearchForm">
-    <input type="text" autofocus
-      ng-model="locationSearchText"
-      id="locationSearchForm.locationSearchText"
-      name="locationSearchText"
-      ng-change="onLocationSearchTextChange(locationSearchText)"
-    />
-    <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-location-searching"
-      ng-show="locationSearching"></span>
+  <form name="locationSearchForm" class="form">
+    <div class="form-group has-feedback">
+      <input type="text" autofocus
+        ng-model="locationSearchText"
+        id="locationSearchForm.locationSearchText"
+        name="locationSearchText"
+        ng-change="onLocationSearchTextChange(locationSearchText)"
+        aria-describedby="locationSearchTextStatus"
+        class="form-control"
+        placeholder="Location"
+      />
+      <span class="form-control-feedback"
+        aria-hidden="true"
+        ng-show="locationSearchText &amp;&amp; locationSearching">
+        <span class="fa fa-circle-o-notch fa-spin wt-spinner wt-location-searching"></span>
+      </span>
+      <span id="locationSearchTextStatus" class="sr-only">(loading)</span>
+    </div>
   </form>
 
   <div ng-hide="locationSearching">
-    <ol class="list-unstyled">
-      <li ng-repeat="loc in locationResults">
-        <a ng-click="pickLocationResult(loc); close()">{{ loc.name }}</a>
-        <button ng-click="addLocation(loc)">+</button>
-      </li>
-    </ol>
+    <div ng-if="locationResults">
+      <div ng-switch="locationResults.length">
+        <div ng-switch-when="0">
+          <div ng-if="locationSearchText">
+            <p>
+              No results.
+            </p>
+          </div>
+        </div>
+        <div ng-switch-default>
+          <table class="table table-striped table-condensed wt-table wt-table-locations">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="loc in locationResults" class="wt-location-result">
+                <td class="td-expand">
+                  <a ng-click="pickLocationResult(loc); close()">
+                    {{ loc.name }}
+                  </a>
+                </td>
+                <td class="td-shrink text-right">
+                  <button class="btn btn-sm btn-success" ng-click="addLocation(loc)">
+                      <span class="fa fa-plus"></span>
+                      <span class="sr-only">Delete</span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-success" ng-click="dismiss()">
+      Done
+    </button>
   </div>
 
 </div>

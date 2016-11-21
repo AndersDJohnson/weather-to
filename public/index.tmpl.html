@@ -50,13 +50,19 @@
       </div>
     </footer>
 
-    <% if(dev) { %>
+    <% if (dev) { %>
+      <script>
+        window.ENV = 'development';
+      </script>
       <script src="bower_components/requirejs/require.js"></script>
       <script src="js/requireConfig.js"></script>
       <script src="js/index.js"></script>
 
       <script src="//localhost:35729/livereload.js"></script>
     <% } else { %>
+      <script>
+        window.ENV = 'production';
+      </script>
       <script src="js/index-build.min.js"></script>
     <% } %>
 

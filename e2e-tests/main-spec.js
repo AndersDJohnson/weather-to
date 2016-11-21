@@ -1,6 +1,6 @@
 describe('weatherTo', function() {
   it('should add location', function() {
-    browser.get('http://localhost:3000');
+    browser.get('http://localhost:8000');
 
         // element(by.model('todoList.todoText')).sendKeys('write first protractor test');
     element(by.css('.nav-link-show-locations')).click();

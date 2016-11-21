@@ -10,7 +10,7 @@ define(['angular', 'resourceArray'], function (angular) {
 
         var locations = [];
 
-        var resource = resourceArray(locations);
+        var resource = resourceArray('locations', locations);
 
         return resource;
       }];

@@ -13,7 +13,8 @@ module.exports = function (grunt) {
     '**/*.js',
     // parse errors
     '!bower_components/jquery/**',
-    '!bower_components/bootstrap/grunt/change-version.js'
+    '!bower_components/bootstrap/grunt/change-version.js',
+    '!bower_components/moment/{src,locale,templates}/**/*.js'
   ];
 
   grunt.registerTask('dev', [

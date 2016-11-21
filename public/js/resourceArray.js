@@ -1,23 +1,48 @@
 define([
   'angular',
-  'lodash'
+  'lodash',
+  'angular-local-storage'
 ],
 function (
   angular,
   _
 ) {
 
-  var resourceArrayModule = angular.module('resourceArray', []);
+  var resourceArrayModule = angular.module('resourceArray', [
+    'LocalStorageModule'
+  ]);
+
+  resourceArrayModule.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
+    localStorageServiceProvider.setPrefix('weather-to:resourceArray');
+  }]);
 
   resourceArrayModule.provider('resourceArray', [function () {
 
     this.$get = [
-      '$q', '$log',
-      function ($q, $log) {
+      '$q', '$log', 'localStorageService',
+      function ($q, $log, localStorageService) {
 
-        var resourceArray = function (array, nextId) {
+        /**
+         * @param name Name of resource.
+         * @param array Default items (if not started).
+         */
+        var resourceArray = function (name, array) {
 
-          nextId = nextId || 1;
+          array = array || [];
+
+          var existing = localStorageService.get(name + '.data') || [];
+
+          var started = localStorageService.get(name + '.started');
+
+          if (started && angular.isArray(existing)) {
+            // ignore default items if started and existing is valid array
+            array = existing;
+          }
+
+          localStorageService.set(name + '.started', true);
+
+          var nextId = localStorageService.get(name + '.nextId');
+          nextId = nextId || (array.length + 1);
 
           var resource = {};
 
@@ -57,6 +82,8 @@ function (
 
             // remove it
             array.splice(index, 1);
+
+            localStorageService.set(name + '.data', array);
 
             deferred.resolve(true);
 
@@ -98,11 +125,13 @@ function (
 
             }
 
+            localStorageService.set(name + '.data', array);
+
             deferred.resolve(item);
 
             return promise;
           };
-          
+
           return resource;
         };
 

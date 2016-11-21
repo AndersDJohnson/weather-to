@@ -15,8 +15,8 @@ define([
             categories, locations, settings, conditionsEngine, locationConverter
         ) {
 
-      $rootScope.weatherTo = {};
-      $rootScope.weatherTo.debug = true;
+      $rootScope.env = window.ENV;
+      $rootScope.debug = ($rootScope.env === 'development');
       $rootScope.$log = $log;
 
       $scope.modal = scopeModal;
@@ -436,6 +436,7 @@ define([
 
       $scope.$watch('current.time', function () {
         $log.log('current.time change - re-computing cats', arguments);
+        $scope.currentTime = $scope.current && $scope.current.time && ($scope.current.time * 1000);
         scopingComputeCats();
       });
 

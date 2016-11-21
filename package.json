@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "serve --port $PORT build",
-    "serve": "serve public",
+    "serve": "serve --port 8000 public",
     "postinstall": "bower install && grunt -v postinstall",
     "test": "npm run test:lint && npm run test:unit:phantom",
     "test:lint": "npm run test:lint:src && npm run test:lint:test",

@@ -24,7 +24,9 @@ require.config({
     propertyParser: '../bower_components/requirejs-plugins/src/propertyParser',
     'Markdown.Converter': '../bower_components/requirejs-plugins/lib/Markdown.Converter',
     text: '../bower_components/requirejs-plugins/lib/text',
-    'angular-mocks': '../bower_components/angular-mocks/angular-mocks'
+    'angular-mocks': '../bower_components/angular-mocks/angular-mocks',
+    'angular-animate': '../bower_components/angular-animate/angular-animate',
+    'angular-local-storage': '../bower_components/angular-local-storage/dist/angular-local-storage'
   },
   shim: {
     bootstrap: {
@@ -36,6 +38,16 @@ require.config({
       exports: 'angular',
       deps: [
         'jquery'
+      ]
+    },
+    'angular-animate': {
+      deps: [
+        'angular'
+      ]
+    },
+    'angular-local-storage': {
+      deps: [
+        'angular'
       ]
     },
     'angular-messages': {
