@@ -7,6 +7,8 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
 
+  var rev = Date.now();
+
   var favicons = fs.readFileSync('./public/favicons.html');
 
   var ngAnnotateFiles = [
@@ -119,7 +121,8 @@ module.exports = function (grunt) {
         options: {
           data: {
             dev: true,
-            favicons: favicons
+            favicons: favicons,
+            rev: rev
           }
         },
         files: [
@@ -132,7 +135,8 @@ module.exports = function (grunt) {
         options: {
           data: {
             dev: false,
-            favicons: favicons
+            favicons: favicons,
+            rev: rev
           }
         },
         files: [
