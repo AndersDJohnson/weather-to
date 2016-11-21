@@ -4,7 +4,7 @@
 
     <h3>Outlook
       <span class="wt-agenda-thru small" ng-show="! refreshingForecast && forecast.daily.last">
-        thru {{ forecast.daily.last.time | amCalendar }}
+        thru {{ forecast.daily.last.time * 1000 | amCalendar }}
       </span>
     </h3>
 
