@@ -43,7 +43,7 @@
 
 
 /**
- * Disabled labels (and within disabled fieldsets) get cursor. 
+ * Disabled labels (and within disabled fieldsets) get cursor.
  */
 fieldset[disabled] label,
 fieldset.disabled label,
@@ -97,6 +97,13 @@ body {
   /*overflow-x: auto;*/
 }
 
+/**
+ * http://stackoverflow.com/questions/23141854/adding-asterisk-to-required-fields-in-bootstrap-3
+ */
+.form-group.required .control-label:after {
+  content: "*";
+  color: red;
+}
 
 /**
  * http://stackoverflow.com/a/8230953
@@ -191,7 +198,7 @@ footer {
 // current location
 
 .wt-current-location {
-  
+
 }
 
 .wt-current-location-link {
@@ -199,7 +206,7 @@ footer {
 }
 
 .wt-current-time {
-  
+
 }
 
 

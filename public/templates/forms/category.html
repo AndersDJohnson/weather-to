@@ -7,7 +7,9 @@
 
   <fieldset>
 
-    <div class="form-group">
+    <div class="form-group required" ng-class="{
+      'has-error': catForm.name.$invalid &amp;&amp; catForm.name.$dirty
+    }">
       <label class="control-label col-sm-2"
         for="catForm.name">
         Name
@@ -18,14 +20,20 @@
           name="name"
           ng-model="catFormModel.name"
           autofocus
+          required
         />
+        <div class="help-block" ng-if="catForm.name.$dirty">
+          <div ng-messages="catForm.name.$error">
+            <div ng-messages-include="templates/messages/simple.html"></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <fieldset>
       <legend>Temperature</legend>
 
-      <div class="form-group">
+      <div class="form-group required">
         <div class="col-xs-6" ng-class="{
           'has-error': catForm.temperature_min.$invalid &amp;&amp; catForm.temperature_min.$dirty
         }">
