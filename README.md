@@ -74,7 +74,8 @@ heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-mult
  * [ ] https://github.com/wenzhixin/bootstrap-table
 
 * Development
- * [ ] grunt-angular-templates
+ * [ ] smarter asset revving, hashing not naive timestamps, and including ng-include templates
+ * [ ] template pre-loading/caching (grunt-angular-templates)
  * [ ] angular-hint
  * [ ] https://docs.angularjs.org/guide/production#disabling-debug-data
  * [x] ng-strict-di
