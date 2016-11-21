@@ -66,7 +66,7 @@ heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-mult
  * [ ] Add to Google Calendar for category matches
  * [ ] Add your own API key
  * [ ] Persist categories for locations
-    * [ ] Local storage
+    * [x] Local storage
     * [ ] Import / export
     * [ ] Dropbox
     * [ ] Google Drive
