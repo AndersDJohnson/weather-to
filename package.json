@@ -2,7 +2,7 @@
   "name": "weather-to",
   "version": "0.0.0",
   "description": "Weather activity planning.",
-  "main": "index.js",
+  "main": "public/main/index.js",
   "scripts": {
     "start": "serve --port $PORT build",
     "serve": "serve --port 8000 public",
